@@ -6,6 +6,13 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 	<link rel="stylesheet" href="../assets/css/main.css" />
 	<noscript><link rel="stylesheet" href="../assets/css/noscript.css" /></noscript>
+	<!-- summernote   -->
+	<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+	<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
+	<script src="../assets/js/summernote/summernote-lite.js"></script>
+	<script src="../assets/js/summernote/lang/summernote-ko-KR.js"></script>
+	<link rel="stylesheet" href="../assets/css/summernote/summernote-lite.css">
+
 </head>
 <body class="is-preload">
 
@@ -27,12 +34,11 @@
 		</div>
 		<nav>
 			<ul>
-				<li><a href="#membership">커뮤니티</a></li>
-				<li><a href="#login">나의변화</a></li>
-				<li><a href="#login">나의활동</a></li>
-				<li><a href="#login">마이페이지</a></li>
+				<li><a href="#community">커뮤니티</a></li>
+				<li><a href="#myChange">나의변화</a></li>
+				<li><a href="#myActivity">나의활동</a></li>
+				<li><a href="#myPage">마이페이지</a></li>
 
-				<!--<li><a href="#elements">Elements</a></li>-->
 			</ul>
 		</nav>
 	</header>
@@ -40,54 +46,152 @@
 	<!-- Main -->
 	<div id="main">
 
-		<!-- membership -->
-		<article id="membership">
-			<h2 class="major">회원가입</h2>
-			<form method="post" action="#">
-				<div class="fields">
-					<div class="field half">
-						<label for="userId">아이디</label>
-						<input type="text" name="userId" id="userId" />
-					</div>
-					<div class="field half">
-						<label for="userPw">비밀번호</label>
-						<input type="password" name="userPw" id="userPw" />
-					</div>
-					<div class="field half">
-						<label for="userName">이름</label>
-						<input type="text" name="userName" id="userName" />
-					</div>
-				</div>
-
-				<div class="field half">
-					<label>성별</label>
-
-					<div class="field half radio-button">
-						<input class="btn" type="radio" name="userSex" id="maleSex" value="male" />
-						<label for="maleSex">남자</label>
-					</div>
-					<div class="field half radio-button">
-						<input class="btn" type="radio" name="userSex" id="femaleSex" value="female" />
-						<label for="femaleSex">여자</label>
-					</div>
-
-					<label></label>
-				</div>
-				<ul class="actions">
-					<li>
-						<a href="#bmi">
-							<input type="button" value="계속" class="primary" />
+		<!-- community -->
+<!--		게시판 목록-->
+<!-- community.html -->
+		<article id="community">
+			<h2 class="major">커뮤니티 게시글 목록</h2>
+			<table>
+				<thead>
+				<tr>
+					<th>썸네일</th>
+					<th>제목</th>
+					<th>내용</th>
+					<th>작성자</th>
+					<th>작성일시</th>
+					<th>조회수</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr th:each="board : ${boardList}">
+					<td>
+						<a th:href="@{'/board_detail/' + ${board.bseq}}">
+							<img class="thumbnail" th:src="@{/image/{fileName}(fileName=${board.img})}" alt="Image">
 						</a>
-					</li>
-					<li><input type="reset" value="다시쓰기" /></li>
-				</ul>
-			</form>
+					</td>
+					<td>
+						<a th:href="@{'/board_detail/' + ${board.bseq}}" th:text="${board.title}"></a>
+					</td>
+					<td th:utext="${board.content}"></td>
+					<td th:text="${board.user.name}"></td>
+					<td th:text="${#dates.format(board.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
+					<td th:text="${board.cnt}"></td>
+				</tr>
+				</tbody>
+			</table>
+			<a href="#insertBord" class="button">새로운 글 작성</a>
+		</article>
+
+<!--		postDetail-->
+<!--		게시판 상세보기-->
+		<article id="postDetail">
+			<div class="container">
+				<h2 class="mb-4">게시글 상세보기</h2>
+				<div class="card">
+					<div class="card-header">
+						<h3 class="major" th:text="${board.title}">제목</h3>
+					</div>
+					<div class="card-body">
+						<div class="info">
+							<div>작성자: <span th:text="${board.user.name}">작성자명</span></div>
+							<div>작성일시: <span th:text="${#dates.format(board.createdAt, 'yyyy-MM-dd HH:mm:ss')}">날짜시간</span></div>
+							<div>조회수: <span th:text="${board.cnt}">조회수</span></div>
+						</div>
+						<img class="thumbnail" th:src="@{/image/{fileName}(fileName=${board.img})}" alt="Image">
+						<p class="card-text" th:utext="${board.content}">내용</p>
+
+						<!-- 수정, 삭제, 목록으로 돌아가기 버튼을 하나의 form으로 묶어서 나란히 나타냄 -->
+						<form>
+							<div class="btn-group">
+								<form th:action="@{'/board_edit/' + ${board.bseq}}" method="post">
+									<button type="submit" class="btn btn-primary">수정하기</button>
+								</form>
+								<form th:action="@{'/board_delete/' + ${board.bseq}}" method="post">
+									<button type="submit" class="btn btn-danger">삭제하기</button>
+								</form>
+								<a href="/board_list" class="btn btn-primary">목록으로 돌아가기</a>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</article>
+
+		<article id="insertBord">
+
+				<h2>커뮤니티 게시글 작성</h2>
+				<form name="form" method="post" enctype="multipart/form-data" action="board_write">
+					<div>
+						<label for="title">Title</label>
+						<input type="text" id="title" name="title">
+					</div>
+
+					<div>
+						<label>Content</label>
+						<textarea id="summernote" name="content" rows="10" cols="100"></textarea>
+					</div>
+
+					<div>
+						<label>이미지 첨부 </label>
+						<input type="file" id="img" name="img" accept="image" class="button">
+					</div>
+
+					<button type="submit" class="button"><a href="#community">게시글 등록</a></button>
+					<button type="reset" class="button">다시 쓰기</button>
+					<a href="#community" class="button">되돌아가기</a>
+				</form>
+
+
+			<script>
+				$('#summernote').summernote({
+					// 에디터 높이
+					height: 150,
+					// 에디터 한글 설정
+					lang: "ko-KR",
+					// 에디터에 커서 이동 (input창의 autofocus라고 생각)
+					focus: true,
+					toolbar: [
+						// 글꼴 설정
+						['fontname', ['fontname']],
+						// 글자 크기 설정
+						['fontsize', ['fontsize']],
+						// 굵기, 기울임꼴, 밑줄,취소 선, 서식지우기
+						['style', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
+						// 글자색
+						['color', ['forecolor', 'color']],
+						// 표만들기
+						['table', ['table']],
+						// 글머리 기호, 번호매기기, 문단정렬
+						['para', ['ul', 'ol', 'paragraph']],
+						// 줄간격
+						['height', ['height']],
+						// 코드보기, 확대해서보기, 도움말
+						['view', ['codeview', 'fullscreen', 'help']]
+					],
+					// 추가한 글꼴
+					fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', '맑은 고딕', '궁서', '굴림체', '굴림', '돋음체', '바탕체'],
+					// 추가한 폰트사이즈
+					fontSizes: ['8', '9', '10', '11', '12', '14', '16', '18', '20', '22', '24', '28', '30', '36', '50', '72']
+				});
+			</script>
 		</article>
 
 
-		<!-- login -->
-		<article id="login">
-			<h2 class="major">로그인</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+		<!-- lomyChangegin -->
+		<article id="myChange">
+			<h2 class="major">나의 변화</h2>
 			<form method="post" action="#">
 				<div class="fields">
 					<div class="field half">
