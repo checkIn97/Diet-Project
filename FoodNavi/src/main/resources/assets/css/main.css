@@ -1,12 +1,6 @@
 @import url(fontawesome-all.min.css);
 @import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:300italic,600italic,300,600");
 
-/*
-	Dimension by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
-*/
-
 html, body, div, span, applet, object,
 iframe, h1, h2, h3, h4, h5, h6, p, blockquote,
 pre, a, abbr, acronym, address, big, cite,
@@ -75,7 +69,7 @@ input, select, textarea {
 /* Basic */
 
 	@-ms-viewport {
-		width: device-width;
+		width: auto;
 	}
 
 	@media screen and (max-width: 480px) {
@@ -1140,9 +1134,12 @@ input, select, textarea {
 			-ms-transition-delay: 0.75s;
 			transition-delay: 0.75s;
 			background-image: linear-gradient(to top, rgba(19, 21, 25, 0.5), rgba(19, 21, 25, 0.5)), url("../../images/overlay.png");
-			background-size: auto, 256px 256px;
-			background-position: center, center;
-			background-repeat: no-repeat, repeat;
+			background-size: auto,
+ 256px 256px;
+			background-position: center,
+ center;
+			background-repeat: no-repeat,
+ repeat;
 			z-index: 2;
 		}
 
@@ -1647,7 +1644,8 @@ input, select, textarea {
 			-ms-transform: scale(0.95);
 			transform: scale(0.95);
 			-moz-filter: blur(0.1rem);
-			-webkit-filter: blur(0.1rem);
+			-webkit-filter: blur(0
+			.1rem);
 			-ms-filter: blur(0.1rem);
 			filter: blur(0.1rem);
 			opacity: 0;
@@ -1656,3 +1654,51 @@ input, select, textarea {
 		body.is-preload #footer {
 			opacity: 0;
 		}
+
+.radio-button input[type="radio"] {
+	display: none;
+}
+
+.radio-button label {
+	padding: 10px;
+	background-color: #ddd;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+.field.half.radio-button label {
+	padding: 10px;
+	background-color: transparent; /* 배경색을 투명하게 설정 */
+	border: 1px solid #fff; /* 테두리 색을 흰색으로 설정 */
+	border-radius: 5px;
+	cursor: pointer;
+	color: #fff; /* 텍스트 색을 흰색으로 설정 */
+	transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.field.half.radio-button input[type="radio"]:checked {
+	background-color: #bbb;
+	color: #000; /* 체크된 상태에서의 텍스트 색을 검은색으로 설정 */
+}
+
+.field.half.radio-button label:hover {
+    background-color: #bbb;
+}
+
+.field.half.radio-button input[type="radio"]:active + label {
+    background-color: #fff;
+    color: #000;
+}
+
+.field.half.radio-button {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+@media screen and (max-width: 600px) {
+	.field.half.radio-button {
+		flex-direction: column;
+	}
+}

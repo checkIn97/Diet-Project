@@ -584,4 +584,9 @@
 
 	};
 
+	function scrollToMembership() {
+		var membershipSection = document.getElementById("membership");
+		membershipSection.scrollIntoView({ behavior: 'smooth' });
+	}
+
 })(jQuery);
