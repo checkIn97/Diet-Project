@@ -33,4 +33,9 @@ public class UsersController {
 		
 		return url;
 	}
+	
+	@GetMapping("/contract") 
+		public String contractView() {
+			return "contract";
+		}
 }
