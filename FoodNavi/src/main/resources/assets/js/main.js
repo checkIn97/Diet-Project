@@ -406,4 +406,8 @@
 
 	document.querySelector('#login input[type="button"].login').addEventListener('click', goToMainPage);
 
+	document.getElementById('maleSex').addEventListener('click', function() {
+		this.checked = true;
+	});
+
 })(jQuery);
