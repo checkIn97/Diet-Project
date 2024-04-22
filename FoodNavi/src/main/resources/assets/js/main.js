@@ -411,3 +411,7 @@
 	});
 
 })(jQuery);
+
+function updateValue(val) {
+	document.getElementById('rangeValue').innerText = val;
+}
