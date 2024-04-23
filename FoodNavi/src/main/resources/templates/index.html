@@ -41,19 +41,19 @@
         <!-- membership -->
         <article id="membership">
             <h2 class="major">회원가입</h2>
-            <form method="post" action="#">
+            <form method="post" action="join">
                 <div class="fields">
                     <div class="field half">
                         <label for="userId">아이디</label>
-                        <input type="text" name="userId" id="userId"/>
+                        <input type="text" name="userid" id="userId"/>
                     </div>
                     <div class="field half">
                         <label for="userPw">비밀번호</label>
-                        <input type="password" name="userPw" id="userPw"/>
+                        <input type="password" name="userpw" id="userPw"/>
                     </div>
                     <div class="field half">
                         <label for="userName">이름</label>
-                        <input type="text" name="userName" id="userName"/>
+                        <input type="text" name="name" id="userName"/>
                     </div>
                 </div>
 
@@ -61,11 +61,11 @@
                     <label>성별</label>
 
                     <div class="field half radio-button">
-                        <input class="btn" type="radio" name="userSex" id="maleSex" value="male"/>
+                        <input class="btn" type="radio" name="sex" id="maleSex" value="M"/>
                         <label for="maleSex">남자</label>
                     </div>
                     <div class="field half radio-button">
-                        <input class="btn" type="radio" name="userSex" id="femaleSex" value="female"/>
+                        <input class="btn" type="radio" name="sex" id="femaleSex" value="F"/>
                         <label for="femaleSex">여자</label>
                     </div>
 
@@ -73,9 +73,9 @@
                 </div>
                 <ul class="actions">
                     <li>
-                        <a href="#bmi">
-                            <input type="button" value="계속" class="primary"/>
-                        </a>
+                        
+                            <input type="submit" value="계속" class="primary"/>
+                        
                     </li>
                     <li><input type="reset" value="다시쓰기"/></li>
                 </ul>
@@ -110,19 +110,19 @@
 
         <article id="bmi">
             <h2 class="major">기본 정보를 알려주세요</h2>
-            <form method="post" action="#">
+            <form method="post" action="insertBMI">
                 <div class="fields">
                     <div class="field half">
                         <label for="userAge">나이</label>
-                        <input type="text" name="userId" id="userAge"/>
+                        <input type="text" name="age" id="userAge"/>
                     </div>
                     <div class="field half">
                         <label for="userHeight">키</label>
-                        <input type="text" name="userPw" id="userHeight"/>
+                        <input type="text" name="height" id="userHeight"/>
                     </div>
                     <div class="field half">
                         <label for="userWeight">몸무게</label>
-                        <input type="text" name="userName" id="userWeight"/>
+                        <input type="text" name="weight" id="userWeight"/>
                     </div>
 
                     <div class="field half">
@@ -146,9 +146,9 @@
                             </a>
                         </li>
                         <li>
-                            <a href="#login">
-                                <input type="button" value="회원가입 완료" class="primary"/>
-                            </a>
+                            
+                            <input type="submit" value="회원가입 완료" class="primary"/>
+                       
                         </li>
                         <li><input type="reset" value="다시쓰기"/></li>
                     </ul>

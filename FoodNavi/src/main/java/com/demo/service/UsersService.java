@@ -9,4 +9,7 @@ public interface UsersService {
 	
 	public Users getUser(int useq); // 아이디로 회원 조회
 	
+	public Users getUserByMaxUseq();
+	
+	public int compareID(String id);
 }

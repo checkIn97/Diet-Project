@@ -23,7 +23,7 @@ public class UsersServiceImpl implements UsersService {
 	@Override
 	public int loginID(Users vo) {
 		int result = -1;
-		int useq = usersRepo.findByUserid(vo.getUserid()).getUseq();
+		int useq = usersRepo.findByUserid(vo.getUserid()).get().getUseq();
 		System.out.println(useq);
 		
 		// Users 테이블에서 사용자 조회
@@ -45,6 +45,27 @@ public class UsersServiceImpl implements UsersService {
 	public Users getUser(int useq) {
 		
 		return usersRepo.findById(useq).get();
+	}
+
+	@Override
+	public Users getUserByMaxUseq() {
+		return usersRepo.findFirstByOrderByUseqDesc();
+		
+	}
+
+	@Override
+	public int compareID(String id) {
+		int result = -1;
+		Optional<Users> user = usersRepo.findByUserid(id);
+		if (user.isEmpty()) {
+			result = -1;
+		} else if (user.get().getUserid().equals(id)) {
+			result = 0;
+		} else {
+			result = 1;
+		}
+		
+		return result;
 	}
 	
 }
