@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Food Navigator</title>
+<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+</head>
+<style>
+	table {
+		border: 1px solid black;
+		width: 1600px;
+		border-collapse:collapse;
+	}
+	
+	th, td {
+		border: 1px solid black;
+	}
+</style>
+<body>
+	<h2>Food Detail</h2>
+	<table>
+		<tr>
+			<th>이미지</th>
+			<td>내용</td>
+		</tr>
+		<tr>
+			<th>이름</th>
+			<td>[[${foodVo.name}]]</td>
+		</tr>
+		<tr>
+			<th>칼로리</th>
+			<td>[[${foodVo.foodDetail.kcal}]] kcal</td>
+		</tr>
+		<tr>
+			<th>탄수화물</th>
+			<td>[[${foodVo.foodDetail.carb}]] g</td>
+		</tr>
+		<tr>
+			<th>단백질</th>
+			<td>[[${foodVo.foodDetail.prt}]] g</td>
+		</tr>
+		<tr>
+			<th>지방</th>
+			<td>[[${foodVo.foodDetail.fat}]] g</td>
+		</tr>
+		<tr>
+			<th>추천 적합도</th>
+			<td></td>
+		</tr>
+		<tr>
+			<th>좋아요</th>
+			<td></td>
+		</tr>		
+	</table>
+	<a th:href="@{food_scan(page=${foodScanVo.pageInfo.number +1})}"><button>목록 보기</button></a>
+</body>
+</html>
