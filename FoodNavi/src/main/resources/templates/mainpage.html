@@ -238,8 +238,7 @@
             <form method="post" action="#">
                 <div class="fields">
 
-<!--                회원 id는 표시만 되고 수정은 안된다.-->
-
+                    <!--회원 id는 표시만 되고 수정은 안된다.-->
                     <div class="field half">
                         <label for="userId">아이디</label>
                         <input type="text" name="userId" id="userId"/>
@@ -254,10 +253,37 @@
                     </div>
 
 
+                    <div class="field half">
+                        <label for="userAge">나이</label>
+                        <input type="text" name="userAge" id="userAge"/>
+                    </div>
+                    <div class="field half">
+                        <label for="userHeight">키</label>
+                        <input type="text" name="userHeight" id="userHeight"/>
+                    </div>
+                    <div class="field half">
+                        <label for="userWeight">몸무게</label>
+                        <input type="text" name="userWeight" id="userWeight"/>
+                    </div>
+
+                    <div class="field half">
+                        <label>당신의 목표</label>
+
+                        <div class="field half radio-button">
+                            <input class="btn" type="radio" name="userGoal" id="bulkUp" value="bulkUp"/>
+                            <label for="bulkUp">벌크업</label>
+                        </div>
+                        <div class="field half radio-button">
+                            <input class="btn" type="radio" name="userGoal" id="diet" value="diet"/>
+                            <label for="diet">다이어트</label>
+                        </div>
+
+                    </div>
+
+                    <div class="field half">
+                        <input type="submit" value="정보 수정" class="primary"/>
+                    </div>
                 </div>
-                <ul class="actions">
-                    <li><input type="submit" value="정보 수정" class="primary"/></li>
-                </ul>
             </form>
         </article>
 

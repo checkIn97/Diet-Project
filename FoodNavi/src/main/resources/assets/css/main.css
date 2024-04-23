@@ -1666,3 +1666,9 @@ input[type=range]::-moz-range-thumb {
     font-weight: bold;
 }
 
+.fixed-bottom {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
