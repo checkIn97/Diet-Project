@@ -21,18 +21,14 @@ public class UsersServiceImpl implements UsersService {
 	}
 
 	@Override
-	public Users getUsers(int useq) {
-		
-		return usersRepo.findById(useq).get();
-	}
-
-	@Override
 	public int loginID(Users vo) {
 		int result = -1;
+		int useq = usersRepo.findByUserid(vo.getUserid()).getUseq();
+		System.out.println(useq);
 		
 		// Users 테이블에서 사용자 조회
-		Optional<Users> user = usersRepo.findById(vo.getUseq());
-		
+		Optional<Users> user = usersRepo.findById(useq);
+	
 		// 결과값 설정 :
 		// 1: ID,PWD 일치, 0: 비밀번호 불일치, -1: ID가 존재하지 않음.
 		if(user.isEmpty()) {
@@ -42,7 +38,13 @@ public class UsersServiceImpl implements UsersService {
 		} else {
 			result = 0; //비밀번호 불일치
 		}
-		return 0;
+		return result;
+	}
+
+	@Override
+	public Users getUser(int useq) {
+		
+		return usersRepo.findById(useq).get();
 	}
 	
 }
