@@ -1657,3 +1657,12 @@ input[type=range]::-moz-range-thumb {
     cursor: pointer;
 }
 
+#admin {
+    margin: 20px; /* 모든 방향으로 10px의 마진을 적용 */
+}
+
+#dietRecommendationButton {
+    font-size: 25px; /* 글씨 크기를 20px로 설정 */
+    font-weight: bold;
+}
+
