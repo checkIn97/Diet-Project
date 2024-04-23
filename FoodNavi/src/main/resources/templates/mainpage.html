@@ -4,17 +4,17 @@
     <title>FoodNavi</title>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
-    <link rel="stylesheet" href="../assets/css/main.css"/>
+    <link rel="stylesheet" href="/assets/css/main.css"/>
     <noscript>
-        <link rel="stylesheet" href="../assets/css/noscript.css"/>
+        <link rel="stylesheet" href="/assets/css/noscript.css"/>
     </noscript>
     <!-- summernote   -->
     <script src="https://code.jquery.com/jquery-3.6.3.min.js"
             integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
-    <script src="../assets/js/summernote/summernote-lite.js"></script>
-    <script src="../assets/js/summernote/lang/summernote-ko-KR.js"></script>
-    <link href="../assets/css/summernote/summernote-lite-darkly.css" rel="stylesheet">
+    <script src="/assets/js/summernote/summernote-lite.js"></script>
+    <script src="/assets/js/summernote/lang/summernote-ko-KR.js"></script>
+    <link href="/assets/css/summernote/summernote-lite-darkly.css" rel="stylesheet">
 
 </head>
 <body class="is-preload">
@@ -287,11 +287,39 @@
             </form>
         </article>
 
-        <!-- Elements -->
-        <article id="elements">
-            <h2 class="major">Elements</h2>
+        <!-- dietRecommendation -->
+        <article id="dietRecommendation">
+            <h2 class="major">식단 추천</h2>
+            <form method="post" action="#">
+                <div class="fields">
+                    <div class="field half">
+                        <div class=" field half radio-button">
+                            <input class="btn" type="checkbox" name="mealTime" id="morning" value="morning"/>
+                            <label for="morning">아침</label>
+                        </div>
+                        <div class="field half radio-button">
+                            <input class="btn" type="checkbox" name="mealTime" id="lunch" value="lunch"/>
+                            <label for="lunch">점심</label>
+                        </div>
+                        <div class="field half radio-button">
+                            <input class="btn" type="checkbox" name="mealTime" id="dinner" value="dinner"/>
+                            <label for="dinner">저녁</label>
+                        </div>
+                        <div class="field half radio-button">
+                            <input class="btn" type="checkbox" name="mealTime" id="snack" value="snack"/>
+                            <label for="snack">간식</label>
+                        </div>
 
-            <pre><code>i = 0;
+                    </div>
+                </div>
+            </form>
+        </article>
+
+                    <!-- Elements -->
+                    <article id="elements">
+                        <h2 class="major">Elements</h2>
+
+                        <pre><code>i = 0;
 
 while (!deck.isInOrder()) {
     print 'Iteration ' + i;
@@ -302,28 +330,28 @@ while (!deck.isInOrder()) {
 print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
 
 
-        </article>
+                    </article>
+
+                </div>
+
+
+                <!-- Footer -->
+                <footer id="footer">
+                    <p class="copyright">&copy; Untitled. Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
+                </footer>
 
     </div>
 
+    <!-- BG -->
+    <div id="bg"></div>
 
-    <!-- Footer -->
-    <footer id="footer">
-        <p class="copyright">&copy; Untitled. Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
-    </footer>
-
-</div>
-
-<!-- BG -->
-<div id="bg"></div>
-
-<!-- Scripts -->
-<script src="../assets/js/jquery.min.js"></script>
-<script src="../assets/js/browser.min.js"></script>
-<script src="../assets/js/breakpoints.min.js"></script>
-<script src="../assets/js/util.js"></script>
-<script src="../assets/js/main.js"></script>
-<script src="../assets/js/menuToggle.js"></script>
+    <!-- Scripts -->
+    <script src="/assets/js/jquery.min.js"></script>
+    <script src="/assets/js/browser.min.js"></script>
+    <script src="/assets/js/breakpoints.min.js"></script>
+    <script src="/assets/js/util.js"></script>
+    <script src="/assets/js/main.js"></script>
+    <script src="/assets/js/menuToggle.js"></script>
 
 </body>
 </html>

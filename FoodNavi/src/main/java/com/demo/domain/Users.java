@@ -30,12 +30,12 @@ import lombok.ToString;
 @DynamicUpdate
 @Entity
 public class Users {
+	@Column(length=50)
+	private String userid;
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int useq;
-	
-	@Column(length=50)
-	private String userid;
 	
 	@Column(length=100)
 	private String userpw;
@@ -56,4 +56,6 @@ public class Users {
 	
 	@OneToMany(mappedBy="user", fetch=FetchType.EAGER)
 	private List<Rcd> likeList = new ArrayList<>();
+	
+	
 }

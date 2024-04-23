@@ -1569,6 +1569,7 @@ body.is-preload #footer {
     opacity: 0;
 }
 
+/* radio 버튼 css */
 .field.half.radio-button input[type="radio"] {
     display: none;
     opacity: 0;
@@ -1614,6 +1615,57 @@ body.is-preload #footer {
 
 @media screen and (max-width: 600px) {
     .field.half.radio-button {
+        flex-direction: column;
+    }
+}
+
+
+/* checkbox 버튼 css */
+.field.half.checkbox-button input[type="radio"] {
+    display: none;
+    opacity: 0;
+}
+
+
+.checkbox-button label {
+    padding: 10px;
+    background-color: #ddd;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.field.half.checkbox-button label {
+    padding: 10px;
+    background-color: transparent; /* 배경색을 투명하게 설정 */
+    border: 1px solid #fff; /* 테두리 색을 흰색으로 설정 */
+    border-radius: 5px;
+    cursor: pointer;
+    color: #fff; /* 텍스트 색을 흰색으로 설정 */
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.field.half.checkbox-button input[type="radio"]:checked + label {
+    background-color: #bbb;
+    color: #000; /* 체크된 상태에서의 텍스트 색을 검은색으로 설정 */
+}
+
+.field.half.checkbox-button label:hover {
+    background-color: #bbb;
+}
+
+.field.half.checkbox-button input[type="radio"]:active + label {
+    background-color: #fff;
+    color: #000;
+}
+
+.field.half.checkbox-button {
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+@media screen and (max-width: 600px) {
+    .field.half.checkbox-button {
         flex-direction: column;
     }
 }
