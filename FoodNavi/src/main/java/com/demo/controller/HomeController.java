@@ -28,15 +28,16 @@ public class HomeController {
 	
 	@GetMapping("/mainpage")
 	public String mainpage(HttpSession session, Model model) {
-		List<Board> boardList = boardRepo.findAll();
-		
-		for (Board board : boardList) {
-			model.addAttribute("board", board);
-		}
+		List<Board> boardList = new ArrayList<Board>();
+
 		model.addAttribute("boardList", boardList);
-
 		Users user = (Users)(session.getAttribute("loginUser"));
-
+		Board board = new Board();
+		board.setCreatedAt(new Date());
+		board.setUser(user);
+		board.setCnt(1);
+		
+        model.addAttribute("board", board);
 		model.addAttribute("user", user);
 		return "mainpage";
 	}
