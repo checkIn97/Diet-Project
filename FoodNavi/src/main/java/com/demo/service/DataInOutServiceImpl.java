@@ -129,7 +129,7 @@ public class DataInOutServiceImpl implements DataInOutService {
 						FoodDetail foodDetailVo = new FoodDetail();
 						foodVo.setName(input[1]);
 						foodScanRepo.save(foodVo);
-						foodVo = foodScanRepo.getLastFood();
+						foodVo = foodScanRepo.findFirstByOrderByFseqDesc();
 						foodDetailVo.setFood(foodVo);
 						foodDetailVo.setKcal(Float.parseFloat(input[2]));
 						foodDetailVo.setPrt(Float.parseFloat(input[3]));

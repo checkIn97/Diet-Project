@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Board List</title>
+<style>
+table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+th, td {
+	padding: 8px;
+	border-bottom: 1px solid #ddd;
+	text-align: left;
+}
+
+th {
+	background-color: #f2f2f2;
+}
+
+.thumbnail {
+	max-width: 100px;
+	max-height: 100px;
+}
+
+button {
+	background-color: #ccc; /* 회색 */
+	border: none;
+	color: white;
+	padding: 12px 20px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	margin: 4px 2px;
+	cursor: pointer;
+	border-radius: 3px;
+}
+</style>
+</head>
+<body>
+	<h2>커뮤니티 게시글 목록</h2>
+	<table>
+		<thead>
+			<tr>
+				<th>썸네일</th>
+				<th>제목</th>
+				<th>내용</th>
+				<th>작성자</th>
+				<th>작성일시</th>
+				<th>조회수</th>
+			</tr>
+		</thead>
+		<form th:action="@{/board_list}" method="get">
+			<input type="text" name="searchKeyword">
+			<button type="submit">검색</button>
+		</form>
+		<tbody>
+			<tr th:each="board : ${boardList}">
+				<td><a th:href="@{'/board_detail/' + ${board.bseq}}"> <img
+						class="thumbnail"
+						th:src="@{/images/{fileName}(fileName=${board.img})}" alt="Image">
+				</a></td>
+				<td><a th:href="@{'/board_detail/' + ${board.bseq}}"
+					th:text="${board.title}"></a></td>
+				<td th:utext="${board.content != null ? (#strings.length(board.content) > 25 ? #strings.substring(board.content, 0, 25) + '...' : board.content) : ''}"></td>
+				<td th:text="${board.user.name}"></td>
+				<td
+					th:text="${#dates.format(board.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
+				<td th:text="${board.cnt}"></td>
+			</tr>
+		</tbody>
+
+	</table>
+	<!-- 페이징 처리 -->
+
+	<th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">
+		<a th:if="${page !=nowPage}"
+			th:href="@{/board_list(page= ${page -1}, searchKeyword = ${param.searchKeyword})}"
+			th:text="${page}"> </a>
+		<strong th:if="${page == nowPage}" th:text="${page}"
+			style="color: red"></strong>
+	</th:block>
+	<button onclick="window.location.href='/board_write'">새로운 글 작성</button>
+
+
+
+</body>
+</html>

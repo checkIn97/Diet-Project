@@ -25,7 +25,7 @@ public class FoodScanRepositoryTest {
 	@Disabled
 	@Test
 	public void getLastFood() {
-		Food food = foodScanRepo.getLastFood();
+		Food food = foodScanRepo.findFirstByOrderByFseqDesc();
 		System.out.println(food);
 	}
 	

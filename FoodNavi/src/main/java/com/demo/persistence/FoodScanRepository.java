@@ -9,9 +9,7 @@ import com.demo.domain.Food;
 
 public interface FoodScanRepository extends JpaRepository<Food, Integer> {
 	
-	@Query(value="SELECT * FROM Food "
-			+ "WHERE fseq = (SELECT MAX(fseq) FROM Food)", nativeQuery=true)
-	Food getLastFood();
+	Food findFirstByOrderByFseqDesc();
 	
 	@Query("SELECT food FROM Food food "
 			+ "WHERE food.name LIKE %:searchWord1% ")
