@@ -21,7 +21,7 @@ public class HomeController {
 	@Autowired
 	private BoardRepository boardRepo;
 		
-	@GetMapping("/main")
+	@GetMapping("/")
 	public String intropage() {
 		return "index";
 	}
