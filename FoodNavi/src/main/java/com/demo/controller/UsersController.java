@@ -5,12 +5,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.demo.domain.Users;
 import com.demo.persistence.UsersRepository;
 import com.demo.service.UsersService;
 
+import jakarta.servlet.http.HttpSession;
+
+@SessionAttributes("loginUser")
 @Controller
 public class UsersController {
 	@Autowired
@@ -27,20 +30,22 @@ public class UsersController {
 			Users user = Users.builder().userid(vo.getUserid()).userpw(vo.getUserpw()).name(vo.getName()).sex(vo.getSex())
 					.build();
 			usersService.insertUser(user);
-			model.addAttribute("useq", user.getUseq());
+
+			
 		}
 		return "redirect:#bmi";
 	}
 
 
 	 @PostMapping("/insertBMI") 
-	 public String insertBMI(Users vo) { 
+	 public String insertBMI(Users vo, HttpSession session) { 
 		 Users user = usersService.getUserByMaxUseq(); 
 		 user.setAge(vo.getAge());
 		 user.setHeight(vo.getHeight()); 
 		 user.setWeight(vo.getWeight());
-		 usersService.insertUser(user); 
-		 return "redirect:#login"; 
+		 usersService.insertUser(user);
+		 session.setAttribute("loginUser", user);
+		 return "redirect:mainpage"; 
 	  }
 	
 
@@ -50,13 +55,13 @@ public class UsersController {
 	}
 
 	@PostMapping("/login")
-	public String loginAction(Users vo, Model model) {
+	public String loginAction(Users vo, HttpSession session) {
 		int useq = usersRepo.findByUserid(vo.getUserid()).get().getUseq();
 		String url = "";
 		if (usersService.loginID(vo) == 1) { // 정상 사용자
-			model.addAttribute("loginUser", usersService.getUser(useq));
+			session.setAttribute("loginUser", usersService.getUser(useq));
 
-			url = "mainpage";
+			url = "redirect:mainpage";
 		} else {
 			url = "login_fail";
 		}

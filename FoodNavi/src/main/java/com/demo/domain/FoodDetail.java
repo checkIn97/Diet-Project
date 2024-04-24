@@ -30,10 +30,10 @@ public class FoodDetail {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int fdseq;
 	
-	private int kcal;
-	private int fat;
-	private int carb;
-	private int prt;
+	private float kcal;
+	private float fat;
+	private float carb;
+	private float prt;
 	
 	@OneToOne
 	@JoinColumn(name="fseq", nullable=false)
