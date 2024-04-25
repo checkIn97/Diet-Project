@@ -107,6 +107,20 @@ public class UsersController {
 		return "myPage";
 	}
 	
+	@GetMapping("/mychange_view")
+	public String myChangeView(HttpSession session, Model model) {
+		Users user = (Users)session.getAttribute("loginUser");
+		model.addAttribute("user", user);
+		return "myChange";
+	}
+	
+	@GetMapping("/myactivity_view")
+	public String myActivityView(HttpSession session, Model model) {
+		Users user = (Users)session.getAttribute("loginUser");
+		model.addAttribute("user", user);
+		return "myActivity";
+	}
+	
 	@PostMapping("/update_user")
 	public String updateAction(HttpSession session, Users vo, Model model) {
 		Users user = (Users)session.getAttribute("loginUser");
