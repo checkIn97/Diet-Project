@@ -100,8 +100,15 @@ public class UsersController {
 		return "changeResult";
 	}
 	
+	@GetMapping("/mypage_view")
+	public String myPageView(HttpSession session, Model model) {
+		Users user = (Users)session.getAttribute("loginUser");
+		model.addAttribute("user", user);
+		return "myPage";
+	}
+	
 	@PostMapping("/update_user")
-	public String update_user(HttpSession session, Users vo, Model model) {
+	public String updateAction(HttpSession session, Users vo, Model model) {
 		Users user = (Users)session.getAttribute("loginUser");
 		user.setUserpw(vo.getUserpw());
 		user.setAge(vo.getAge());
