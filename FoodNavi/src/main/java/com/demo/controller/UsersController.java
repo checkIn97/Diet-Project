@@ -67,9 +67,4 @@ public class UsersController {
 		return "membership";
 	}
 
-
-	@GetMapping("/contract")
-	public String contractView() {
-		return "contract";
-	}
 }

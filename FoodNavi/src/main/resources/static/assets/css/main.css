@@ -1724,3 +1724,17 @@ input[type=range]::-moz-range-thumb {
     width: 100%;
 }
 
+
+/* toggleButton.css */
+#toggleButtonControl {
+    position: fixed;
+    right: 250px;
+}
+
+#toggleButton {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    right: 250px;
+    top: 100px;
+}
