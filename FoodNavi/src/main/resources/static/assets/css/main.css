@@ -1736,5 +1736,12 @@ input[type=range]::-moz-range-thumb {
     flex-direction: column;
     position: fixed;
     right: 250px;
-    top: 100px;
+    top: 150px;
 }
+
+#box {
+    background: #1b1f22;
+    padding: 25px;
+    border-radius: 10px;
+}
+
