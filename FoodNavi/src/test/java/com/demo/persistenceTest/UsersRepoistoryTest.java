@@ -28,4 +28,11 @@ public class UsersRepoistoryTest {
 		
 		usersRepo.save(vo);
 	}
+	
+	@Disabled
+	@Test
+	public void deleteUsersTest() {
+		Users vo = usersRepo.findByUserid("sn").get();
+		usersRepo.delete(vo);
+	}
 }

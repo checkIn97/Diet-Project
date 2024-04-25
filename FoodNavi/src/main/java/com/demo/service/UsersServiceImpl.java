@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import com.demo.domain.Users;
 import com.demo.persistence.UsersRepository;
 
+import jakarta.servlet.http.HttpSession;
+
 @Service
 public class UsersServiceImpl implements UsersService {
 	
@@ -67,5 +69,4 @@ public class UsersServiceImpl implements UsersService {
 		
 		return result;
 	}
-	
 }

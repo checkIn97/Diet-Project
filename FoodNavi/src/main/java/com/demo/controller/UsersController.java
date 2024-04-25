@@ -112,6 +112,15 @@ public class UsersController {
 		return "updateResult";
 	}
 	
+	@PostMapping("/delete_user")
+    public String deleteAction(HttpSession session, Model model, Users vo) {
+		Users user = (Users)session.getAttribute("loginUser");
+		usersRepo.delete(user);
+		model.addAttribute("msg", "회원탈퇴가 완료되었습니다.");
+		
+		return "deleteResult";
+	}
+	
 	@GetMapping("/contract")
 	public String contractView() {
 		return "contract";
