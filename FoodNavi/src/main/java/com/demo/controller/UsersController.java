@@ -27,7 +27,7 @@ public class UsersController {
 			usersService.insertUser(user);
 			model.addAttribute("useq", user.getUseq());
 		}
-		return "redirect:#bmi";
+		return "bmi";
 	}
 
 
@@ -38,7 +38,7 @@ public class UsersController {
 		 user.setHeight(vo.getHeight()); 
 		 user.setWeight(vo.getWeight());
 		 usersService.insertUser(user); 
-		 return "redirect:#login"; 
+		 return "login";
 	  }
 	
 
@@ -61,6 +61,12 @@ public class UsersController {
 
 		return url;
 	}
+
+	@GetMapping("/membership")
+	public String membershipView() {
+		return "membership";
+	}
+
 
 	@GetMapping("/contract")
 	public String contractView() {
