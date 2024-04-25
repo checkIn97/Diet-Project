@@ -5,6 +5,12 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<a href="location:index">로그인 실패!</a>
+	 <script th:inline="javascript">
+        /*<![CDATA[*/
+        var message = /*[[${msg}]]*/ '';
+        alert(message);
+        window.location.href = "login_form";
+        /*]]>*/
+    </script>
 </body>
 </html>

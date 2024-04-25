@@ -22,6 +22,11 @@ public class UsersController {
 	private UsersService usersService;
 	@Autowired
 	private UsersRepository usersRepo;
+	
+	@GetMapping("/membership")
+	public String joinView() {
+		return "membership";
+	}
 
 	@PostMapping("/join")
 	public String joinAction(Users vo, Model model) {
@@ -45,10 +50,10 @@ public class UsersController {
 			Users user = Users.builder().userid(vo.getUserid()).userpw(vo.getUserpw()).name(vo.getName()).sex(vo.getSex())
 					.build();
 			usersService.insertUser(user);
-
+			model.addAttribute("user", user);
 			
 		}
-		return "redirect:#bmi";
+		return "bmi";
 	}
 
 
@@ -70,7 +75,7 @@ public class UsersController {
 	}
 
 	@PostMapping("/login")
-	public String loginAction(Users vo, HttpSession session) {
+	public String loginAction(Users vo, HttpSession session, Model model) {
 		int useq = usersRepo.findByUserid(vo.getUserid()).get().getUseq();
 		String url = "";
 		if (usersService.loginID(vo) == 1) { // 정상 사용자
@@ -78,7 +83,9 @@ public class UsersController {
 
 			url = "redirect:mainpage";
 		} else {
+			model.addAttribute("msg", "없는 아이디 또는 비밀번호 오류 입니다.");
 			url = "login_fail";
+			return url; 
 		}
 
 		return url;
