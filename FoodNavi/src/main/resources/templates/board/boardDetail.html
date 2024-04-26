@@ -11,30 +11,38 @@
         <h2 class="mb-4">게시글 상세보기</h2>
         <div class="card">
             <div class="card-header">
-                <h3 class="major" th:text="${board.title}">제목</h3>
+                <h3 th:text="${board.title}">제목</h3>
             </div>
             <div class="card-body">
                 <div class="info">
-                    <div>작성자: <span th:text="${board.user.name}">작성자명</span></div>
-                    <div>작성일시: <span
-                            th:text="${#dates.format(board.createdAt, 'yyyy-MM-dd HH:mm:ss')}">날짜시간</span></div>
-                    <div>조회수: <span th:text="${board.cnt}">조회수</span></div>
+                    <div>
+                        작성자: <span th:text="${board.user.name}">작성자명</span>
+                    </div>
+                    <div>
+                        작성일시: <span
+                            th:text="${#dates.format(board.createdAt, 'yyyy-MM-dd HH:mm:ss')}">날짜시간</span>
+                    </div>
+                    <div>
+                        조회수: <span th:text="${board.cnt}">조회수</span>
+                    </div>
                 </div>
-                <img class="thumbnail" th:src="@{/image/{fileName}(fileName=${board.img})}" alt="Image">
+                <img class="thumbnail"
+                     th:src="@{/images/{fileName}(fileName=${board.img})}" alt="Image">
                 <p class="card-text" th:utext="${board.content}">내용</p>
 
-                <!-- 수정, 삭제, 목록으로 돌아가기 버튼을 하나의 form으로 묶어서 나란히 나타냄 -->
-                <form>
-                    <div class="btn-group">
-                        <form th:action="@{'/board_edit/' + ${board.bseq}}" method="post">
-                            <button type="submit" class="btn btn-primary">수정하기</button>
-                        </form>
-                        <form th:action="@{'/board_delete/' + ${board.bseq}}" method="post">
-                            <button type="submit" class="btn btn-danger">삭제하기</button>
-                        </form>
-                        <a href="/board_list" class="btn btn-primary">목록으로 돌아가기</a>
-                    </div>
-                </form>
+                <div class="btn-group">
+                    <!-- 작성자와 현재 사용자의 useq가 일치하지 않는 경우에는 목록으로 돌아가기만 표. -->
+                    <a href="/board_list" class="btn btn-primary">목록으로 돌아가기</a>
+                </div>
+                <div class="btn-group">
+                    <!-- 작성자와 현재 사용자의 useq가 일치하는 경우에만 수정하기와 삭제하기 버튼을 표시합니다. -->
+                    <a th:href="@{'/board_edit_go/' + ${board.bseq}}"
+                       class="btn btn-primary">수정하기</a>
+                    <form th:action="@{'/board_delete/' + ${board.bseq}}" method="post">
+                        <button type="submit" class="btn btn-danger">삭제하기</button>
+                    </form>
+                </div>
+
             </div>
         </div>
     </div>

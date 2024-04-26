@@ -21,13 +21,14 @@
         </div>
 
         <div>
-            <label>이미지 첨부 </label>
-            <input type="file" id="img" name="img" accept="image" class="button">
+            <label for="img">이미지 첨부 :</label>
+            <input type="file" id="img" name="img" accept="images/*" class="button">
         </div>
 
-        <button type="submit" class="button"><a href="#community">게시글 등록</a></button>
+
+        <button type="submit" class="button">게시글 등록</button>
         <button type="reset" class="button">다시 쓰기</button>
-        <a href="#community" class="button">되돌아가기</a>
+        <button type="button" onclick="window.location.href='/board_list'" class="button">돌아가기</button>
     </form>
 
 
@@ -49,10 +50,7 @@
                 // 글자 크기 설정
                 ['fontsize', ['fontsize']],
                 // 굵기, 기울임꼴, 밑줄,취소 선, 서식지우기
-                ['style', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
-                // 글자색
-                ['color', ['forecolor', 'color']],
-                // 표만들기
+                ['style', ['bold', 'italic', 'underline', 'strikethrough', 'clear']], // 표만들기
                 ['table', ['table']],
                 // 글머리 기호, 번호매기기, 문단정렬
                 ['para', ['ul', 'ol', 'paragraph']],

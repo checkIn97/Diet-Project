@@ -63,8 +63,7 @@ public class BoardController {
     	
     	// 세션에서 사용자 정보 가져오기
     	Users user = (Users) session.getAttribute("loginUser");
-        
-    	
+
     	Board vo = new Board();
         vo.setTitle(title);
         vo.setContent(content);

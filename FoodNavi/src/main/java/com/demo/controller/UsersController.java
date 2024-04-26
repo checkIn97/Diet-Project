@@ -13,6 +13,7 @@ import com.demo.domain.Users;
 import com.demo.persistence.UsersRepository;
 import com.demo.service.UsersService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @SessionAttributes("loginUser")
@@ -29,7 +30,7 @@ public class UsersController {
 	}
 
 	@PostMapping("/join")
-	public String joinAction(Users vo, Model model) {
+	public String joinAction(Users vo, Model model, HttpSession session) {
 		String PATTERN_ID = "^[a-z]{1}[a-z0-9]{5,10}+$";
 		String PATTERN_PW = "^(?=.*[a-zA-Z])((?=.*\\d)|(?=.*\\W)).{8,128}+$";
 		boolean idPattern = Pattern.matches(PATTERN_ID, vo.getUserid());
@@ -49,8 +50,7 @@ public class UsersController {
 		} else {
 			Users user = Users.builder().userid(vo.getUserid()).userpw(vo.getUserpw()).name(vo.getName()).sex(vo.getSex())
 					.build();
-			usersService.insertUser(user);
-			model.addAttribute("user", user);
+			session.setAttribute("joinUser", user);
 			
 		}
 		return "bmi";
@@ -59,12 +59,12 @@ public class UsersController {
 
 	 @PostMapping("/insertBMI") 
 	 public String insertBMI(Users vo, HttpSession session) { 
-		 Users user = usersService.getUserByMaxUseq(); 
+		 Users user = (Users)session.getAttribute("joinUser"); 
 		 user.setAge(vo.getAge());
 		 user.setHeight(vo.getHeight()); 
 		 user.setWeight(vo.getWeight());
 		 usersService.insertUser(user);
-		 session.setAttribute("loginUser", user);
+
 		 return "redirect:mainpage"; 
 	  }
 	
@@ -80,7 +80,7 @@ public class UsersController {
 		String url = "";
 		if (usersService.loginID(vo) == 1) { // 정상 사용자
 			session.setAttribute("loginUser", usersService.getUser(useq));
-
+			
 			url = "redirect:mainpage";
 		} else {
 			model.addAttribute("msg", "없는 아이디 또는 비밀번호 오류 입니다.");

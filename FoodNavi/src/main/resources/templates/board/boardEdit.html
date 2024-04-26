@@ -27,13 +27,13 @@
 
         <div>
             <label for="img">이미지 첨부 :</label>
-            <input type="file" id="img" name="img" accept="images/*">
+            <input type="file" id="img" name="img" accept="images/*" class="button">
             <img th:text="${board.img}">
         </div>
 
-        <button type="submit">수정 완료</button>
+        <button type="submit" class="button">수정 완료</button>
 
-        <button type="button" onclick="window.location.href='/board_list'">돌아가기</button>
+        <button type="button" onclick="window.location.href='/board_list'" class="button">돌아가기</button>
     </form>
 
 
