@@ -5,51 +5,56 @@
 <meta charset="UTF-8">
 <title>Board List</title>
 
+<h1><a href="/mainpage">FoodNavi</a></h1>
 
-<article>
-	<h2>커뮤니티 게시글 목록</h2>
-	<table>
-		<thead>
-			<tr>
-				<th>썸네일</th>
-				<th>제목</th>
-				<th>내용</th>
-				<th>작성자</th>
-				<th>작성일시</th>
-				<th>조회수</th>
-			</tr>
-		</thead>
-		<form th:action="@{/board_list}" method="get">
-			<input type="text" name="searchKeyword">
-			<button type="submit">검색</button>
-		</form>
-		<tbody>
-			<tr th:each="board : ${boardList}">
-				<td><a th:href="@{'/board_detail/' + ${board.bseq}}"> <img
-						class="thumbnail"
-						th:src="@{/images/{fileName}(fileName=${board.img})}" alt="Image">
-				</a></td>
-				<td><a th:href="@{'/board_detail/' + ${board.bseq}}"
-					th:text="${board.title}"></a></td>
-				<td th:utext="${board.content != null ? (#strings.length(board.content) > 25 ? #strings.substring(board.content, 0, 25) + '...' : board.content) : ''}"></td>
-				<td th:text="${board.user.name}"></td>
-				<td
-					th:text="${#dates.format(board.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
-				<td th:text="${board.cnt}"></td>
-			</tr>
-		</tbody>
+<article id="box">
+    <h2>커뮤니티 게시글 목록</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>썸네일</th>
+            <th>제목</th>
+            <th>내용</th>
+            <th>작성자</th>
+            <th>작성일시</th>
+            <th>조회수</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="board : ${boardList}">
+            <td>
+                <a th:href="@{'/board_detail/' + ${board.bseq}}">
+                    <img class="thumbnail" th:src="@{/image/{fileName}(fileName=${board.img})}" alt="Image">
+                </a>
+            </td>
+            <td>
+                <a th:href="@{'/board_detail/' + ${board.bseq}}" th:text="${board.title}"></a>
+            </td>
+            <td th:utext="${board.content}"></td>
+            <td th:text="${board.user.name}"></td>
+            <td th:text="${#dates.format(board.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
+            <td th:text="${board.cnt}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <!-- 페이징 처리 -->
 
-	</table>
-	<!-- 페이징 처리 -->
+    <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">
+        <a th:if="${page !=nowPage}"
+           th:href="@{/board_list(page= ${page -1}, searchKeyword = ${param.searchKeyword})}"
+           th:text="${page}"> </a>
+        <strong th:if="${page == nowPage}" th:text="${page}"
+                style="color: red"></strong>
+    </th:block>
 
-	<th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">
-		<a th:if="${page !=nowPage}"
-			th:href="@{/board_list(page= ${page -1}, searchKeyword = ${param.searchKeyword})}"
-			th:text="${page}"> </a>
-		<strong th:if="${page == nowPage}" th:text="${page}"
-			style="color: red"></strong>
-	</th:block>
-	<button onclick="window.location.href='/board_write'">새로운 글 작성</button>
+    <form th:action="@{/board_list}" method="get">
+        <label>
+            <input type="text" name="searchKeyword">
+        </label>
+        <button type="submit">검색</button>
+    </form>
+
+    <button onclick="window.location.href='/board_write_go'" class="button">새로운 글 작성</button>
 
 
 
