@@ -112,5 +112,6 @@ public class FoodScanController {
 		
 		return foodScanVo;
 	}
-	
+
+
 }
