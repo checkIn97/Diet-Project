@@ -1740,6 +1740,7 @@ input[type=range]::-moz-range-thumb {
 }
 
 #box {
+    width: auto;
     background: #1b1f22;
     padding: 25px;
     border-radius: 10px;

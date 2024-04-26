@@ -22,7 +22,7 @@ public class UsersController {
 	private UsersService usersService;
 	@Autowired
 	private UsersRepository usersRepo;
-	
+
 	@GetMapping("/membership")
 	public String joinView() {
 		return "membership";
@@ -36,38 +36,38 @@ public class UsersController {
 		boolean pwPattern = Pattern.matches(PATTERN_PW, vo.getUserpw());
 		if (usersService.compareID(vo.getUserid()) == 0) {
 			model.addAttribute("msg", "이미 존재하는 아이디 입니다.");
-            return "alertPage"; 
+			return "alertPage";
 		} else if (vo.getUserid() == null) {
 			model.addAttribute("msg", "아이디를 입력해주세요.");
 			return "alertPage";
 		} else if (!idPattern) {
 			model.addAttribute("msg", "아이디는 영문, 숫자 포함 6자리 이상 입력하셔야 합니다.");
-            return "alertPage"; 
+			return "alertPage";
 		} else if (!pwPattern) {
 			model.addAttribute("msg", "비밀번호는 영문 소문자, 대문자, 숫자, 특수문자를 반드시 하나씩 포함하여 8자리 이상 입력하셔야 합니다.");
-            return "alertPage"; 
+			return "alertPage";
 		} else {
 			Users user = Users.builder().userid(vo.getUserid()).userpw(vo.getUserpw()).name(vo.getName()).sex(vo.getSex())
 					.build();
 			usersService.insertUser(user);
 			model.addAttribute("user", user);
-			
+
 		}
 		return "bmi";
 	}
 
 
-	 @PostMapping("/insertBMI") 
-	 public String insertBMI(Users vo, HttpSession session) { 
-		 Users user = usersService.getUserByMaxUseq(); 
-		 user.setAge(vo.getAge());
-		 user.setHeight(vo.getHeight()); 
-		 user.setWeight(vo.getWeight());
-		 usersService.insertUser(user);
-		 session.setAttribute("loginUser", user);
-		 return "redirect:mainpage"; 
-	  }
-	
+	@PostMapping("/insertBMI")
+	public String insertBMI(Users vo, HttpSession session) {
+		Users user = usersService.getUserByMaxUseq();
+		user.setAge(vo.getAge());
+		user.setHeight(vo.getHeight());
+		user.setWeight(vo.getWeight());
+		usersService.insertUser(user);
+		session.setAttribute("loginUser", user);
+		return "redirect:mainpage";
+	}
+
 
 	@GetMapping("/login_form")
 	public String loginView() {
@@ -85,12 +85,12 @@ public class UsersController {
 		} else {
 			model.addAttribute("msg", "없는 아이디 또는 비밀번호 오류 입니다.");
 			url = "login_fail";
-			return url; 
+			return url;
 		}
 
 		return url;
 	}
-	
+
 	@PostMapping("/change_weight")
 	public String changeWeight(HttpSession session, Users vo, Model model) {
 		Users user = (Users)session.getAttribute("loginUser");
@@ -99,14 +99,28 @@ public class UsersController {
 		model.addAttribute("msg", "체중 수정이 완료되었습니다.");
 		return "changeResult";
 	}
-	
+
 	@GetMapping("/mypage_view")
 	public String myPageView(HttpSession session, Model model) {
 		Users user = (Users)session.getAttribute("loginUser");
 		model.addAttribute("user", user);
 		return "myPage";
 	}
-	
+
+	@GetMapping("/mychange_view")
+	public String myChangeView(HttpSession session, Model model) {
+		Users user = (Users)session.getAttribute("loginUser");
+		model.addAttribute("user", user);
+		return "myChange";
+	}
+
+	@GetMapping("/myactivity_view")
+	public String myActivityView(HttpSession session, Model model) {
+		Users user = (Users)session.getAttribute("loginUser");
+		model.addAttribute("user", user);
+		return "myActivity";
+	}
+
 	@PostMapping("/update_user")
 	public String updateAction(HttpSession session, Users vo, Model model) {
 		Users user = (Users)session.getAttribute("loginUser");
@@ -118,16 +132,16 @@ public class UsersController {
 		model.addAttribute("msg", "회원정보 수정이 완료되었습니다.");
 		return "updateResult";
 	}
-	
+
 	@PostMapping("/delete_user")
-    public String deleteAction(HttpSession session, Model model, Users vo) {
+	public String deleteAction(HttpSession session, Model model, Users vo) {
 		Users user = (Users)session.getAttribute("loginUser");
 		usersRepo.delete(user);
 		model.addAttribute("msg", "회원탈퇴가 완료되었습니다.");
-		
+
 		return "deleteResult";
 	}
-	
+
 	@GetMapping("/contract")
 	public String contractView() {
 		return "contract";

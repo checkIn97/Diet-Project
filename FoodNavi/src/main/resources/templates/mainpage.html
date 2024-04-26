@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html lang="ko">
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
     <title>FoodNavi</title>
     <meta charset="utf-8"/>
@@ -25,7 +25,7 @@
                 <p> 오늘 섭취한 칼로리 0000kal </p>
                 <p> 오늘 섭취한 영양소 탄수화물 000% 단백질 000% 지방 000% </p>
                 <button class="button" name="dietRecommendation" id="dietRecommendationButton" value="recommend">
-                    <a href="#dietRecommendation">식단추천</a></button>
+                    <a href="/dietRecommendation">식단추천</a></button>
                 <!--각 href 링크는 컨트롤러와 연결해야 합니다.-->
             </div>
         </div>
@@ -33,13 +33,17 @@
             <ul>
                 <!--각 href 링크는 컨트롤러와 연결해야 합니다.-->
                 <li><a href="/board_list">커뮤니티</a></li>
-                <li><a href="/myChange">나의변화</a></li>
-                <li><a href="/myActivity">나의활동</a></li>
+                <li><a href="/mychange_view">나의변화</a></li>
+                <li><a href="/myactivity_view">나의활동</a></li>
                 <li><a href="/mypage_view">마이페이지</a></li>
+            </ul>
         </nav>
+
 
         <!--관리자 아이디로 로그인 하면 보이게 할 것-->
         <button class="primary" name="admin" id="admin" value="admin"><a href="#admin">관리자</a></button>
+
+        <button class="button" name="logout" id="logout" value="logout"><a href="#logout">로그아웃</a></button>
 
     </header>
 

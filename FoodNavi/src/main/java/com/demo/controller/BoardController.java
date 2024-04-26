@@ -19,6 +19,10 @@ import org.springframework.web.multipart.MultipartFile;
 import com.demo.domain.Board;
 import com.demo.domain.Users;
 import com.demo.service.BoardService;
+import com.demo.service.UsersService;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class BoardController {
@@ -26,24 +30,40 @@ public class BoardController {
     @Autowired
     BoardService boardService;
 
+    @Autowired
+    UsersService userService;
+
     //게시글 작성으로 이동
-    @GetMapping("board_write")
-    public String showWriteForm() {
-        return "board/boardInsert"; // HTML 파일의 이름입니다.
+    @GetMapping("/board_write_go")
+    public String showWriteForm(HttpServletRequest request, HttpSession session) {
+        // 세션에서 사용자 정보 가져오기
+        Users user = (Users) session.getAttribute("loginUser");
+
+        // 세션에 로그인 정보가 없는 경우
+        if (user == null) {
+            // 로그인 알림을 포함한 경고 메시지를 설정합니다.
+            request.setAttribute("message", "로그인 후 게시글을 작성할 수 있습니다.");
+            return "#"; // 로그인 페이지로 이동.
+        }else {
+
+            return "board/boardInsert"; //게시글 작성페이지로 이동.
+        }
+
     }
 
 
 
-    private static final String UPLOAD_DIRECTORY = "/Users/shu/Documents/github/Diet-Project/FoodNavi/src/main/resources/static/images/";
+    private static final String UPLOAD_DIRECTORY = "../static/images/";
     // 게시글 작성
     @PostMapping("board_write")
     public String saveBoard(@RequestParam("title") String title,
                             @RequestParam("content") String content,
-                            @RequestParam("img") MultipartFile file) {
+                            @RequestParam("img") MultipartFile file,
+                            HttpSession session) {
 
-        // 임시로 사용할 사용자 정보 생성
-        Users user = new Users();
-        user.setUseq(1); // 사용자 아이디 설정
+        // 세션에서 사용자 정보 가져오기
+        Users user = (Users) session.getAttribute("loginUser");
+
 
         Board vo = new Board();
         vo.setTitle(title);
@@ -139,20 +159,17 @@ public class BoardController {
     public String boardEdit(@RequestParam("title") String title,
                             @RequestParam("content") String content,
                             @RequestParam("bseq") int bseq,
-                            @RequestParam("img") MultipartFile file) {
+                            @RequestParam("img") MultipartFile file,
+                            HttpSession session) {
 
         // 세션에서 사용자 정보 가져오기
-        // Uses user = (Users) session.getAttribute("user");
-
-        // 임시로 사용할 사용자 정보 생성
-        Users user = new Users();
-        user.setUseq(1); // 사용자 아이디 설정
+        Users user = (Users) session.getAttribute("loginUser");
 
         Board vo = new Board();
         vo.setBseq(bseq);
         vo.setTitle(title);
         vo.setContent(content);
-        vo.setUser(user); // 사용자 정보 설정
+        vo.setUser(user);
 
         if (!file.isEmpty()) {
             try {

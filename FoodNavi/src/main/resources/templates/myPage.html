@@ -3,13 +3,13 @@
 <th:block th:include="~{/includes/header}"></th:block>
 <meta charset="UTF-8">
 
+<h1><a href="/mainpage">FoodNavi</a></h1>
+
 <!-- myPage -->
 <article id="box">
     <h2 class="major">마이페이지</h2>
     <form method="post" action="#">
         <div class="fields">
-
-            <h1><a href="/mainpage">FoodNavi</a></h1>
             <!--회원 id는 표시만 되고 수정은 안된다.-->
             <div class="field half">
                 <label for="userId">아이디</label>
@@ -53,7 +53,8 @@
             </div>
 
             <div class="field half">
-                <input type="submit" value="정보 수정" class="primary"/>
+                    <input type="submit" value="정보 수정" class="primary"/>
+                    <input type="button" value="회원탈퇴" class="button"/>
             </div>
         </div>
     </form>

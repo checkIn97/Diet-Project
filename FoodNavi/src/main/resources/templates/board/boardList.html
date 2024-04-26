@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ko">
-<th:block th:include="~{/includes/header}"></th:block>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:insert="~{/includes/header}"></th:block>
+
 <meta charset="UTF-8">
+<title>Board List</title>
 
 <h1><a href="/mainpage">FoodNavi</a></h1>
-<!-- community -->
-<!--게시판 목록-->
 
 <article id="box">
-    <h2 class="major">커뮤니티 게시글 목록</h2>
+    <h2>커뮤니티 게시글 목록</h2>
     <table>
         <thead>
         <tr>
@@ -37,7 +37,26 @@
         </tr>
         </tbody>
     </table>
-    <a href="#insertBord" class="button">새로운 글 작성</a>
-</article>
+    <!-- 페이징 처리 -->
 
-<th:block th:include="~{includes/footer}"></th:block>
+    <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">
+        <a th:if="${page !=nowPage}"
+           th:href="@{/board_list(page= ${page -1}, searchKeyword = ${param.searchKeyword})}"
+           th:text="${page}"> </a>
+        <strong th:if="${page == nowPage}" th:text="${page}"
+                style="color: red"></strong>
+    </th:block>
+
+    <form th:action="@{/board_list}" method="get">
+        <label>
+            <input type="text" name="searchKeyword">
+        </label>
+        <button type="submit">검색</button>
+    </form>
+
+    <button onclick="window.location.href='/board_write_go'" class="button">새로운 글 작성</button>
+
+
+
+</article>
+<th:block th:insert="~{/includes/footer}"></th:block>
