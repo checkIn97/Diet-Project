@@ -9,26 +9,44 @@
     <h2 class="major">식단 추천</h2>
     <form method="post" action="#">
         <div class="fields">
-            <div class="field half">
-                <div class=" field half radio-button">
-                    <input class="btn" type="checkbox" name="mealTime" id="morning" value="morning"/>
-                    <label for="morning">아침</label>
-                </div>
-                <div class="field half radio-button">
-                    <input class="btn" type="checkbox" name="mealTime" id="lunch" value="lunch"/>
-                    <label for="lunch">점심</label>
-                </div>
-                <div class="field half radio-button">
-                    <input class="btn" type="checkbox" name="mealTime" id="dinner" value="dinner"/>
-                    <label for="dinner">저녁</label>
-                </div>
-                <div class="field half radio-button">
-                    <input class="btn" type="checkbox" name="mealTime" id="snack" value="snack"/>
-                    <label for="snack">간식</label>
-                </div>
+            <div class="field">
+                -
+                <!--id랑 value, href는 컨트롤러와 도메인 확인하셔서 수정하셔야 합니다.-->
 
-                <label></label>
+                <label for="foodType">요리종류</label>
+                <select name="exerciseType" id="foodType">
+                    <option value="#">한식</option>
+                    <option value="#">중식</option>
+                    <option value="#">양식</option>
+                </select>
 
+                <label for="purpose">목적</label>
+                <select name="exerciseType" id="purpose">
+                    <option value="#">다이어트</option>
+                    <option value="#">벌크업</option>
+                    <option value="#">가성비</option>
+                    <option value="#">건강식</option>
+                    <option value="#">당뇨식</option>
+                </select>
+
+                <div>
+                    <a href="/food_recommend">
+                        <input class="btn" type="button" name="mealTime" id="morning" value="아침">
+                    </a>
+
+                    <a href="/food_recommend">
+                        <input class="btn" type="button" name="mealTime" id="lunch" value="점심"/>
+                    </a>
+
+                    <a href="/food_recommend">
+                        <input class="btn" type="button" name="mealTime" id="dinner" value="저녁"/>
+                    </a>
+
+
+                    <a href="/food_recommend">
+                        <input class="btn" type="button" name="mealTime" id="snack" value="간식"/>
+                    </a>
+                </div>
             </div>
         </div>
     </form>

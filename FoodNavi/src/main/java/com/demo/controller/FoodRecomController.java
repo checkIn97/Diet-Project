@@ -10,4 +10,12 @@ public class FoodRecomController {
     public String dietRecommendation() {
         return "food/foodDay";
     }
+
+    @GetMapping("/food_recommend")
+    public String foodRecommend() {
+        return "food/foodRecommend";
+    }
+
 }
+
+
