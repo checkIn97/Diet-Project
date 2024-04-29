@@ -12,7 +12,6 @@
     <table>
         <thead>
         <tr>
-            <th>썸네일</th>
             <th>제목</th>
             <th>내용</th>
             <th>작성자</th>
@@ -22,11 +21,6 @@
         </thead>
         <tbody>
         <tr th:each="board : ${boardList}">
-            <td>
-                <a th:href="@{'/board_detail/' + ${board.bseq}}">
-                    <img class="thumbnail" th:src="@{/image/{fileName}(fileName=${board.img})}" alt="Image">
-                </a>
-            </td>
             <td>
                 <a th:href="@{'/board_detail/' + ${board.bseq}}" th:text="${board.title}"></a>
             </td>

@@ -53,7 +53,7 @@ public class BoardController {
 
 
 
-    private static final String UPLOAD_DIRECTORY = "../static/images/";
+    private static final String UPLOAD_DIRECTORY = "../images/";
     // 게시글 작성
     @PostMapping("board_write")
     public String saveBoard(@RequestParam("title") String title,

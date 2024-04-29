@@ -26,20 +26,21 @@
                         조회수: <span th:text="${board.cnt}">조회수</span>
                     </div>
                 </div>
-                <img class="thumbnail"
-                     th:src="@{/images/{fileName}(fileName=${board.img})}" alt="Image">
+                    <div th:if="${board.img != null && !board.img.isEmpty()}">
+                        <img th:src="${board.img}">
+                    </div>
                 <p class="card-text" th:utext="${board.content}">내용</p>
 
                 <div class="btn-group">
                     <!-- 작성자와 현재 사용자의 useq가 일치하지 않는 경우에는 목록으로 돌아가기만 표. -->
-                    <a href="/board_list" class="btn btn-primary">목록으로 돌아가기</a>
+                    <a href="/board_list" class="button">목록으로 돌아가기</a>
                 </div>
                 <div class="btn-group">
                     <!-- 작성자와 현재 사용자의 useq가 일치하는 경우에만 수정하기와 삭제하기 버튼을 표시합니다. -->
                     <a th:href="@{'/board_edit_go/' + ${board.bseq}}"
-                       class="btn btn-primary">수정하기</a>
+                       class="button">수정하기</a>
                     <form th:action="@{'/board_delete/' + ${board.bseq}}" method="post">
-                        <button type="submit" class="btn btn-danger">삭제하기</button>
+                        <button type="submit" class="primary">삭제하기</button>
                     </form>
                 </div>
 
