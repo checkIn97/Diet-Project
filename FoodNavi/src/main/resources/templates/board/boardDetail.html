@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ko">
-<th:block th:include="~{/includes/header}"></th:block>
-<meta charset="UTF-8">
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:insert="~{/includes/header}"></th:block>
 
-<h1><a href="/mainpage">FoodNavi</a></h1>
-<!--		postDetail-->
-<!--		게시판 상세보기-->
-<article id="box">
+<meta charset="UTF-8">
+<title>게시글 상세보기</title>
+
+<article>
     <div class="container">
         <h2 class="mb-4">게시글 상세보기</h2>
         <div class="card">
@@ -16,38 +15,45 @@
             <div class="card-body">
                 <div class="info">
                     <div>
-                        작성자: <span th:text="${board.user.name}">작성자명</span>
+                        <input type="hidden" name="bseq" th:value="${board.bseq}"><br>
+                        작성자: <span th:text="${board.user.userid}">작성자명</span>
+
                     </div>
                     <div>
                         작성일시: <span
                             th:text="${#dates.format(board.createdAt, 'yyyy-MM-dd HH:mm:ss')}">날짜시간</span>
                     </div>
                     <div>
-                        조회수: <span th:text="${board.cnt}">조회수</span>
+                        조회수: <span th:text="${board.cnt}+1">조회수</span>
                     </div>
+
                 </div>
-                    <div th:if="${board.img != null && !board.img.isEmpty()}">
-                        <img th:src="${board.img}">
-                    </div>
+
+                <img class="thumbnail"
+                     th:if="${board.img}"
+                     th:src="@{/uploadImages/{fileName}(fileName=${board.img})}"
+                     alt="Image">
+
                 <p class="card-text" th:utext="${board.content}">내용</p>
 
                 <div class="btn-group">
-                    <!-- 작성자와 현재 사용자의 useq가 일치하지 않는 경우에는 목록으로 돌아가기만 표. -->
-                    <a href="/board_list" class="button">목록으로 돌아가기</a>
-                </div>
-                <div class="btn-group">
-                    <!-- 작성자와 현재 사용자의 useq가 일치하는 경우에만 수정하기와 삭제하기 버튼을 표시합니다. -->
-                    <a th:href="@{'/board_edit_go/' + ${board.bseq}}"
-                       class="button">수정하기</a>
-                    <form th:action="@{'/board_delete/' + ${board.bseq}}" method="post">
-                        <button type="submit" class="primary">삭제하기</button>
+                    <!-- 작성자만 수정 및 삭제 버튼을 볼 수 있도록 -->
+                    <a th:if="${isAuthor}"
+                       th:href="@{'/board_edit_go/' + ${board.bseq}}"
+                       class="btn btn-primary">수정하기</a>
+                    <form th:if="${isAuthor}"
+                          th:action="@{'/board_delete/' + ${board.bseq}}" method="post">
+                        <button type="submit" class="btn btn-danger">삭제하기</button>
                     </form>
-                </div>
 
+                    <!-- 목록으로 돌아가기 -->
+                    <a href="/board_list" class="btn btn-primary">목록으로 돌아가기</a>
+                </div>
             </div>
         </div>
     </div>
+
+    <th:block th:insert="~{/board/boardComments}"></th:block>
 </article>
 
-
-<th:block th:include="~{includes/footer}"></th:block>
+<th:block th:insert="~{/includes/footer}"></th:block>

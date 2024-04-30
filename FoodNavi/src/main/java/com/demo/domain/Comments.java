@@ -35,16 +35,22 @@ public class Comments {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int cseq;
-	
+
+	@ManyToOne
+	@JoinColumn(name="bseq", nullable=false)
+	private Board board;
+
 	@Column(length=2000)
 	private String content;
-	
+
 	@ManyToOne
 	@JoinColumn(name="useq", nullable=false)
 	private Users user;
-	
+
 	@Temporal(value=TemporalType.TIMESTAMP)
 	@ColumnDefault("sysdate")
 	@Column(updatable=false)
 	private Date createdAt;
+
+
 }
