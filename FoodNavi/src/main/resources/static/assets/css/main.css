@@ -1621,7 +1621,7 @@ body.is-preload #footer {
 
 
 /* checkbox 버튼 css */
-.field.half.checkbox-button input[type="radio"] {
+.field.half.checkbox-button input[type="checkbox"] {
     display: none;
     opacity: 0;
 }
@@ -1645,7 +1645,7 @@ body.is-preload #footer {
     transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
 }
 
-.field.half.checkbox-button input[type="radio"]:checked + label {
+.field.half.checkbox-button input[type="checkbox"]:checked + label {
     background-color: #bbb;
     color: #000; /* 체크된 상태에서의 텍스트 색을 검은색으로 설정 */
 }
@@ -1654,7 +1654,7 @@ body.is-preload #footer {
     background-color: #bbb;
 }
 
-.field.half.checkbox-button input[type="radio"]:active + label {
+.field.half.checkbox-button input[type="checkbox"]:active + label {
     background-color: #fff;
     color: #000;
 }
