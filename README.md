@@ -10,6 +10,7 @@ MBC 아카데미 빅데이터 활용 실무 프로젝트 기반 JAVA 풀스택 �
   <li>커뮤니티: 식단에 대한 평가 혹은 사용자 간 여러가지 정보를 교환할 수 있는 게시판 서비스입니다.</li>
 </ol>
 <hr>
+
 ### 홈 화면
 ![index](https://github.com/checkIn97/Diet-Project/assets/158795073/17177f44-f5c0-40d5-9d29-69884235ff10)
 
