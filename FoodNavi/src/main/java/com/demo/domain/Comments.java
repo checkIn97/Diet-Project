@@ -36,6 +36,10 @@ public class Comments {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int cseq;
 	
+	@ManyToOne
+	@JoinColumn(name="bseq", nullable=false)
+	private Board board;
+	
 	@Column(length=2000)
 	private String content;
 	
@@ -47,4 +51,6 @@ public class Comments {
 	@ColumnDefault("sysdate")
 	@Column(updatable=false)
 	private Date createdAt;
+	
+	
 }

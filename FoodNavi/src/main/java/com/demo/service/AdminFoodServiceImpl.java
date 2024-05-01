@@ -1,5 +1,6 @@
 package com.demo.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.demo.domain.Food;
-
+import com.demo.dto.FoodScanVo;
 import com.demo.persistence.AdminFoodRepository;
 
 @Service
@@ -23,11 +24,41 @@ public class AdminFoodServiceImpl implements AdminFoodService {
 	public void insertFood(Food fvo) {
 		foodRepo.save(fvo);
 	}
+	
+	@Override
+	public Food getFoodByFseq(int fseq) {
+		return foodRepo.findById(fseq).get();
+	}
+	
+	@Override
+	public Food getFoodByMaxFseq() {
+		return foodRepo.findFirstByOrderByFseqDesc();
+	}
 
 	@Override
-	public Page<Food> getFoodList(String name, int page, int size) {
-		Pageable pageable = PageRequest.of(page-1,  size, Direction.ASC, "name");
-		return foodRepo.getFoodList(name, pageable);
+	public Page<Food> getFoodList(FoodScanVo foodScanVo, int page, int size) {
+		Pageable pageable = null;
+		if (foodScanVo.getSortDirection().equals("ASC")) {
+			pageable = PageRequest.of(page-1, size, Direction.ASC, foodScanVo.getSortBy());
+		} else {
+			pageable = PageRequest.of(page-1, size, Direction.DESC, foodScanVo.getSortBy());
+		}
+		
+		String[][] searchType = foodScanVo.getSearchType();
+		
+		String searchField = foodScanVo.getSearchField();
+		String searchWord = foodScanVo.getSearchWord();
+		List<String> searchParams = new ArrayList<>();
+				
+		for (String[] field : searchType) {
+			if (field[0].equals(searchField)) {
+				searchParams.add(searchWord);
+			} else {
+				searchParams.add("");
+			}
+		}
+		
+		return foodRepo.getFoodList(searchParams.get(0), pageable);
 	}
 
 	@Override
@@ -41,6 +72,11 @@ public class AdminFoodServiceImpl implements AdminFoodService {
 		
 		foodRepo.save(fvo);
 		
+	}
+	
+	@Override
+	public void deleteFood(int fseq) {
+		foodRepo.deleteById(fseq);
 	}
 
 }

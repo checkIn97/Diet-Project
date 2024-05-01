@@ -2,12 +2,14 @@ package com.demo.service;
 
 
 import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Service;
 
 import com.demo.domain.Board;
+import com.demo.dto.BoardScanVo;
 
 public interface AdminBoardService {
 
-	Page<Board> getBoardList(String title, int page, int size);
+	public Page<Board> getBoardList(BoardScanVo boardScanVo, int page, int size);
+	public void deleteBoard(int bseq);
+	public Board getBoardByBseq(int bseq);
 	
 }

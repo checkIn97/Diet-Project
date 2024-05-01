@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:insert="~{/includes/header}"></th:block>
+
+<meta charset="UTF-8">
+<title>Food List</title>
+
+<h1><a href="admin_main">FoodNavi</a></h1>
+
+<article id="box">
+    <h2>음식 목록</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>등록번호</th>
+            <th>이미지</th>
+            <th>이름</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="food : ${foodList}">
+            <td>[[${food.fseq}]]</td>
+            <td th:if="${food.img == null}">없음</td>
+            <td th:if="${food.img != null}"><img th:src="${food.img}"></td>
+            <td><a th:href="@{admin_food_Detail(fseq=${food.fseq})}" th:text="${food.name}"></a></td>
+        </tr>
+        </tbody>
+    </table>
+    
+    <!-- 페이지 영역 -->
+    <!-- 리스트에 맞게 페이지가 입력되는 영역 -->
+	<!-- 리스트의 사이즈가 0인 경우에는 표시되지 않음 -->
+    <th:block id="page_insert" th:if="${pageInfo.totalPages != 0}" th:insert="~{/admin/include/food_page_area}"></th:block>
+
+    <form th:action="@{/admin_food_list}" method="get">
+        <label>
+            <input type="text" name="searchWord">
+        </label>
+        <a href="admin_food_insert_form"><button type="button">추가</button></a>
+        <button type="submit">검색</button>
+    </form>
+</article>
+<th:block th:insert="~{/includes/footer}"></th:block>

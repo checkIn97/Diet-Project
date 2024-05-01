@@ -424,3 +424,10 @@ document.getElementById("toggleButtonControl").addEventListener("click", functio
         toggleButton.style.display = "none";
     }
 });
+
+window.onload = function() {
+    var img = document.getElementById('img');
+    if (!img.getAttribute('src')) {
+        img.style.display = 'none';
+    }
+}

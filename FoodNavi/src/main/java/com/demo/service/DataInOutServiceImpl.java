@@ -3,19 +3,34 @@ package com.demo.service;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.demo.domain.Food;
 import com.demo.domain.FoodDetail;
+import com.demo.domain.FoodTable;
 import com.demo.domain.Users;
 import com.demo.persistence.FoodDetailScanRepository;
 import com.demo.persistence.FoodScanRepository;
+import com.demo.persistence.FoodTableRepository;
 import com.demo.persistence.UsersInOutRepository;
 
 @Service
 public class DataInOutServiceImpl implements DataInOutService {
+	
+	@Autowired
+	private FoodScanRepository foodScanRepo;
+	
+	@Autowired
+	private FoodDetailScanRepository foodDetailScanRepo;
+	
+	@Autowired
+	private UsersInOutRepository usersInOutRepo;
+	
+	@Autowired
+	private FoodTableRepository foodTableRepo;
 	
 	// food 더미데이터 생성을 위한 임시 데이터
 	private String[] foodStyle = {"한국식", "일본식", "중국식", "태국식", "이탈리아식", "프랑스식", "스페인식", "멕시코식", "러시아식"};	
@@ -76,21 +91,12 @@ public class DataInOutServiceImpl implements DataInOutService {
 	
 	private int[] heightMean = {170, 164};
 	private int[] weightMean = {70, 60};
+	private int heightChangeMale = 5;
+	private int heightChangeFemale = 3;
+	private int weightChangeMale = 5;
+	private int weightChangeFemale = 3;
 	
-	
-	
-
-	
-	
-	@Autowired
-	private FoodScanRepository foodScanRepo;
-	
-	@Autowired
-	private FoodDetailScanRepository foodDetailScanRepo;
-	
-	@Autowired
-	private UsersInOutRepository usersInOutRepo;
-	
+		
 	@Override
 	public void foodIn(String file, String n) {
 		int num = -1;
@@ -135,6 +141,10 @@ public class DataInOutServiceImpl implements DataInOutService {
 						foodDetailVo.setPrt(Float.parseFloat(input[3]));
 						foodDetailVo.setFat(Float.parseFloat(input[4]));
 						foodDetailVo.setCarb(Float.parseFloat(input[5]));
+						foodDetailVo.setTasteType("all");
+						foodDetailVo.setNationType("all");
+						foodDetailVo.setHealthyType("all");
+						foodDetailVo.setVeganType(0);
 						foodDetailScanRepo.save(foodDetailVo);
 						count++;
 						text = "";
@@ -182,6 +192,10 @@ public class DataInOutServiceImpl implements DataInOutService {
 					foodDetailVo.setCarb((int)(Math.random()*30 + 40));
 					foodDetailVo.setPrt((int)(Math.random()*40 + 30));
 					foodDetailVo.setKcal(foodDetailVo.getCarb()*4 + foodDetailVo.getPrt()*4 + foodDetailVo.getFat()*9);
+					foodDetailVo.setTasteType("all");
+					foodDetailVo.setNationType("all");
+					foodDetailVo.setHealthyType("all");
+					foodDetailVo.setVeganType(0);
 					foodDetailScanRepo.save(foodDetailVo);
 					count++;
 				}
@@ -319,11 +333,11 @@ public class DataInOutServiceImpl implements DataInOutService {
 					int heightIncrease = 0;
 					int weightIncrease = 0;
 					if (sex == 0 ) {
-						heightIncrease = 4;
-						weightIncrease = 5;
+						heightIncrease = heightChangeMale;
+						weightIncrease = weightChangeMale;
 					} else {
-						heightIncrease = 3;
-						weightIncrease = 3;
+						heightIncrease = heightChangeFemale;
+						weightIncrease = weightChangeFemale;
 					}
 					int height = heightMean[sex];
 					for (int i = 0 ; i < 10 ; i++) {
@@ -387,6 +401,39 @@ public class DataInOutServiceImpl implements DataInOutService {
 
 	@Override
 	public void usersOut(String file, String date) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void foodTableIn(String file, String n) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void foodTableInDummy(String n) {
+		int num = Integer.parseInt(n);
+		int totalUserCount = usersInOutRepo.getTotalUsersCount();
+		int totalFoodCount = foodScanRepo.getTotalFoodCount(); 
+		for (int i = 0 ; i < num ; i++) {
+			int tmp_useq = (int)(Math.random()*totalUserCount+1);
+			int tmp_fseq = (int)(Math.random()*totalFoodCount+1);
+			FoodTable tmp_foodTable = new FoodTable();
+			Users tmp_user = usersInOutRepo.findById(tmp_useq).get();
+			Food tmp_food = foodScanRepo.findById(tmp_fseq).get();
+			int serveNumber = (int)(Math.random()*3+1);
+			tmp_foodTable.setUser(tmp_user);
+			tmp_foodTable.setFood(tmp_food);
+			tmp_foodTable.setServeNumber(serveNumber);
+			tmp_foodTable.setServedDate(new Date());
+			foodTableRepo.save(tmp_foodTable);
+		}
+		
+	}
+
+	@Override
+	public void foodTableOut(String file, String date) {
 		// TODO Auto-generated method stub
 		
 	}

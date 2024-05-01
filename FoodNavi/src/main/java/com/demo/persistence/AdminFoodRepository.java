@@ -8,18 +8,19 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import com.demo.domain.Food;
+import com.demo.domain.Users;
 
 
 public interface AdminFoodRepository extends JpaRepository<Food, Integer> {
 
-	@Query(value="SELECT f FROM Food f "
-			+ "INNER JOIN FoodDetail fd ON fd.food.fseq = f.fseq "
-			+ "WHERE f.name LIKE %?1% ")
-	public Page<Food> getFoodList(String name, Pageable pageable);
+	@Query("SELECT food FROM Food food "
+			+ "WHERE food.name LIKE %:searchWord% ")
+	public Page<Food> getFoodList(String searchWord, Pageable pageable);
 	
 	@Query(value="SELECT f FROM Food f "
 			+ "INNER JOIN FoodDetail fd ON fd.fdseq = f.foodDetail.fdseq "
 			+ "WHERE fd.fdseq = ?1 ")
 	public List<Food> getFoodDetail(int fseq);
 	
+	public Food findFirstByOrderByFseqDesc();
 }

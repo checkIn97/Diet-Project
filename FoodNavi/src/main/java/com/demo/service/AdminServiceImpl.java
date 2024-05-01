@@ -18,22 +18,23 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public int adminCheck(Admin vo) {
 		int result = -1;
-		Optional<Admin> admin = adminRepo.findById(vo.getAseq());
-			if(admin.isEmpty()) {
-				result = -1;
-			} else if(vo.getAdminpw().equals(admin.get().getAdminpw())) {
-				result = 1;
-			} else {
-				result = 0;
-			}
-			
+		Optional<Admin> admin = adminRepo.findByAdminid(vo.getAdminid());
+		if(admin.isEmpty()) {
+			result = -1;
+		} else if(vo.getAdminpw().equals(admin.get().getAdminpw())) {
+			result = 1;
+		} else {
+			result = 0;
+		}
+		
+		
 		return result;	
 	}
 
 	@Override
 	public Admin getAdmin(String adminid) {
 		
-		return adminRepo.findByAdminid(adminid);
+		return adminRepo.findByAdminid(adminid).get();
 		
 	}
 

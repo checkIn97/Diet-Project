@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Food Navigator</title>
+<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+</head>
+<style>
+	table {
+		border: 1px solid black;
+		width: 1600px;
+		border-collapse:collapse;
+	}
+	
+	th, td {
+		border: 1px solid black;
+	}
+</style>
+<body>
+	<h2>User Info</h2>
+	<form method="post" action="">
+	<table>
+		<tr>
+			<th>아이디</th>
+			<td>[[${user.userid}]]</td>
+		</tr>
+		<tr>
+			<th>이름</th>
+			<td>[[${user.name}]]</td>
+		</tr>
+		<tr>
+			<th>성별</th>
+			<td>[[${user.sex}]]</td>
+		</tr>
+		<tr>
+			<th>나이</th>
+			<td>[[${user.age}]]</td>
+		</tr>
+		<tr>
+			<th>신장</th>
+			<td>[[${user.height}]] g</td>
+		</tr>
+		<tr>
+			<th>체중</th>
+			<td>[[${user.weight}]] g</td>
+		</tr>
+		<tr>
+			<th>목표</th>
+			<td></td>
+		</tr>		
+	</table>	
+		<input type="hidden" name="useq" th:value="${user.useq}">
+		<input type="submit" value="활동정지">
+	</form>
+	<a th:href="@{admin_user_list(page=${pageInfo.number +1})}"><button>목록 보기</button></a>	
+
+</body>
+</html>

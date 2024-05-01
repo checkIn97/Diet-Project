@@ -10,7 +10,9 @@ import com.demo.domain.Board;
 
 public interface AdminBoardRepository extends JpaRepository<Board, Integer> {
 
-	@Query("SELECT b FROM Board b Where b.title=?1")
-	public Page<Board> getBoardList(String title, Pageable pageable);
+	@Query("SELECT board FROM Board board "
+			+ "WHERE board.title LIKE %:title% "
+			+ "AND board.content LIKE %:content% ")
+	public Page<Board> getBoardList(String title, String content, Pageable pageable);
 	
 }

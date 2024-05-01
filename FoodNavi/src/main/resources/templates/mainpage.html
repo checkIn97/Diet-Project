@@ -21,11 +21,11 @@
         </div>
         <div class="content">
             <div class="inner">
-                <h1>[[${user.name}]] 님을 위한 오늘의 식단</h1>
-                <p> 오늘 섭취한 칼로리 0000kal </p>
+                <h1>[[${userVo.user.name}]] 님을 위한 오늘의 식단</h1>
+                <p> 오늘 섭취한 칼로리 0000kcal </p>
                 <p> 오늘 섭취한 영양소 탄수화물 000% 단백질 000% 지방 000% </p>
                 <button class="button" name="dietRecommendation" id="dietRecommendationButton" value="recommend">
-                    <a href="#dietRecommendation">식단추천</a></button>
+                    <a href="food_scan">식단추천</a></button>
                 <!--각 href 링크는 컨트롤러와 연결해야 합니다.-->
             </div>
         </div>
@@ -33,9 +33,9 @@
             <ul>
                 <!--각 href 링크는 컨트롤러와 연결해야 합니다.-->
                 <li><a href="/board_list">커뮤니티</a></li>
-                <li><a href="/mychange_view">나의변화</a></li>
-                <li><a href="/myactivity_view">나의활동</a></li>
-                <li><a href="/mypage_view">마이페이지</a></li>
+                <li><a href="/user_mychange_view">나의변화</a></li>
+                <li><a href="/user_myactivity_view">나의활동</a></li>
+                <li><a href="/user_mypage_view">마이페이지</a></li>
         </nav>
 
         <!--관리자 아이디로 로그인 하면 보이게 할 것-->
@@ -73,6 +73,7 @@ print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
     </footer>
 
 </div>
+
 
 <!-- BG -->
 <div id="bg"></div>

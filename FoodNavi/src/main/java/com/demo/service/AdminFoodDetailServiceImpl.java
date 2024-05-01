@@ -27,4 +27,11 @@ public class AdminFoodDetailServiceImpl implements AdminFoodDetailService {
 		
 	}
 
+
+	@Override
+	public void deleteFoodDetail(int fdseq) {
+		foodDetailRepo.deleteById(fdseq);
+		
+	}
+
 }
