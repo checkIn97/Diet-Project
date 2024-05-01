@@ -13,9 +13,10 @@
 		<input type="hidden" name="page" value=0>
 		<table>
 			<tr>
+				<td>검색단어</td>
 				<td>
 					<select name="searchField">
-						<th:block th:each="field : ${foodScanVo.fieldType}">
+						<th:block th:each="field : ${foodScanVo.searchType}">
 							<th:block th:if="${field[0] == foodScanVo.searchField}">
 								<option th:value="${field[0]}" selected>[[${field[1]}]]</option>
 							</th:block>
@@ -28,39 +29,112 @@
 				<td>
 					<input type="text" name="searchWord" th:value="${foodScanVo.searchWord}"/>
 				</td>
+				<td>제외단어</td>
+				<td>
+					<select name="banField">
+						<th:block th:each="field : ${foodScanVo.searchType}">
+							<th:block th:if="${field[0] == foodScanVo.banField}">
+								<option th:value="${field[0]}" selected>[[${field[1]}]]</option>
+							</th:block>
+							<th:block th:unless="${field[0] == foodScanVo.banField}">
+								<option th:value="${field[0]}">[[${field[1]}]]</option>
+							</th:block>						
+						</th:block>
+					</select>
+				</td>
+				<td>
+					<input type="text" name="banWord" th:value="${foodScanVo.banWord}"/>
+				</td>
 				<td>
 					<input type="button" value="검색" onclick="food_scan()"/>
 				</td>
 			</tr>
-			<th:block th:unless="${session.loginUser == null && session.loginUser != null}">
 			<tr>
 				<td>
-					<select name="perpose">
-						<option value="none">목적</option>
-						<option value="diet">다이어트</option>
-						<option value="blukup">벌크업</option>
+					<select name="tasteField">
+						<th:block th:each="field : ${foodScanVo.tasteType}">
+							<th:block th:if="${field[0] == foodScanVo.tasteField}">
+								<option th:value="${field[0]}" selected>[[${field[1]}]]</option>
+							</th:block>
+							<th:block th:unless="${field[0] == foodScanVo.tasteField}">
+								<option th:value="${field[0]}">[[${field[1]}]]</option>
+							</th:block>						
+						</th:block>
 					</select>
 				</td>
 				<td>
-					<select name="vegan">
-						<option value="n" selected>채식주의x</option>
-						<option value="y">채식주의O</option>
+					<select name="weightField">
+						<th:block th:each="field : ${foodScanVo.weightType}">
+							<th:block th:if="${field[0] == foodScanVo.weightField}">
+								<option th:value="${field[0]}" selected>[[${field[1]}]]</option>
+							</th:block>
+							<th:block th:unless="${field[0] == foodScanVo.weightField}">
+								<option th:value="${field[0]}">[[${field[1]}]]</option>
+							</th:block>						
+						</th:block>
+					</select>
+				</td>
+				<td>
+					<select name="veganField">
+						<th:block th:each="field : ${foodScanVo.veganType}">
+							<th:block th:if="${field[0] == foodScanVo.veganField}">
+								<option th:value="${field[0]}" selected>[[${field[1]}]]</option>
+							</th:block>
+							<th:block th:unless="${field[0] == foodScanVo.veganField}">
+								<option th:value="${field[0]}">[[${field[1]}]]</option>
+							</th:block>						
+						</th:block>
+					</select>
+				</td>
+				<td>
+					<select name="nationField">
+						<th:block th:each="field : ${foodScanVo.nationType}">
+							<th:block th:if="${field[0] == foodScanVo.nationField}">
+								<option th:value="${field[0]}" selected>[[${field[1]}]]</option>
+							</th:block>
+							<th:block th:unless="${field[0] == foodScanVo.nationField}">
+								<option th:value="${field[0]}">[[${field[1]}]]</option>
+							</th:block>						
+						</th:block>
+					</select>
+				</td>
+				<td>
+					<select name="healthyField">
+						<th:block th:each="field : ${foodScanVo.healthyType}">
+							<th:block th:if="${field[0] == foodScanVo.healthyField}">
+								<option th:value="${field[0]}" selected>[[${field[1]}]]</option>
+							</th:block>
+							<th:block th:unless="${field[0] == foodScanVo.healthyField}">
+								<option th:value="${field[0]}">[[${field[1]}]]</option>
+							</th:block>						
+						</th:block>
+					</select>
+				</td>
+				<td>
+					<select name="meahField">
+						<th:block th:each="field : ${foodScanVo.mealType}">
+							<th:block th:if="${field[0] == foodScanVo.mealField}">
+								<option th:value="${field[0]}" selected>[[${field[1]}]]</option>
+							</th:block>
+							<th:block th:unless="${field[0] == foodScanVo.mealField}">
+								<option th:value="${field[0]}">[[${field[1]}]]</option>
+							</th:block>						
+						</th:block>
 					</select>
 				</td>
 				<td>
 					<input type="button" value="추천검색" onclick="food_recommend()"/>
 				</td>
 			</tr>
-			</th:block>
 		</table>
 		<br>
 	</form>
 	<!-- 리스트가 입력되는 영역 -->
-	<th:block id="list_insert" th:insert="~{/food_scan/include/list_area}"></th:block>
+	<th:block id="list_insert" th:insert="~{/food_scan/include/food_list_area}"></th:block>
 	
 	<!-- 리스트에 맞게 페이지가 입력되는 영역 -->
 	<!-- 리스트의 사이즈가 0인 경우에는 표시되지 않음 -->
-    <th:block id="page_insert" th:if="${foodScanVo.pageInfo.totalPages != 0}" th:insert="~{/food_scan/include/page_area}"></th:block>
+    <th:block id="page_insert" th:if="${pageInfo.totalPages != 0}" th:insert="~{/food_scan/include/food_page_area}"></th:block>
 </body>
 <script>
 function food_scan() {

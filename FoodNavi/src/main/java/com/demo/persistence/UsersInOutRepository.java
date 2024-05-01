@@ -6,6 +6,11 @@ import org.springframework.data.jpa.repository.Query;
 import com.demo.domain.Users;
 
 public interface UsersInOutRepository extends JpaRepository<Users, Integer> {
+	
 	@Query("SELECT users FROM Users users WHERE users.userid=:userid ")
-	Users getUsersByUserid(String userid);
+	public Users getUsersByUserid(String userid);
+	
+	@Query("SELECT COUNT(users) FROM Users users ")
+	public int getTotalUsersCount();
+	
 }

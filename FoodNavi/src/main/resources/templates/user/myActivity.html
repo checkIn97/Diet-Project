@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<th:block th:include="~{/includes/header}"></th:block>
+<meta charset="UTF-8">
+
+<h1><a href="/mainpage">FoodNavi</a></h1>
+<!--myActivity-->
+<article id="box">
+    <h2 class="major">오늘 나의 운동시간</h2>
+    <form method="post" action="#">
+        <div class="fields">
+            <div class="field half">
+                <label for="exerciseType">운동 종류</label>
+                <select name="exerciseType" id="exerciseType">
+                    <option value="aerobic">유산소(런닝, 걷기 등등)</option>
+                    <option value="strength">근력운동(헬스, 필라테스 등등)</option>
+                    <option value="sports">스포츠(축구, 농구 등등)</option>
+                </select>
+            </div>
+            <div class="field half">
+                <label for="exerciseTime">운동 시간 <span id="rangeValue">0</span>분</label>
+                <input type="range" name="exerciseTime" id="exerciseTime" min="0" max="180" step="10"
+                       oninput="updateValue(this.value)"/>
+
+            </div>
+        </div>
+        <ul class="actions">
+            <li><input type="submit" value="기록하기" class="primary"/></li>
+            <li><input type="reset" value="다시쓰기"/></li>
+        </ul>
+    </form>
+</article>
+
+<th:block th:include="~{includes/footer}"></th:block>

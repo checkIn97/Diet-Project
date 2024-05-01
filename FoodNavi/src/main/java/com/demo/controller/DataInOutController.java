@@ -48,5 +48,13 @@ public class DataInOutController {
 		return "redirect:main";
 	}
 	
+	// history에 랜덤하게 더미데이터를 입력한다.
+	// n : 추가할 더미데이터의 숫자
+	@GetMapping("/foodTableindummy")
+	public String historyInDummy(@RequestParam(value="n", defaultValue="100") String n) {
+		dataInputService.foodTableInDummy(n);
+		return "redirect:main";
+	}
+	
 	
 }

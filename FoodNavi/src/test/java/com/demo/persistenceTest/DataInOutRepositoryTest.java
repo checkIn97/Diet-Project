@@ -1,4 +1,4 @@
-package com.demo.persistence;
+package com.demo.persistenceTest;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -18,7 +18,6 @@ public class DataInOutRepositoryTest {
 		// 입력할 더미 유저의 숫자
 		String n = "100";
 		dataInOutService.usersInDummy(n);
-		
 	}
 	
 	@Disabled
@@ -33,9 +32,16 @@ public class DataInOutRepositoryTest {
 	@Test
 	public void foodIn() {
 		// csv 파일에서 food와 foodDetail 입력
-		String n = "1000";
+		String n = "10000";
 		String file = "전국통합식품영양성분정보표준데이터_수정.csv";
 		dataInOutService.foodIn(file, n);
+	}
+	
+	@Disabled
+	@Test
+	public void foodTableInDummy() {
+		String n = "100";
+		dataInOutService.foodTableInDummy(n);
 	}
 	
 }

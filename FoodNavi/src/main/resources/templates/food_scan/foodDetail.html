@@ -18,6 +18,7 @@
 </style>
 <body>
 	<h2>Food Detail</h2>
+	<form method="post" action="food_table_in">
 	<table>
 		<tr>
 			<th>이미지</th>
@@ -51,7 +52,12 @@
 			<th>좋아요</th>
 			<td></td>
 		</tr>		
-	</table>
-	<a th:href="@{food_scan(page=${foodScanVo.pageInfo.number +1})}"><button>목록 보기</button></a>
+	</table>	
+		<input type="hidden" name="fseq" th:value="${foodVo.fseq}">
+		<input type="hidden" name="useq" th:value="${userVo.user.useq}">
+		<input type="submit" value="밥상에 추가하기">
+	</form>	
+	<a th:href="@{food_scan(page=${pageInfo.number +1})}"><button>목록 보기</button></a>
+	<a th:href="@{food_table_serve(useq=${userVo.user.useq})}"><button>밥상 차리기</button></a>
 </body>
 </html>

@@ -1,4 +1,4 @@
-package com.demo.persistence;
+package com.demo.persistenceTest;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -27,5 +27,12 @@ public class UsersRepoistoryTest {
 				.build();
 		
 		usersRepo.save(vo);
+	}
+	
+	@Disabled
+	@Test
+	public void deleteUsersTest() {
+		Users vo = usersRepo.findByUserid("sn").get();
+		usersRepo.delete(vo);
 	}
 }
