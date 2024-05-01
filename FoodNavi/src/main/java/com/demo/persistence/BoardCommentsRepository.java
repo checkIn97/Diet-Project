@@ -10,7 +10,9 @@ import com.demo.domain.Comments;
 
 public interface BoardCommentsRepository extends JpaRepository<Comments, Integer> {
 	
-	@Query("SELECT c FROM Comments c WHERE c.board.bseq = ?1")
+	@Query("SELECT c FROM Comments c "
+			+ "WHERE c.board.bseq = ?1 "
+			+ "ORDER BY c.cseq DESC ")
 		List<Comments> findCommentsByBseq(int bseq);
 	
 	@Query("SELECT COUNT(c) FROM Comments c " +

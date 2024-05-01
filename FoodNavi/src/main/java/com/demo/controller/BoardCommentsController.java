@@ -17,6 +17,7 @@ import com.demo.domain.Comments;
 import com.demo.domain.Users;
 import com.demo.service.BoardCommentsService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @RestController
@@ -28,9 +29,12 @@ public class BoardCommentsController {
 
 	@GetMapping("/current-user")
 	@ResponseBody
-	public int getCurrentUser(HttpSession session) {
+	public int getCurrentUser(HttpSession session, HttpServletRequest request) {
 		
-		Users user = (Users) session.getAttribute("loginUser");
+		// 세션에서 사용자 정보 가져오기
+    	Users user = (Users) session.getAttribute("loginUser");
+        
+    	
 		int currentUser = user.getUseq();
 		
 		

@@ -12,11 +12,14 @@ import com.demo.domain.Board;
 
 public interface BoardRepository extends JpaRepository<Board, Integer> {
 
-    Page<Board> findAllByOrderByCreatedAtDesc(Pageable pageable);
+	Page<Board> findAllByOrderByCreatedAtDesc(Pageable pageable);
 
-    @Modifying
-    @Query("update Board p set p.cnt = p.cnt+1 where p.bseq = :bseq")
-    int updateCnt(@Param("bseq") int bseq);
-
-    Page<Board> findByTitleContaining(String serchKeyword, Pageable pageable);
+	@Modifying
+	@Query("update Board p set p.cnt = p.cnt+1 where p.bseq = :bseq")
+	int updateCnt(@Param("bseq") int bseq);
+	
+	@Query("SELECT board FROM Board board "
+			+ "WHERE board.title LIKE %:title% "
+			+ "AND board.content LIKE %:content% ")
+	Page<Board> findBoardList(String title, String content, Pageable pageable);
 }

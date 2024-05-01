@@ -1,15 +1,5 @@
 package com.demo.service;
 
-import java.util.List;
-
-import com.demo.domain.Admin;
-import com.demo.domain.Board;
-import com.demo.domain.Comments;
-import com.demo.domain.Food;
-import com.demo.domain.FoodDetail;
-import com.demo.domain.Rcd;
-import com.demo.domain.Users;
-
 public interface DataInOutService {
 	
 	public void adminIn(String file, String n);
@@ -39,5 +29,9 @@ public interface DataInOutService {
 	public void usersIn(String file, String n);
 	public void usersInDummy(String n);
 	public void usersOut(String file, String date);	
+	
+	public void foodTableIn(String file, String n);
+	public void foodTableInDummy(String n);
+	public void foodTableOut(String file, String date);
 
 }

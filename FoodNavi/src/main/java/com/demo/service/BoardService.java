@@ -6,26 +6,27 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.demo.domain.Board;
+import com.demo.dto.BoardScanVo;
 
 public interface BoardService {
+	
+	void insertBoard(Board vo);
+	
+	Board getBoard(int bseq);
+	
+	List<Board> getBoardList(String userid);
+	
+	Page<Board> findBoardList(BoardScanVo boardScanVo, int page, int size);
 
-    void insertBoard(Board vo);
-
-    Board getBoard(int bseq);
-
-    List<Board> getBoardList(String userid);
-
-    Page<Board> findBoardList(String searchKeyword, Pageable pageable);
-
-    Page<Board> getListAllBoard(Pageable pageable);
-
-    void editBoard(Board vo);
-
-    void deleteBoard(int bseq);
-
-    int updateCnt(int bseq);
-
-
-
-
+	Page<Board> getListAllBoard(Pageable pageable);
+	
+	void editBoard(Board vo);
+	
+	void deleteBoard(int bseq);
+	
+	int updateCnt(int bseq);
+	
+	
+	
+	
 }

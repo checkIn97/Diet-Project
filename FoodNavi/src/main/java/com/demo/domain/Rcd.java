@@ -30,9 +30,12 @@ public class Rcd {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int rseq;
 	
-	private int cnt;
-	
 	@ManyToOne()
 	@JoinColumn(name="useq", nullable=false)
 	private Users user;
+	
+	@ManyToOne()
+	@JoinColumn(name="fseq", nullable=false)
+	private Food fseq;
+	
 }

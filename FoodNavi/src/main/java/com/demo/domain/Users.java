@@ -42,20 +42,15 @@ public class Users {
 	private String name;
 	
 	@Column(length=1)
-	private String sex;	
+	private String sex;
 	
 	private int age;
 	private int height;
 	private int weight;
-	
-	@OneToMany(mappedBy="user", fetch=FetchType.EAGER)
-	private List<Board> boardList = new ArrayList<>();
-	
-	@OneToMany(mappedBy="user", fetch=FetchType.EAGER)
-	private List<Comments> commentList = new ArrayList<>();
+	private String userGoal;
+	private String useyn;
 	
 	@OneToMany(mappedBy="user", fetch=FetchType.EAGER)
 	private List<Rcd> likeList = new ArrayList<>();
-	
-	
+		
 }

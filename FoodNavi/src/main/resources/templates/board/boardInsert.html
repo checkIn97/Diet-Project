@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
-<th:block th:include="~{/includes/headerMain}"></th:block>
+<th:block th:include="~{/includes/header}"></th:block>
 <meta charset="UTF-8">
 
 <h1><a href="/mainpage">FoodNavi</a></h1>
@@ -8,25 +8,25 @@
 <article id="box">
 
     <h2>커뮤니티 게시글 작성</h2>
-    <form name="form" method="post" enctype="multipart/form-data" action="board_write">
+    <form name="form" method="post" enctype="multipart/form-data" action="board_insert">
         <div>
             <label for="title">Title</label>
             <input type="text" id="title" name="title">
         </div>
 
         <div>
-            <label for="summernote">Content</label>
-            <textarea id="summernote" name="content" rows="50" cols="100"></textarea>
+            <label for="content">Content:</label>
+            <textarea id="summernote" name="content" ></textarea>
         </div>
 
         <div>
             <label for="img">이미지 첨부 :</label>
-            <input type="file" id="img" name="img" accept="images/*" class="button">
+            <input type="file" id="img" name="img" accept="uploadImages/*" class="button">
         </div>
 
 
         <button type="submit" class="button">게시글 등록</button>
-        <button type="reset" class="button">다시 쓰기</button>
+        
         <button type="button" onclick="window.location.href='/board_list'" class="button">돌아가기</button>
     </form>
 
