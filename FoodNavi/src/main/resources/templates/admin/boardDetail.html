@@ -1,11 +1,15 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<th:block th:insert="~{/includes/header}"></th:block>
+<th:block th:include="~{/admin/include/headerAdmin}"></th:block>
 
 <meta charset="UTF-8">
 <title>게시글 상세보기</title>
 
-<article>
+<h1>
+	<a href="admin_main">FoodNavi</a>
+</h1>
+
+<article class="box">
 	<div class="container">
 		<h2 class="mb-4">게시글 상세보기</h2>
 		<div class="card">
@@ -38,11 +42,11 @@
 
 				<div class="btn-group">
 					<form action="admin_board_delete" method="get">
-						<button type="submit" class="btn btn-danger">삭제하기</button>
+						<button type="submit" class="primary">삭제하기</button>
 					</form>
 
 					<!-- 목록으로 돌아가기 -->
-					<a th:href="@{admin_board_list(page=${pageInfo.number +1})}" class="btn btn-primary">목록으로 돌아가기</a>
+					<a th:href="@{admin_board_list(page=${pageInfo.number +1})}" class="button">목록으로 돌아가기</a>
 				</div>
 			</div>
 		</div>

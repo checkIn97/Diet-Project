@@ -1682,3 +1682,10 @@ input[type=range]::-moz-range-thumb {
     padding: 25px;
     border-radius: 10px;
 }
+
+input[type="number"]{
+    background: transparent;
+    border: 1px solid #ffffff;
+    border-radius: 4px;
+    color: #ffffff;
+}

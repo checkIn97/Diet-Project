@@ -58,7 +58,7 @@ public class BoardController {
     }
 
    
-    
+//    img 주소 넣는곳
     private static final String UPLOAD_DIRECTORY = "c:\\";
 
     // 게시글 작성

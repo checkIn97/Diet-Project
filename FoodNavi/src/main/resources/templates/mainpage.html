@@ -5,6 +5,7 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
     <link rel="stylesheet" href="/assets/css/main.css"/>
+    <link rel="stylesheet" href="/assets/css/bgMain.css"/>
     <noscript>
         <link rel="stylesheet" href="/assets/css/noscript.css"/>
     </noscript>
@@ -25,7 +26,7 @@
                 <p> 오늘 섭취한 칼로리 0000kcal </p>
                 <p> 오늘 섭취한 영양소 탄수화물 000% 단백질 000% 지방 000% </p>
                 <button class="button" name="dietRecommendation" id="dietRecommendationButton" value="recommend">
-                    <a href="food_scan">식단추천</a></button>
+                    <a href="/foodRecommendation">식단추천</a></button>
                 <!--각 href 링크는 컨트롤러와 연결해야 합니다.-->
             </div>
         </div>
@@ -39,7 +40,9 @@
         </nav>
 
         <!--관리자 아이디로 로그인 하면 보이게 할 것-->
-        <button class="primary" name="admin" id="admin" value="admin"><a href="#admin">관리자</a></button>
+<!--        <button class="primary" name="admin" id="admin" value="admin"><a href="#admin">관리자</a></button>-->
+        <!--로그아웃 버튼-->
+        <button class="button" name="#" id="logout" value="logout"><a href="#">로그아웃</a></button>
 
     </header>
 
