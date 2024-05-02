@@ -174,14 +174,22 @@ public class UsersController {
 	@PostMapping("/user_update")
 	public String updateAction(HttpSession session, Users vo, Model model) {
 		Users user = (Users)session.getAttribute("loginUser");
+		String PATTERN_PW = "^(?=.*[a-zA-Z])((?=.*\\d)|(?=.*\\W)).{8,128}+$";
+		boolean pwPattern = Pattern.matches(PATTERN_PW, vo.getUserpw());
 		
-		user.setUserpw(vo.getUserpw());
-		user.setAge(vo.getAge());
-		user.setHeight(vo.getHeight());
-		user.setWeight(vo.getWeight());
-		usersRepo.save(user);
-		model.addAttribute("msg", "회원정보 수정이 완료되었습니다.");
-		return "user/updateResult";
+		if (pwPattern == false) {
+			model.addAttribute("warn", "비밀번호는 영문 소문자, 대문자, 숫자, 특수문자를 반드시 하나씩 포함하여 8자리 이상 입력하셔야 합니다.");
+			return "user/alertPage";
+		} else {
+
+			user.setUserpw(vo.getUserpw());
+			user.setAge(vo.getAge());
+			user.setHeight(vo.getHeight());
+			user.setWeight(vo.getWeight());
+			usersRepo.save(user);
+			model.addAttribute("msg", "회원정보 수정이 완료되었습니다.");
+			return "user/updateResult";
+		}
 	}
 	
 	// 삭제방식 변경 필요
