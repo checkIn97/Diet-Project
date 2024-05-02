@@ -1,0 +1,108 @@
+<!-- toggleButton.html -->
+<div id="toggleButton" class="box">
+
+
+    <div class="field">
+        <label>목적</label>
+        <div class="field half  checkbox-button">
+            <input class="btn" type="checkbox" name="purpose" id="diet" value="#" checked/>
+            <label for="diet">다이어트</label>
+        </div>
+        <div class="field half checkbox-button">
+            <input class="btn" type="checkbox" name="purpose" id="bulkUp" value="#"/>
+            <label for="bulkUp">벌크업</label>
+        </div>
+    </div>
+
+
+    <div class="field">
+        <label for="dietType">식단 종류</label>
+        <select name="exerciseType" id="dietType">
+            <option value="healthyFood">건강식</option>
+            <option value="diabeticDiet">당뇨식</option>
+            <option value="lowSaltDiet">저염식</option>
+            <option value="lowCarbohydrate">저탄고지</option>
+        </select>
+    </div>
+
+    <div class="field">
+        <label>알레르기</label>
+        <div class="field half  checkbox-button">
+            <input class="btn" type="checkbox" name="purpose" id="egg" value="#"/>
+            <label for="egg">계란</label>
+        </div>
+        <div class="field half checkbox-button">
+            <input class="btn" type="checkbox" name="purpose" id="milk" value="#"/>
+            <label for="milk">우유</label>
+        </div>
+        <div class="field half checkbox-button">
+            <input class="btn" type="checkbox" name="purpose" id="bean" value="#"/>
+            <label for="bean">콩</label>
+        </div>
+        <div class="field half checkbox-button">
+            <input class="btn" type="checkbox" name="purpose" id="shellfish" value="#"/>
+            <label for="shellfish">갑각류</label>
+        </div>
+
+        <div class="field half">
+            <label for="otherInput">다른 알레르기를 입력하세요:</label>
+            <input type="text" id="otherInput" name="otherInput">
+            <button class="button" name="#" value="#">전송</button>
+        </div>
+    </div>
+
+    <div class="field">
+        <label>맛 추천</label>
+        <div class="field half  checkbox-button">
+            <input class="btn" type="checkbox" name="purpose" id="Spicy" value="#"/>
+            <label for="Spicy">매운맛</label>
+        </div>
+        <div class="field half checkbox-button">
+            <input class="btn" type="checkbox" name="purpose" id="sweetness" value="#"/>
+            <label for="sweetness">단맛</label>
+        </div>
+        <div class="field half checkbox-button">
+            <input class="btn" type="checkbox" name="purpose" id="salty" value="#"/>
+            <label for="salty">짠맛</label>
+        </div>
+        <div class="field half checkbox-button">
+            <input class="btn" type="checkbox" name="purpose" id="sour" value="#"/>
+            <label for="sour">신맛</label>
+        </div>
+        <div class="field half checkbox-button">
+            <input class="btn" type="checkbox" name="purpose" id="bitter" value="#"/>
+            <label for="bitter">쓴맛</label>
+        </div>
+        <div class="field half checkbox-button">
+            <input class="btn" type="checkbox" name="purpose" id="light" value="#"/>
+            <label for="light">담백한 맛</label>
+        </div>
+    </div>
+
+    <div class="field">
+        <label for="vegetarian">채식 여부</label>
+        <select name="exerciseType" id="vegetarian">
+            <option value="noVegetarian">해당 사항 없음</option>
+            <option value="pollo">폴로(닭과 조류는 먹음)</option>
+            <option value="pesco">페스코(어패류는 먹음)</option>
+            <option value="lactoOvo">락토오보(달걀 우유는 먹음)</option>
+            <option value="lacto">락토(유제품은 먹음)</option>
+            <option value="vegan">비건(순수 채식 만함)</option>
+        </select>
+    </div>
+
+    <div class="field">
+        <label for="foodCountry">나라별 음식</label>
+        <select name="exerciseType" id="foodCountry">
+            <option value="koreanFood">한식</option>
+            <option value="westernFood">양식</option>
+            <option value="chineseFood">중식</option>
+            <option value="japaneseFood">일식</option>
+            <option value="asianFood">동남아식</option>
+            <option value="fusionFood">퓨전식</option>
+        </select>
+    </div>
+
+</div>
+
+<button id="toggleButtonControl">상세 조건</button>
