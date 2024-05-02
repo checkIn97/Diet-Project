@@ -24,10 +24,10 @@
 
 <!-- 페이지 번호가 표시되는 영역 구현 -->
 <div id="page_area">
-	<ul class="pagination" th:with="start=${T(java.lang.Math).floor(pageInfo.number/boardScanVo.pageMaxDisplay)*boardScanVo.pageMaxDisplay + 1},
-														   last=(${start + boardScanVo.pageMaxDisplay-1 < pageInfo.totalPages ? start + boardScanVo.pageMaxDisplay-1 : pageInfo.totalPages})">
+	<ul class="pagination" th:with="start=${T(java.lang.Math).floor(pageInfo.number/foodScanVo.pageMaxDisplay)*foodScanVo.pageMaxDisplay + 1},
+														   last=(${start + foodScanVo.pageMaxDisplay-1 < pageInfo.totalPages ? start + foodScanVo.pageMaxDisplay-1 : pageInfo.totalPages})">
   		<th:block th:with="
-  			next_url=@{admin_board_list},
+  			next_url=${foodScanVo.recommend} ? 'food_recommend' : 'food_scan',
   			firstPage=@{${next_url}(page=1)},
   			previous=@{${next_url}(page=${pageInfo.number})},
   			next=@{${next_url}(page=${pageInfo.number + 2})},
