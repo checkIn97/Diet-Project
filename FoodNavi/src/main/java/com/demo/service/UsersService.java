@@ -1,5 +1,7 @@
 package com.demo.service;
 
+import java.util.List;
+
 import com.demo.domain.Users;
 
 public interface UsersService {
@@ -12,4 +14,6 @@ public interface UsersService {
 	public Users getUserByMaxUseq();
 	
 	public int compareID(String id);
+	
+	public List<Users> getUserListByUseyn(String useyn); // 탈퇴여부로 검색
 }
