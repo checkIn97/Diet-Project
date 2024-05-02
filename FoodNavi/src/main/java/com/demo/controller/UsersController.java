@@ -193,7 +193,7 @@ public class UsersController {
 	}
 	
 	// 삭제방식 변경 필요
-	@PostMapping("/user_delete")
+	@GetMapping("/user_delete")
     public String deleteAction(HttpSession session, Model model, Users vo) {
 		Users user = (Users)session.getAttribute("loginUser");
 		user.setUseyn("n");
