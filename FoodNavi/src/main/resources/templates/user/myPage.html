@@ -2,49 +2,71 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <th:block th:include="~{/includes/headerMain}"></th:block>
 <meta charset="UTF-8">
-
-<h1><a href="/mainpage">FoodNavi</a></h1>
+<script th:inline="javascript">
+    function delete_user() {
+        /*<![CDATA[*/
+        window.location.href="user_delete";
+        /*]]>*/
+    }
+</script>
+<h1>
+    <a href="/mainpage">FoodNavi</a>
+</h1>
 
 <!-- myPage -->
 <article id="box">
     <h2 class="major">마이페이지</h2>
-    <form method="post" action="login.html">
+    <form method="post" action="user_update">
         <div class="fields">
+
+
             <!--회원 id는 표시만 되고 수정은 안된다.-->
             <div class="field half">
                 <label for="userId">아이디</label>
-                <input type="text" name="userId" id="userId"/>
+                <input type="text" name="userid" id="userId" th:value="${user.userid}" readonly/>
             </div>
             <div class="field half">
                 <label for="userName">이름</label>
-                <input type="text" name="userName" id="userName"/>
+                <input type="text" name="name" id="userName" th:value="${user.name}" readonly/>
             </div>
             <div class="field half">
                 <label for="userPassword">비밀번호</label>
-                <input type="password" name="userPassword" id="userPassword"/>
+                <input type="password" name="userpw" id="userPassword"/>
             </div>
 
 
             <div class="field half">
                 <label for="userAge">나이</label>
-                <input type="text" name="userAge" id="userAge"/>
+                <input type="text" name="age" id="userAge" th:value="${user.age}"/>
             </div>
             <div class="field half">
                 <label for="userHeight">키</label>
-                <input type="text" name="userHeight" id="userHeight"/>
+                <input type="text" name="height" id="userHeight" th:value="${user.height}"/>
             </div>
             <div class="field half">
                 <label for="userWeight">몸무게</label>
-                <input type="text" name="userWeight" id="userWeight"/>
+                <input type="text" name="weight" id="userWeight" th:value="${user.weight}"/>
             </div>
 
-        </div>
+            <div class="field half">
+                <label>당신의 목표</label>
 
-        <div class="field half">
-            <input type="submit" value="정보 수정" class="primary"/>
-            <input type="button" value="회원탈퇴" class="button"/>
-        </div>
+                <div class="field half radio-button">
+                    <input class="btn" type="radio" name="userGoal" id="bulkUp" value="bulkUp"/>
+                    <label for="bulkUp">벌크업</label>
+                </div>
+                <div class="field half radio-button">
+                    <input class="btn" type="radio" name="userGoal" id="diet" value="diet"/>
+                    <label for="diet">다이어트</label>
+                </div>
 
+            </div>
+
+            <div class="field half">
+                <input type="submit" value="정보 수정" class="primary"/> <input
+                    type="button" value="회원탈퇴" class="button" onclick="delete_user()" />
+            </div>
+        </div>
     </form>
 </article>
 
