@@ -1,5 +1,6 @@
 package com.demo.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,8 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.demo.domain.Users;
 import com.demo.persistence.UsersRepository;
-
-import jakarta.servlet.http.HttpSession;
 
 @Service
 public class UsersServiceImpl implements UsersService {
@@ -33,7 +32,7 @@ public class UsersServiceImpl implements UsersService {
 	
 		// 결과값 설정 :
 		// 1: ID,PWD 일치, 0: 비밀번호 불일치, -1: ID가 존재하지 않음.
-		if(user.isEmpty()) {
+		if(user.isEmpty() || user.get().getUseyn() == "n") {
 			result = -1;
 		} else if(user.get().getUserpw().equals(vo.getUserpw())) {
 			result = 1;
@@ -68,5 +67,12 @@ public class UsersServiceImpl implements UsersService {
 		}
 		
 		return result;
+	}
+
+	@Override
+	public List<Users> getUserListByUseyn(String useyn) {
+		List<Users> userList = usersRepo.getUserListByUseyn(useyn);
+		
+		return userList;
 	}
 }
