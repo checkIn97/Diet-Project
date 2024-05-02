@@ -1,12 +1,22 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
-<th:block th:include="~{/includes/header}"></th:block>
+<th:block th:include="~{/includes/headerMain}"></th:block>
 <meta charset="UTF-8">
-<h1><a href="/mainpage">FoodNavi</a></h1>
+<script th:inline="javascript">
+	function delete_user() {
+		/*<![CDATA[*/
+			window.location.href="user_delete";
+		/*]]>*/
+	}
+</script>
+<h1>
+	<a href="/mainpage">FoodNavi</a>
+</h1>
+
 <!-- myPage -->
 <article id="box">
-    <h2 class="major">마이페이지</h2>
-    <form method="post" action="user_update">
+	<h2 class="major">마이페이지</h2>
+<form method="post" action="user_update">
         <div class="fields">
 
             
@@ -53,10 +63,11 @@
             </div>
 
             <div class="field half">
-                <input type="submit" value="정보 수정" class="primary"/>
-            </div>
-        </div>
-    </form>
+                <input type="submit" value="정보 수정" class="primary"/> <input
+				type="button" value="회원탈퇴" class="button" onclick="delete_user()" />
+		</div>
+
+	</form>
 </article>
 
 <th:block th:include="~{includes/footer}"></th:block>
