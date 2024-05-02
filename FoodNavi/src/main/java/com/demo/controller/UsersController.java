@@ -123,7 +123,7 @@ public class UsersController {
 		
 		status.setComplete();
 				
-		return "/";
+		return "index";
 	}
 	
 	@PostMapping("/user_change_weight")
