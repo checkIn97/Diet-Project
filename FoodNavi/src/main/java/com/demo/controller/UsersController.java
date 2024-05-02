@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
 
 import com.demo.domain.Users;
 import com.demo.dto.UserVo;
@@ -28,35 +29,58 @@ public class UsersController {
 	public String joinView() {
 		return "/user/membership";
 	}
-
+	
 	@PostMapping("/user_join")
 	public String joinAction(Users vo, Model model, HttpSession session) {
-		String PATTERN_ID = "^[a-z]{1}[a-z0-9]{5,10}+$";
-		String PATTERN_PW = "^(?=.*[a-zA-Z])((?=.*\\d)|(?=.*\\W)).{8,128}+$";
-		boolean idPattern = Pattern.matches(PATTERN_ID, vo.getUserid());
-		boolean pwPattern = Pattern.matches(PATTERN_PW, vo.getUserpw());
-		if (usersService.compareID(vo.getUserid()) == 0) {
-			model.addAttribute("msg", "이미 존재하는 아이디 입니다.");
-            return "/user/alertPage"; 
-		} else if (vo.getUserid() == null) {
-			model.addAttribute("msg", "아이디를 입력해주세요.");
-			return "/user/alertPage";
-		} else if (!idPattern) {
-			model.addAttribute("msg", "아이디는 영문, 숫자 포함 6자리 이상 입력하셔야 합니다.");
-            return "/user/alertPage"; 
-		} else if (!pwPattern) {
-			model.addAttribute("msg", "비밀번호는 영문 소문자, 대문자, 숫자, 특수문자를 반드시 하나씩 포함하여 8자리 이상 입력하셔야 합니다.");
-            return "/user/alertPage"; 
+		int success = (int)session.getAttribute("success");
+		if (success == -1) {
+			model.addAttribute("msg", "비밀번호를 정확히 입력해주세요.");
+			return "user/alertPage";
 		} else {
 			Users user = Users.builder().userid(vo.getUserid()).userpw(vo.getUserpw()).name(vo.getName()).sex(vo.getSex())
-					.build();
+					.userGoal(vo.getUserGoal()).useyn("y").build();
 			session.setAttribute("joinUser", user);
-			
+	
+			return "user/bmi";
 		}
-		return "user/bmi";
 	}
-
-
+	
+//	ID 중복 확인 처리
+	@GetMapping("/id_check_form")
+	public String idCheckView(Users vo, Model model) {
+		int result = usersService.compareID(vo.getUserid());
+		String PATTERN_ID = "^[a-z]{1}[a-z0-9]{5,10}+$";
+		boolean idPattern = Pattern.matches(PATTERN_ID, vo.getUserid());
+		
+		if (!idPattern) {
+			model.addAttribute("msg", "아이디는 영문, 숫자 포함 6자리 이상 입력하셔야 합니다.");
+		} 
+		
+		model.addAttribute("message", result);
+		model.addAttribute("userid", vo.getUserid());
+		
+		return "user/idcheck";
+	}
+	
+	// 비밀번호 확인
+	@GetMapping("/pw_confirm") 
+	public String pwCheck(Users vo, Model model, HttpSession session) {
+		String PATTERN_PW = "^(?=.*[a-zA-Z])((?=.*\\d)|(?=.*\\W)).{8,128}+$";
+		boolean pwPattern = Pattern.matches(PATTERN_PW, vo.getUserpw());
+		int success = -1;
+		
+		if (!pwPattern) {
+			model.addAttribute("msg", "비밀번호는 영문 소문자, 대문자, 숫자, 특수문자를 반드시 하나씩 포함하여 8자리 이상 입력하셔야 합니다.");
+			session.setAttribute("success", success);
+		} else {
+			success = 1;
+			model.addAttribute("msg", "비밀번호가 일치합니다.");
+			session.setAttribute("success", success);
+		}
+		
+		return "user/pwConfirm";
+	}
+	
 	 @PostMapping("/user_insertBMI") 
 	 public String insertBMI(Users vo, HttpSession session) { 
 		 Users user = (Users)session.getAttribute("joinUser"); 
@@ -91,6 +115,15 @@ public class UsersController {
 		}
 
 		return url;
+	}
+	
+//	로그아웃 처리
+	@GetMapping("/logout")
+	public String logout(SessionStatus status) {
+		
+		status.setComplete();
+				
+		return "/";
 	}
 	
 	@PostMapping("/user_change_weight")
@@ -130,9 +163,18 @@ public class UsersController {
 		return "user/myActivity";
 	}
 	
+	@GetMapping("/pw_check")
+	public String pwCheckView(HttpSession session, Model model) {
+		String userpw = ((Users)session.getAttribute("loginUser")).getUserpw();
+		System.out.println(userpw);
+		model.addAttribute("sessionpw", userpw);
+		return "user/pwCheck";
+	}
+	
 	@PostMapping("/user_update")
 	public String updateAction(HttpSession session, Users vo, Model model) {
 		Users user = (Users)session.getAttribute("loginUser");
+		
 		user.setUserpw(vo.getUserpw());
 		user.setAge(vo.getAge());
 		user.setHeight(vo.getHeight());
@@ -146,7 +188,8 @@ public class UsersController {
 	@PostMapping("/user_delete")
     public String deleteAction(HttpSession session, Model model, Users vo) {
 		Users user = (Users)session.getAttribute("loginUser");
-		usersRepo.delete(user);
+		user.setUseyn("n");
+		usersRepo.save(user);
 		model.addAttribute("msg", "회원탈퇴가 완료되었습니다.");
 		
 		return "user/deleteResult";
