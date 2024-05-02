@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:include="~{/admin/include/headerAdmin}"></th:block>
+
+<meta charset="UTF-8">
+<title>Board List</title>
+
+<h1>
+	<a href="admin_main">FoodNavi</a>
+</h1>
+
+<article id="box">
+	<h2>커뮤니티 게시글 목록</h2>
+	<table>
+		<thead>
+			<tr>
+				<th>제목</th>
+				<th>내용</th>
+				<th>작성자</th>
+				<th>작성일시</th>
+				<th>조회수</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="board : ${boardList}">
+
+				<td><a th:href="@{admin_board_detail(bseq=${board.bseq})}"
+					th:text="${board.title}"></a> <input type="hidden" id="bseq"
+					name="bseq" th:value="${board.bseq}" /></td>
+				<td th:utext="${board.content}"></td>
+				<td th:text="${board.user.userid}"></td>
+				<td
+					th:text="${#dates.format(board.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
+				<td th:text="${board.cnt}"></td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<!-- 페이지 영역 -->
+    <!-- 리스트에 맞게 페이지가 입력되는 영역 -->
+	<!-- 리스트의 사이즈가 0인 경우에는 표시되지 않음 -->
+    <th:block id="page_insert" th:if="${pageInfo.totalPages != 0}" th:insert="~{/admin/include/board_page_area}"></th:block>
+	<form th:action="@{/admin_board_list}" method="get">
+		<label> <input type="text" name="searchWord">
+		</label>
+		<button type="submit">검색</button>
+	</form>
+
+
+</article>
+<th:block th:insert="~{/includes/footer}"></th:block>

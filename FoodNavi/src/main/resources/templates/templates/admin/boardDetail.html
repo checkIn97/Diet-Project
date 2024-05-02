@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:include="~{/admin/include/headerAdmin}"></th:block>
+
+<meta charset="UTF-8">
+<title>게시글 상세보기</title>
+
+<h1>
+	<a href="admin_main">FoodNavi</a>
+</h1>
+
+<article class="box">
+	<div class="container">
+		<h2 class="mb-4">게시글 상세보기</h2>
+		<div class="card">
+			<div class="card-header">
+				<h3 th:text="${board.title}">제목</h3>
+			</div>
+			<div class="card-body">
+				<div class="info">
+					<div>
+						<input type="hidden" name="bseq" th:value="${board.bseq}"><br>
+						작성자: <span th:text="${board.user.userid}">작성자명</span>
+
+					</div>
+					<div>
+						작성일시: <span
+							th:text="${#dates.format(board.createdAt, 'yyyy-MM-dd HH:mm:ss')}">날짜시간</span>
+					</div>
+					<div>
+						조회수: <span th:text="${board.cnt}+1">조회수</span>
+					</div>
+
+				</div>
+
+				<img class="thumbnail"
+					th:if="${board.img}"
+					th:src="@{/uploadImages/{fileName}(fileName=${board.img})}"
+					alt="Image">
+
+				<p class="card-text" th:utext="${board.content}">내용</p>
+
+				<div class="btn-group">
+					<form action="admin_board_delete" method="get">
+						<button type="submit" class="primary">삭제하기</button>
+					</form>
+
+					<!-- 목록으로 돌아가기 -->
+					<a th:href="@{admin_board_list(page=${pageInfo.number +1})}" class="button">목록으로 돌아가기</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<th:block th:insert="~{/admin/boardComments}"></th:block>
+</article>
+
+<th:block th:insert="~{/includes/footer}"></th:block>
