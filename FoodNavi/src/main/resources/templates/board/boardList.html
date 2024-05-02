@@ -15,7 +15,6 @@
 		<thead>
 			<tr>
 				<th>제목</th>
-				<th>내용</th>
 				<th>작성자</th>
 				<th>작성일시</th>
 				<th>조회수</th>
@@ -27,7 +26,6 @@
 				<td><a th:href="@{'/board_detail/' + ${board.bseq}}"
 					th:text="${board.title}"></a> <input type="hidden" id="bseq"
 					name="bseq" th:value="${board.bseq}" /></td>
-				<td th:utext="${board.content}"></td>
 				<td th:text="${board.user.userid}"></td>
 				<td
 					th:text="${#dates.format(board.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></td>

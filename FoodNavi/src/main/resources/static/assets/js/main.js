@@ -432,8 +432,12 @@ window.onload = function() {
     }
 }
 
-// 토글 버튼의 초기 상태를 설정합니다. 이 예제에서는 버튼이 'off' 상태로 시작합니다.
+// 토글 버튼의 초기 상태를 설정합니다. 'off' 상태로 시작합니다.
 let isButtonOn = false;
 
-// 토글 버튼 요소를 찾습니다. 이 예제에서는 버튼의 id가 'toggleButton'이라고 가정합니다.
+// 토글 버튼 요소를 찾습니다.
 const toggleButton = document.getElementById('toggleButton');
+
+
+// 테이블 요소를 가져옵니다
+var ingredientsTable = document.getElementById('ingredientsTable');
