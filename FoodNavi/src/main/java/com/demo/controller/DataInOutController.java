@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.demo.domain.Food;
 import com.demo.service.DataInOutService;
 
 @Controller
@@ -19,7 +20,7 @@ public class DataInOutController {
 	@GetMapping("/foodin")
 	public String foodInFood(@RequestParam(value="file", defaultValue="") String file, 
 			@RequestParam(value="n", defaultValue="all") String n) {		
-		dataInputService.foodIn(file, n);
+		dataInputService.foodInFromCsv(file, n);
 		return "redirect:main";
 	}
 	
@@ -27,7 +28,7 @@ public class DataInOutController {
 	// n : 추가할 더미데이터의 숫자
 	@GetMapping("/foodindummy")
 	public String foodInDummy(@RequestParam(value="n", defaultValue="100") String n) {
-		dataInputService.foodInDummy(n);
+		dataInputService.foodInDummy("FoodToCsv", n);
 		return "redirect:main";
 	}
 	
@@ -35,8 +36,9 @@ public class DataInOutController {
 	// 아직 미구현 상태
 	@GetMapping("/foodout")
 	public String foodOut(@RequestParam(value="file", defaultValue="") String file, 
-			@RequestParam(value="date", defaultValue="") String date) {	
-		dataInputService.foodOut(file, date);
+			@RequestParam(value="date", defaultValue="") String date) {
+		Food food = new Food();
+		dataInputService.foodListToCsv(file, food);
 		return "redirect:main";
 	}
 	
@@ -50,11 +52,17 @@ public class DataInOutController {
 	
 	// history에 랜덤하게 더미데이터를 입력한다.
 	// n : 추가할 더미데이터의 숫자
-	@GetMapping("/foodTableindummy")
+	@GetMapping("/historyindummy")
 	public String historyInDummy(@RequestParam(value="n", defaultValue="100") String n) {
-		dataInputService.foodTableInDummy(n);
+		String file = "History.csv";
+		dataInputService.historyInDummy(file, n);
 		return "redirect:main";
 	}
 	
+	@GetMapping("historyListToCsv")
+	public String historyListToCsv() {
+		
+		return "";
+	}
 	
 }
