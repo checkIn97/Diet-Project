@@ -410,11 +410,11 @@ function updateValue(val) {
 }
 
 // toggleButton.js
-document.getElementById('toggleButton').addEventListener('click', function(event) {
-    if (event.target.tagName === 'BUTTON') {
-        console.log(event.target.textContent + ' 버튼이 클릭되었습니다.');
-    }
-});
+// document.getElementById('toggleButton').addEventListener('click', function(event) {
+//     if (event.target.tagName === 'BUTTON') {
+//         console.log(event.target.textContent + ' 버튼이 클릭되었습니다.');
+//     }
+// });
 
 document.getElementById("toggleButtonControl").addEventListener("click", function() {
     var toggleButton = document.getElementById("toggleButton");

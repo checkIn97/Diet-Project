@@ -1,13 +1,16 @@
 package com.demo.controller;
 
-import java.io.File;
-import java.io.IOException;
-
+import com.demo.domain.Board;
+import com.demo.domain.Users;
+import com.demo.dto.BoardScanVo;
+import com.demo.service.BoardCommentsService;
+import com.demo.service.BoardService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,16 +19,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.demo.domain.Board;
-import com.demo.domain.Users;
-import com.demo.dto.BoardScanVo;
-import com.demo.dto.UserScanVo;
-import com.demo.service.BoardCommentsService;
-import com.demo.service.BoardService;
-import com.demo.service.UsersService;
-
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 @Controller
 public class BoardController {
@@ -56,10 +54,10 @@ public class BoardController {
 
 
 
-    private static final String UPLOAD_DIRECTORY = "c:\\";
+    private static final String UPLOAD_DIRECTORY = "C:/Diet-Project/FoodNavi/src/main/resources/static/uploadImages/";
 
     // 게시글 작성
-    @PostMapping("board_insert")
+    @PostMapping("/board_insert")
     public String saveBoard(@RequestParam("title") String title,
                             @RequestParam("content") String content,
                             @RequestParam("img") MultipartFile file,
@@ -83,22 +81,63 @@ public class BoardController {
 
         if (!file.isEmpty()) {
             try {
+                /*랜덤한 UUID 생성*/
+                String uuid = UUID.randomUUID().toString();
+
+                /*파일 확장자 분리*/
+                String originalFileName = file.getOriginalFilename();
+                String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
+
+                /*랜덤한 UUID를 파일 이름에 추가*/
+                String newFileName = uuid + extension;
+
                 // 업로드 디렉토리에 파일 저장
-                String filePath = UPLOAD_DIRECTORY + file.getOriginalFilename();
+                String filePath = UPLOAD_DIRECTORY + newFileName;
                 File dest = new File(filePath);
                 file.transferTo(dest);
-                vo.setImg(file.getOriginalFilename()); // 이미지 경로를 게시글에 저장
+                vo.setImg(newFileName); // 이미지 경로를 게시글에 저장
                 System.out.println(request.getServletContext().getRealPath("/"));
             } catch (IOException e) {
                 e.printStackTrace();
-                return "Failed to upload image";
+                return "이미지 업로드에 실패하였습니다. 다시 시도해주십시오.";
             }
         }
+
+
 
         boardService.insertBoard(vo);
         return "redirect:/board_list"; // 저장 후 리스트 페이지로 리다이렉트합니다.
     }
 
+    // 이미지 업로드
+    @PostMapping("/upload_image")
+    public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile multipartFile, HttpServletRequest request) {
+        try {
+            // 파일이 비어있지 않은 경우에만 처리
+            if (!multipartFile.isEmpty()) {
+                // 파일 저장
+                String fileName = multipartFile.getOriginalFilename();
+                String filePath = UPLOAD_DIRECTORY + fileName;
+                File dest = new File(filePath);
+                multipartFile.transferTo(dest);
+
+                // 이미지 URL 생성
+                String imageUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/images/" + fileName;
+
+                // Froala 에디터가 요구하는 형식으로 응답을 만듭니다.
+                Map<String, Object> response = new HashMap<>();
+                response.put("link", imageUrl); // 'link'는 업로드된 이미지의 URL을 포함해야 합니다.
+
+                // 이미지 URL 반환
+                return new ResponseEntity<>(response, HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // 파일 업로드 실패 시 에러 메시지 반환
+        return new ResponseEntity<>("파일 업로드에 실패했습니다.", HttpStatus.BAD_REQUEST);
+    }
 
     // 게시글 리스트 보기
     @GetMapping("/board_list")

@@ -1521,7 +1521,6 @@ a.note-dropdown-item, a.note-dropdown-item:hover {
 
 .note-editor .note-editing-area .note-editable table {
     width: 100%;
-    max-width: 100%;
     border-collapse: collapse
 }
 
