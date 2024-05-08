@@ -1,9 +1,18 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
-<th:block th:include="~{/includes/headerMain}"></th:block>
-<link href='https://cdnjs.cloudflare.com/ajax/libs/froala-editor/3.2.6/css/froala_editor.pkgd.min.css'
-      rel='stylesheet' type='text/css'/>
+<th:block th:insert="~{/includes/headerMain}"></th:block>
 <meta charset="UTF-8">
+
+<!-- summernote   -->
+<script src="https://code.jquery.com/jquery-3.6.3.min.js"
+        integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU="
+        crossorigin="anonymous"></script>
+<link
+        href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css"
+        rel="stylesheet">
+<script src="/assets/summernote/js/summernote-lite.js"></script>
+<script src="/assets/summernote/lang/summernote-ko-KR.js"></script>
+<link href="/assets/summernote/css/summernote-lite-darkly.css" rel="stylesheet">
 
 <h1><a href="/mainpage">FoodNavi</a></h1>
 
@@ -16,23 +25,14 @@
             <input type="text" id="title" name="title">
         </div>
 
+        <div class="post-form">
+            <label for="summernote">Content:</label>
+            <textarea id="summernote" name="content"></textarea>
+        </div>
+
         <div>
-            <label for="content">Content:</label>
-            <textarea id="content" name="content"></textarea>
-
-            <div>
-                <label for="img">이미지 첨부 :</label>
-                <input type="file" id="img" name="img" accept="uploadImages/*" class="button">
-            </div>
-
-            <script type="text/javascript" src='https://cdnjs.cloudflare.com/ajax/libs/froala-editor/3.2.6/js/froala_editor.pkgd.min.js'></script>
-            <script>
-                var editor = new FroalaEditor('#content', {
-                    imageUploadURL: '/upload_image',  // 이미지 업로드를 처리할 서버의 URL
-                    imageUploadMethod : 'POST'
-                });
-
-            </script>
+            <label for="img">이미지 첨부 :</label>
+            <input type="file" id="img" name="img" accept="uploadImages/*" class="button">
         </div>
 
 
@@ -41,6 +41,37 @@
         <button type="button" onclick="window.location.href='/board_list'" class="button">돌아가기</button>
     </form>
 
+
+    <script>
+
+        // $(document).ready(function () {
+            $('#summernote').summernote({
+                height: 300,                 // 에디터 높이
+                minHeight: 500,             // 최소 높이
+                maxHeight: 500,             // 최대 높이
+                // 에디터 한글 설정
+                lang: "ko-KR",
+                focus: true,
+                theme: 'darkly',
+                toolbar: [
+                    // 글꼴 설정
+                    ['fontname', ['fontname']],
+                    // 글자 크기 설정
+                    ['fontsize', ['fontsize']],
+                    // 굵기, 기울임꼴, 밑줄,취소 선, 서식지우기
+                    ['style', ['bold', 'italic', 'underline', 'strikethrough', 'clear']], // 표만들기
+                    ['table', ['table']],
+                    // 글머리 기호, 번호매기기, 문단정렬
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    // 줄간격
+                    ['height', ['height']],
+                ],
+                // 추가한 글꼴
+                fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', '맑은 고딕', '궁서', '굴림체', '굴림', '돋음체', '바탕체'],
+
+            });
+
+    </script>
 </article>
 
-<th:block th:include="~{includes/footer}"></th:block>
+<th:block th:insert="~{includes/footer}"></th:block>

@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<th:block th:include="~{/includes/header}"></th:block>
+<th:block th:insert="~{/includes/header}"></th:block>
 <title>Alert Page</title>
 </head>
 <body>
@@ -32,5 +32,5 @@
     <button type="button" onclick="closeWindow()">닫기</button>
     </th:block>
 </body>
-<th:block th:include="~{includes/footer}"></th:block>
+<th:block th:insert="~{includes/footer}"></th:block>
 </html>

@@ -7,22 +7,21 @@ import com.demo.service.BoardCommentsService;
 import com.demo.service.BoardService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.UUID;
 
 @Controller
@@ -45,13 +44,12 @@ public class BoardController {
             // 로그인 알림을 포함한 경고 메시지를 설정합니다.
             request.setAttribute("message", "로그인 후 게시글을 작성할 수 있습니다.");
             return "/user_login_form"; // 로그인 페이지로 이동.
-        }else {
+        } else {
 
             return "board/boardInsert"; //게시글 작성페이지로 이동.
         }
 
     }
-
 
 
     private static final String UPLOAD_DIRECTORY = "C:/Diet-Project/FoodNavi/src/main/resources/static/uploadImages/";
@@ -104,51 +102,21 @@ public class BoardController {
         }
 
 
-
         boardService.insertBoard(vo);
         return "redirect:/board_list"; // 저장 후 리스트 페이지로 리다이렉트합니다.
     }
 
-    // 이미지 업로드
-    @PostMapping("/upload_image")
-    public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile multipartFile, HttpServletRequest request) {
-        try {
-            // 파일이 비어있지 않은 경우에만 처리
-            if (!multipartFile.isEmpty()) {
-                // 파일 저장
-                String fileName = multipartFile.getOriginalFilename();
-                String filePath = UPLOAD_DIRECTORY + fileName;
-                File dest = new File(filePath);
-                multipartFile.transferTo(dest);
-
-                // 이미지 URL 생성
-                String imageUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/images/" + fileName;
-
-                // Froala 에디터가 요구하는 형식으로 응답을 만듭니다.
-                Map<String, Object> response = new HashMap<>();
-                response.put("link", imageUrl); // 'link'는 업로드된 이미지의 URL을 포함해야 합니다.
-
-                // 이미지 URL 반환
-                return new ResponseEntity<>(response, HttpStatus.OK);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        // 파일 업로드 실패 시 에러 메시지 반환
-        return new ResponseEntity<>("파일 업로드에 실패했습니다.", HttpStatus.BAD_REQUEST);
-    }
 
     // 게시글 리스트 보기
     @GetMapping("/board_list")
     public String showBoardList(Model model,
-                                @RequestParam(value="page", defaultValue="0") int page,
-                                @RequestParam(value="size", defaultValue="20") int size,
-                                @RequestParam(value="sortBy", defaultValue="bseq") String sortBy,
-                                @RequestParam(value="sortDirection", defaultValue="DESC") String sortDirection,
-                                @RequestParam(value="pageMaxDisplay", defaultValue="5") int pageMaxDisplay,
-                                @RequestParam(value="searchField", defaultValue="title") String searchField,
-                                @RequestParam(value="searchWord", defaultValue="") String searchWord,
+                                @RequestParam(value = "page", defaultValue = "0") int page,
+                                @RequestParam(value = "size", defaultValue = "20") int size,
+                                @RequestParam(value = "sortBy", defaultValue = "bseq") String sortBy,
+                                @RequestParam(value = "sortDirection", defaultValue = "DESC") String sortDirection,
+                                @RequestParam(value = "pageMaxDisplay", defaultValue = "5") int pageMaxDisplay,
+                                @RequestParam(value = "searchField", defaultValue = "title") String searchField,
+                                @RequestParam(value = "searchWord", defaultValue = "") String searchWord,
                                 BoardScanVo boardScanVo,
                                 HttpSession session, HttpServletRequest request) {
 
@@ -170,7 +138,7 @@ public class BoardController {
             boardScanVo.setSortDirection(sortDirection);
             boardScanVo.setPageMaxDisplay(pageMaxDisplay);
         } else {
-            boardScanVo = (BoardScanVo)session.getAttribute("boardScanVo");
+            boardScanVo = (BoardScanVo) session.getAttribute("boardScanVo");
         }
         Page<Board> boardData = boardService.findBoardList(boardScanVo, page, size);
         boardScanVo.setPageInfo(boardData);
@@ -207,7 +175,7 @@ public class BoardController {
         // 게시글의 작성자와 현재 사용자가 같은지 확인하여 모델에 추가
         model.addAttribute("isAuthor", board.getUser().getUseq() == user.getUseq());
 
-        BoardScanVo boardScanVo = (BoardScanVo)session.getAttribute("boardScanVo");
+        BoardScanVo boardScanVo = (BoardScanVo) session.getAttribute("boardScanVo");
         model.addAttribute("boardScanVo", boardScanVo);
         model.addAttribute("boardList", boardScanVo.getBoardList());
         model.addAttribute("pageInfo", boardScanVo.getPageInfo());
@@ -237,6 +205,7 @@ public class BoardController {
         return "redirect:/board_list";
 
     }
+
 
     // 게시글 수정화면으로 이동하기
     @GetMapping("/board_edit_form/{bseq}")
