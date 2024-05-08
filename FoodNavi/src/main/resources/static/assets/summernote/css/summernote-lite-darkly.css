@@ -382,7 +382,7 @@ a.note-dropdown-item:hover {
   padding: 1rem;
   text-align: center;
   border-top: 1px solid #444;
-  height:40px
+  height:80px
 }
 
 .note-modal-footer .note-btn {
@@ -475,7 +475,7 @@ a.note-dropdown-item:hover {
 }
 
 .note-input:focus {
-  color: #444;
+  color: #eeeeee;
   background-color: #fff;
   border-color: #739ac2;
   outline: 0;
