@@ -41,9 +41,19 @@
 	<!-- 리스트의 사이즈가 0인 경우에는 표시되지 않음 -->
     <th:block id="page_insert" th:if="${pageInfo.totalPages != 0}" th:insert="~{/admin/include/board_page_area}"></th:block>
 	<form th:action="@{/admin_board_list}" method="get">
-		<label> <input type="text" name="searchWord">
-		</label>
-		<button type="submit">검색</button>
+		<div class="search-container">
+			<select name="search" id="search" class="search">
+				<option value="titleSearch">제목</option>
+				<option value="contentSearch">내용</option>
+				<option value="titleContentSearch">제목 / 내용</option>
+				<option value="writerSearch">작성자</option>
+			</select>
+
+			<label> <input type="text" name="searchWord" class="searchWord">
+			</label>
+
+			<button type="submit" class="searchButton">검색</button>
+		</div>
 	</form>
 
 

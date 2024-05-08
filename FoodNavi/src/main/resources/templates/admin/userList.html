@@ -29,17 +29,20 @@
         </tr>
         </tbody>
     </table>
-    
+
     <!-- 페이지 영역 -->
     <!-- 리스트에 맞게 페이지가 입력되는 영역 -->
-	<!-- 리스트의 사이즈가 0인 경우에는 표시되지 않음 -->
-    <th:block id="page_insert" th:if="${pageInfo.totalPages != 0}" th:insert="~{/admin/include/user_page_area}"></th:block>
+    <!-- 리스트의 사이즈가 0인 경우에는 표시되지 않음 -->
+    <th:block id="page_insert" th:if="${pageInfo.totalPages != 0}"
+              th:insert="~{/admin/include/user_page_area}"></th:block>
 
     <form th:action="@{/admin_user_list}" method="get">
-        <label>
-            <input type="text" name="searchWord">
-        </label>
-        <button type="submit">검색</button>
+        <div class="search-container">
+            <label>
+                <input type="text" name="searchWord">
+            </label>
+            <button type="submit">검색</button>
+        </div>
     </form>
 </article>
 <th:block th:insert="~{/includes/footer}"></th:block>
