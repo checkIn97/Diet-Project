@@ -1,28 +1,20 @@
 package com.demo.service;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.demo.domain.Admin;
-import com.demo.domain.Board;
-import com.demo.domain.Comments;
 import com.demo.domain.Food;
 import com.demo.domain.FoodDetail;
-import com.demo.domain.History;
-import com.demo.domain.Rcd;
+import com.demo.domain.FoodTable;
 import com.demo.domain.Users;
 import com.demo.persistence.FoodDetailScanRepository;
 import com.demo.persistence.FoodScanRepository;
-import com.demo.persistence.HistoryRepository;
+import com.demo.persistence.FoodTableRepository;
 import com.demo.persistence.UsersInOutRepository;
 
 @Service
@@ -38,7 +30,7 @@ public class DataInOutServiceImpl implements DataInOutService {
 	private UsersInOutRepository usersInOutRepo;
 	
 	@Autowired
-	private HistoryRepository historyRepo;
+	private FoodTableRepository foodTableRepo;
 	
 	// food 더미데이터 생성을 위한 임시 데이터
 	private String[] foodStyle = {"한국식", "일본식", "중국식", "태국식", "이탈리아식", "프랑스식", "스페인식", "멕시코식", "러시아식"};	
@@ -106,7 +98,7 @@ public class DataInOutServiceImpl implements DataInOutService {
 	
 		
 	@Override
-	public void foodInFromCsv(String csvFile, String n) {
+	public void foodIn(String file, String n) {
 		int num = -1;
 		int check = -1;
 		int count = 0;
@@ -122,7 +114,7 @@ public class DataInOutServiceImpl implements DataInOutService {
 		
 		if (num >= 0 || n.equals("all")) {
 			try {
-				FileReader fr = new FileReader(csvFile);
+				FileReader fr = new FileReader(file);
 				BufferedReader br = new BufferedReader(fr);
 
 				while(true) {
@@ -173,7 +165,7 @@ public class DataInOutServiceImpl implements DataInOutService {
 	}
 	
 	@Override
-	public void foodInDummy(String pyFile, String n) {
+	public void foodInDummy(String n) {
 		int num = -1;
 		int count = 0;
 		String text = "";
@@ -217,13 +209,13 @@ public class DataInOutServiceImpl implements DataInOutService {
 	}
 	
 	@Override
-	public void foodListToCsv(String pyFile, Food food) {
+	public void foodOut(String file, String date) {
 		
 	}
 
 
 	@Override
-	public void adminInFromCsv(String csvFile, String n) {
+	public void adminIn(String file, String n) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -235,13 +227,13 @@ public class DataInOutServiceImpl implements DataInOutService {
 	}
 
 	@Override
-	public void adminToCsv(String pyFile, Admin admin) {
+	public void adminOut(String file, String date) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void boardInFromCsv(String csvFile, String n) {
+	public void boardIn(String file, String n) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -253,13 +245,13 @@ public class DataInOutServiceImpl implements DataInOutService {
 	}
 
 	@Override
-	public void boardToCsv(String pyFile, Board board) {
+	public void boardOut(String file, String date) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void commentsInFromCsv(String csvFile, String n) {
+	public void commentsIn(String file, String n) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -271,7 +263,7 @@ public class DataInOutServiceImpl implements DataInOutService {
 	}
 
 	@Override
-	public void commentsToCsv(String pyFile, Comments comments) {
+	public void commentsOut(String file, String date) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -280,7 +272,7 @@ public class DataInOutServiceImpl implements DataInOutService {
 
 
 	@Override
-	public void foodDetailInFromCsv(String csvFile, String n) {
+	public void foodDetailIn(String file, String n) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -292,13 +284,13 @@ public class DataInOutServiceImpl implements DataInOutService {
 	}
 
 	@Override
-	public void foodDetailToCsv(String pyFile, FoodDetail foodDetail) {
+	public void foodDetailOut(String file, String date) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void rcdInFromCsv(String csvFile, String n) {
+	public void rcdIn(String file, String n) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -310,13 +302,13 @@ public class DataInOutServiceImpl implements DataInOutService {
 	}
 
 	@Override
-	public void rcdToCsv(String pyFile, Rcd rcd) {
+	public void rcdOut(String file, String date) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void usersInFromCsv(String csvFile, String n) {
+	public void usersIn(String file, String n) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -408,100 +400,41 @@ public class DataInOutServiceImpl implements DataInOutService {
 	}
 
 	@Override
-	public void usersToCsv(String pyFile, Users users) {
+	public void usersOut(String file, String date) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void historyInFromCsv(String csvFile, String n) {
+	public void foodTableIn(String file, String n) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void historyInDummy(String pyFile, String n) {
+	public void foodTableInDummy(String n) {
 		int num = Integer.parseInt(n);
 		int totalUserCount = usersInOutRepo.getTotalUsersCount();
-		int totalFoodCount = foodScanRepo.getTotalFoodCount();
-		List<History> historyList = new ArrayList<>();
+		int totalFoodCount = foodScanRepo.getTotalFoodCount(); 
 		for (int i = 0 ; i < num ; i++) {
 			int tmp_useq = (int)(Math.random()*totalUserCount+1);
 			int tmp_fseq = (int)(Math.random()*totalFoodCount+1);
-			History tmp_history = new History();
+			FoodTable tmp_foodTable = new FoodTable();
 			Users tmp_user = usersInOutRepo.findById(tmp_useq).get();
 			Food tmp_food = foodScanRepo.findById(tmp_fseq).get();
 			int serveNumber = (int)(Math.random()*3+1);
-			tmp_history.setUser(tmp_user);
-			tmp_history.setFood(tmp_food);
-			tmp_history.setServeNumber(serveNumber);			
-			historyRepo.save(tmp_history);
-			tmp_history = historyRepo.getHistoryListNotConfirmedYet(tmp_user).get(0);
-			tmp_history.setServedDate(new Date());
-			historyRepo.save(tmp_history);
-			historyList.add(tmp_history);
+			tmp_foodTable.setUser(tmp_user);
+			tmp_foodTable.setFood(tmp_food);
+			tmp_foodTable.setServeNumber(serveNumber);
+			tmp_foodTable.setServedDate(new Date());
+			foodTableRepo.save(tmp_foodTable);
 		}
-		historyListToCsv(pyFile, historyList);
 		
 	}
 
-	
 	@Override
-	public void historyListToCsv(String pyFile, List<History> historyList) {
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder
-			.append("hseq,")
-			.append("useq,")
-			.append("user_sex,")
-			.append("user_age,")
-			.append("user_height,")
-			.append("user_weight,")
-			.append("meal_type,")
-			.append("served_date,")
-			.append("served_number,")
-			.append("fseq,")
-			.append("food_name,")
-			.append("food_kcal,")
-			.append("food_carb,")
-			.append("food_prt,")
-			.append("food_fat\n");
-		
-		for (History history : historyList) {
-			stringBuilder
-				.append(history.getHseq()).append(',')
-				.append(history.getUser().getUseq()).append(',')
-				.append(history.getUser().getSex()).append(',')
-				.append(history.getUser().getAge()).append(',')
-				.append(history.getUser().getHeight()).append(',')
-				.append(history.getUser().getWeight()).append(',')
-				.append((history.getMealType() == null ? "구분없음" : history.getMealType())).append(',')
-				.append(String.valueOf(history.getServedDate())).append(',')
-				.append(history.getServeNumber()).append(',')
-				.append(history.getFood().getFseq()).append(',')
-				.append(history.getFood().getName()).append(',')
-				.append(history.getFood().getFoodDetail().getKcal()).append(',')
-				.append(history.getFood().getFoodDetail().getCarb()).append(',')
-				.append(history.getFood().getFoodDetail().getPrt()).append(',')
-				.append(history.getFood().getFoodDetail().getFat()).append('\n');
-		}
-		String csvFile = "History_tmp.csv";
-		try {
-			FileWriter fileWriter = new FileWriter(csvFile);
-			try (BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
-				bufferedWriter.write(stringBuilder.toString());
-				bufferedWriter.close();
-			}
-			fileWriter.close();
-			
-			ProcessBuilder processBuilder = new ProcessBuilder("python", pyFile, csvFile);
-			Process process = processBuilder.start();
-			System.out.println("History 데이터 내보내기 성공");
-		}catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("History 데이터 내보내기 실패");
-		}
-		
-		
+	public void foodTableOut(String file, String date) {
+		// TODO Auto-generated method stub
 		
 	}
 
