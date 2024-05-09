@@ -410,16 +410,16 @@ function updateValue(val) {
 }
 
 // toggleButton.js
-document.getElementById('toggleButton').addEventListener('click', function(event) {
-    if (event.target.tagName === 'BUTTON') {
-        console.log(event.target.textContent + ' 버튼이 클릭되었습니다.');
-    }
-});
+// document.getElementById('toggleButton').addEventListener('click', function(event) {
+//     if (event.target.tagName === 'BUTTON') {
+//         console.log(event.target.textContent + ' 버튼이 클릭되었습니다.');
+//     }
+// });
 
 document.getElementById("toggleButtonControl").addEventListener("click", function() {
     var toggleButton = document.getElementById("toggleButton");
     if (toggleButton.style.display === "none") {
-        toggleButton.style.display = "flex";
+        toggleButton.style.display = "block";
     } else {
         toggleButton.style.display = "none";
     }
@@ -441,3 +441,5 @@ const toggleButton = document.getElementById('toggleButton');
 
 // 테이블 요소를 가져옵니다
 var ingredientsTable = document.getElementById('ingredientsTable');
+
+
