@@ -18,18 +18,51 @@
     <!-- Header -->
     <header id="header">
         <div class="logo">
-            <span class="icon fa-gem"></span>
+            <span class="icon"><img src="/assets/images/food.png" alt="food Icon" class="foodLogo"></span>
         </div>
         <div class="content">
             <div class="inner">
                 <h1>[[${userVo.user.name}]] 님을 위한 오늘의 식단</h1>
-                <p> 오늘 섭취한 칼로리 0000kcal </p>
-                <p> 오늘 섭취한 영양소 탄수화물 000% 단백질 000% 지방 000% </p>
-                <button class="button" name="dietRecommendation" id="dietRecommendationButton" value="recommend">
-                    <a href="/foodRecommendation">식단추천</a></button>
-                <!--각 href 링크는 컨트롤러와 연결해야 합니다.-->
+
+                <div>
+                    <label for="kcalChart" class="userBodyText">오늘 섭취한 칼로리</label>
+                    <div id="kcalChart" class="chart">
+                        <div class="chart-bar"></div>
+                    </div>
+                    <a class="userBodyNum">1430/2100kcal</a>
+                </div>
+
+                <div class="chart-container">
+                    <div>
+                        <label for="carbohydrateChart" class="userBodyText">탄수화물</label>
+                        <div id="carbohydrateChart" class="chart">
+                            <div class="chart-bar"></div>
+                        </div>
+                        <a class="userBodyNum">200g/400g</a>
+                    </div>
+                    <div>
+                        <label for="proteinChart" class="userBodyText">단백질</label>
+                        <div id="proteinChart" class="chart">
+                            <div class="chart-bar"></div>
+                        </div>
+                        <a class="userBodyNum">700g/700g</a>
+                    </div>
+                    <div>
+                        <label for="fatChart" class="userBodyText">지방</label>
+                        <div id="fatChart" class="chart">
+                            <div class="chart-bar"></div>
+                        </div>
+                        <a class="userBodyNum">30g/100g</a>
+                    </div>
+                </div>
+
+                <div class="foodReco">
+                    <button class="primary" name="dietRecommendation" id="foodRecoButton" value="recommend">
+                        <a href="/foodRecommendation">식단추천</a></button>
+                </div>
             </div>
         </div>
+
         <nav>
             <ul>
                 <!--각 href 링크는 컨트롤러와 연결해야 합니다.-->
@@ -37,25 +70,26 @@
                 <li><a href="/user_mychange_view">나의변화</a></li>
                 <li><a href="/user_myactivity_view">나의활동</a></li>
                 <li><a href="/pw_check">마이페이지</a></li>
+            </ul>
         </nav>
 
         <!--관리자 아이디로 로그인 하면 보이게 할 것-->
-<!--        <button class="primary" name="admin" id="admin" value="admin"><a href="#admin">관리자</a></button>-->
+        <!--        <button class="primary" name="admin" id="admin" value="admin"><a href="#admin">관리자</a></button>-->
         <!--로그아웃 버튼-->
-        <button class="button" name="#" id="logout" value="logout"><a href="logout">로그아웃</a></button>
+        <button class="button" name="logout" id="logout" value="logout"><a href="logout">로그아웃</a></button>
 
     </header>
 
+</div>
+<!-- Main -->
+<div id="main">
 
-    <!-- Main -->
-    <div id="main">
 
+    <!-- Elements -->
+    <article id="elements">
+        <h2 class="major">Elements</h2>
 
-        <!-- Elements -->
-        <article id="elements">
-            <h2 class="major">Elements</h2>
-
-            <pre><code>i = 0;
+        <pre><code>i = 0;
 
 while (!deck.isInOrder()) {
     print 'Iteration ' + i;
@@ -66,14 +100,14 @@ while (!deck.isInOrder()) {
 print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
 
 
-        </article>
+    </article>
 
-    </div>
+</div>
 
-    <!-- Footer -->
-    <footer id="footer">
-        <p class="copyright">&copy; Untitled. Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
-    </footer>
+<!-- Footer -->
+<footer id="footer">
+    <p class="copyright">&copy; Untitled. Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
+</footer>
 
 </div>
 
@@ -88,6 +122,7 @@ print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
 <script src="/assets/js/util.js"></script>
 <script src="/assets/js/main.js"></script>
 <script src="/assets/js/menuToggle.js"></script>
+<script src="/assets/js/chart.js"></script>
 
 </body>
 </html>
