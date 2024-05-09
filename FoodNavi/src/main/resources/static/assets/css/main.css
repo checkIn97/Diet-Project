@@ -148,7 +148,7 @@ a {
     -webkit-transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out, border-bottom-color 0.2s ease-in-out;
     -ms-transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out, border-bottom-color 0.2s ease-in-out;
     transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out, border-bottom-color 0.2s ease-in-out;
-    border-bottom: dotted 1px rgba(255, 255, 255, 0.5);
+    /*border-bottom: dotted 1px rgba(255, 255, 255, 0.5);*/
     text-decoration: none;
     color: inherit;
 }
@@ -186,9 +186,6 @@ h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
 
 h1.major, h2.major, h3.major, h4.major, h5.major, h6.major {
     border-bottom: solid 1px #ffffff;
-    width: -moz-max-content;
-    width: -webkit-max-content;
-    width: -ms-max-content;
     width: max-content;
     padding-bottom: 0.5rem;
     margin: 0 0 2rem 0;
@@ -377,7 +374,7 @@ label {
     font-weight: 300;
     letter-spacing: 0.2rem;
     line-height: 1.5;
-    margin: 0 0 1rem 0;
+    margin: 1rem 0 1rem 0;
     text-transform: uppercase;
 }
 
@@ -434,6 +431,7 @@ select {
     height: 2.75rem;
     padding-right: 2.75rem;
     text-overflow: ellipsis;
+    /*margin: 0 0 1rem 0*/
 }
 
 select option {
@@ -488,11 +486,18 @@ textarea {
 
 /* Box */
 
+#box {
+    width: auto;
+    background: rgba(35, 37, 45, 0.85);
+    padding: 4em;
+    border-radius: 10px;
+    position: relative;
+}
+
 .box {
     border-radius: 4px;
-    border: solid 1px #ffffff;
+    /*border: solid 1px #ffffff;*/
     margin-bottom: 2rem;
-    padding: 1.5em;
 }
 
 .box > :last-child,
@@ -506,6 +511,13 @@ textarea {
     border-radius: 0;
     padding: 0;
 }
+.box {
+    width: auto;
+    background: rgba(35, 37, 45, 0.85);
+    padding: 3em;
+    border-radius: 10px;
+}
+
 
 /* Icon */
 
@@ -867,7 +879,7 @@ table th {
     color: #ffffff;
     font-size: 0.9em;
     font-weight: 600;
-    padding: 0 0.75em 0.75em 0.75em;
+    padding: 0.75em 0.75em 0.75em 0.75em;
     text-align: left;
 }
 
@@ -938,6 +950,7 @@ button,
     text-decoration: none;
     text-transform: uppercase;
     white-space: nowrap;
+    /*margin: 0.5rem 0 1rem 0;*/
 }
 
 input[type="submit"]:hover,
@@ -1011,82 +1024,6 @@ input[type="reset"],
 input[type="button"],
 button {
     line-height: calc(2.75rem - 2px);
-}
-
-/* BG */
-
-#bg {
-    -moz-transform: scale(1.0);
-    -webkit-transform: scale(1.0);
-    -ms-transform: scale(1.0);
-    transform: scale(1.0);
-    -webkit-backface-visibility: hidden;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    z-index: 1;
-}
-
-#bg:before, #bg:after {
-    content: '';
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
-
-#bg:before {
-    -moz-transition: background-color 2.5s ease-in-out;
-    -webkit-transition: background-color 2.5s ease-in-out;
-    -ms-transition: background-color 2.5s ease-in-out;
-    transition: background-color 2.5s ease-in-out;
-    -moz-transition-delay: 0.75s;
-    -webkit-transition-delay: 0.75s;
-    -ms-transition-delay: 0.75s;
-    transition-delay: 0.75s;
-    background-image: linear-gradient(to top, rgba(19, 21, 25, 0.5), rgba(19, 21, 25, 0.5)), url("../images/overlay.png");
-    background-size: auto,
-    256px 256px;
-    background-position: center,
-    center;
-    background-repeat: no-repeat,
-    repeat;
-    z-index: 2;
-}
-
-#bg:after {
-    -moz-transform: scale(1.125);
-    -webkit-transform: scale(1.125);
-    -ms-transform: scale(1.125);
-    transform: scale(1.125);
-    -moz-transition: -moz-transform 0.325s ease-in-out, -moz-filter 0.325s ease-in-out;
-    -webkit-transition: -webkit-transform 0.325s ease-in-out, -webkit-filter 0.325s ease-in-out;
-    -ms-transition: -ms-transform 0.325s ease-in-out, -ms-filter 0.325s ease-in-out;
-    transition: transform 0.325s ease-in-out, filter 0.325s ease-in-out;
-    background-image: url("../images/bg.jpg");
-    background-position: center;
-    background-size: cover;
-    background-repeat: no-repeat;
-    z-index: 1;
-}
-
-body.is-article-visible #bg:after {
-    -moz-transform: scale(1.0825);
-    -webkit-transform: scale(1.0825);
-    -ms-transform: scale(1.0825);
-    transform: scale(1.0825);
-    -moz-filter: blur(0.2rem);
-    -webkit-filter: blur(0.2rem);
-    -ms-filter: blur(0.2rem);
-    filter: blur(0.2rem);
-}
-
-body.is-preload #bg:before {
-    background-color: #000000;
 }
 
 /* Wrapper */
@@ -1197,6 +1134,31 @@ body.is-preload #bg:before {
 
 #header > :first-child:before {
     display: none;
+}
+
+#header .foodLogo {
+    width: 3.5rem;
+    height: 3.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.foodLogo{
+    transform: translateX(-2px);
+}
+
+@media screen and (max-width: 600px) {
+    .foodLogo {
+        max-width: 100%;
+        height: auto;
+    }
+}
+
+div.logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #header .logo {
@@ -1621,7 +1583,7 @@ body.is-preload #footer {
 
 
 /* checkbox 버튼 css */
-.field.half.checkbox-button input[type="radio"] {
+.field.half.checkbox-button input[type="checkbox"] {
     display: none;
     opacity: 0;
 }
@@ -1645,7 +1607,7 @@ body.is-preload #footer {
     transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
 }
 
-.field.half.checkbox-button input[type="radio"]:checked + label {
+.field.half.checkbox-button input[type="checkbox"]:checked + label {
     background-color: #bbb;
     color: #000; /* 체크된 상태에서의 텍스트 색을 검은색으로 설정 */
 }
@@ -1654,7 +1616,7 @@ body.is-preload #footer {
     background-color: #bbb;
 }
 
-.field.half.checkbox-button input[type="radio"]:active + label {
+.field.half.checkbox-button input[type="checkbox"]:active + label {
     background-color: #fff;
     color: #000;
 }
@@ -1726,21 +1688,145 @@ input[type=range]::-moz-range-thumb {
 
 
 /* toggleButton.css */
-#toggleButtonControl {
-    position: fixed;
-    right: 250px;
-}
+/*#toggleButtonControl {*/
+/*    position: fixed;*/
+/*    right: 0;*/
+/*    bottom: 0;*/
+/*}*/
 
 #toggleButton {
-    display: flex;
-    flex-direction: column;
-    position: fixed;
-    right: 250px;
-    top: 150px;
+    display: none;
+    /*position: fixed;*/
+    right: 0;
+    bottom: 0;
 }
 
-#box {
-    background: #1b1f22;
-    padding: 25px;
-    border-radius: 10px;
+#toggleButton.box{
+    margin-top: 20px;
+}
+
+.blur-effect {
+    filter: blur(5px);
+}
+
+
+
+input[type="number"]{
+    background: transparent;
+    border: 1px solid #ffffff;
+    border-radius: 4px;
+    color: #ffffff;
+}
+
+.search-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.search {
+    width: 20%;
+}
+
+.searchWord {
+    width: 70%;
+}
+
+/*탄단지 차트*/
+
+.chart-container {
+    display: flex;
+    /*flex-direction: column;*/
+    justify-content: space-around;
+    align-items: center;
+}
+
+.chart-bar {
+    height: 100%;
+    /*background-color: #7ddcde; !* 차트의 현재 값을 나타내는 바의 색상 *!*/
+    width: 0;
+    transition: width 0.5s;
+    border-radius: 20px;
+}
+
+.chart {
+    border: #eaeaea 2px solid;
+    flex: 1;
+    height: 10px;
+    width: 150px;
+    background-color: #797979; /* 차트의 전체 길이를 나타내는 바의 색상 */
+    margin-bottom: 10px;
+    border-radius: 30px;
+}
+
+#carbohydrateChart .chart-bar {
+    background-color: #97c9e1; /* 탄수화물 차트를 빨간색으로 설정 */
+}
+
+#proteinChart .chart-bar {
+    background-color: #87bba2; /* 단백질 차트를 초록색으로 설정 */
+}
+
+#fatChart .chart-bar {
+    background-color: #c9e4ca; /* 지방 차트를 파란색으로 설정 */
+}
+
+
+/*칼로리 차트*/
+
+#kcalChart {
+    position: relative;
+    width: 400px;
+    height: 50px;
+    margin: 0 auto; /* 차트를 가운데로 이동 */
+}
+
+#kcalChart .chart-bar {
+    height: 100%;
+    background-color: #e74c3c; /* 차트의 현재 값을 나타내는 바의 색상 */
+    width: 0;
+    transition: width 0.5s;
+    border-radius: 30px;
+}
+
+.userBodyText {
+    font-size: 1.1em;
+}
+
+.userBodyNum {
+    font-size: 1.1em;
+}
+
+.btn-group {
+    display: flex;
+    flex-direction: row;
+}
+
+.btn-group button {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.foodReco {
+    margin-top: 20px;
+}
+
+#foodRecoButton {
+    border-radius: 50px;
+    width: 150px;
+    height: 70px;
+    font-size: 20px;
+
+}
+
+.adminButton {
+    margin-top: 20px;
+}
+
+.userButton {
+    bottom: 0;
+    width: 100%;
+    display: inline-block;
+    padding: 0;
+    margin-top: 20px;
 }
