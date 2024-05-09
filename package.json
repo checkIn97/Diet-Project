@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "jquery": "^3.7.1",
+    "jquery-mockjax": "^2.6.1",
+    "jsdom": "^24.0.0"
+  }
+}

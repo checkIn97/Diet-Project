@@ -491,6 +491,7 @@ textarea {
     background: rgba(35, 37, 45, 0.85);
     padding: 4em;
     border-radius: 10px;
+    position: relative;
 }
 
 .box {
@@ -1819,5 +1820,13 @@ input[type="number"]{
 }
 
 .adminButton {
+    margin-top: 20px;
+}
+
+.userButton {
+    bottom: 0;
+    width: 100%;
+    display: inline-block;
+    padding: 0;
     margin-top: 20px;
 }
