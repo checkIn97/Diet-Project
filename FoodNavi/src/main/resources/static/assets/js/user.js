@@ -26,7 +26,7 @@ function pwconfirm() {
 		alert("비밀번호가 일치하지 않습니다!");
 		$("#userPw").focus();
 		return false;
-	}else if($("#userPw").val().indexOf("%") == -1 || $("#userPw").val().indexOf("^") == -1) {
+	} else if($("#userPw").val().indexOf("%") == 1 || $("#userPw").val().indexOf("^") == 1) {
 		alert("%와 ^는 사용하실 수 없습니다.");
 		$("#userPw").focus();
 		return false;
