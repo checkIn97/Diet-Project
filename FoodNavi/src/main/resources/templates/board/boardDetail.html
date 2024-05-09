@@ -12,34 +12,36 @@
 <article class="box">
     <div class="container">
         <h2 class="mb-4">게시글 상세보기</h2>
+        <hr>
         <div class="card">
             <div class="card-header">
-                <h3 th:text="${board.title}">제목</h3>
+                <h2 th:text="${board.title}">제목</h2>
             </div>
             <div class="card-body">
                 <div class="info">
-                    <div>
+                    <div class="boardTitle">
                         <input type="hidden" name="bseq" th:value="${board.bseq}"><br>
                         작성자: <span th:text="${board.user.userid}">작성자명</span>
-
                     </div>
-                    <div>
-                        작성일시: <span
-                            th:text="${#dates.format(board.createdAt, 'yyyy-MM-dd HH:mm:ss')}">날짜시간</span>
+                    <div class="boardInfo">
+                        <div>
+                            작성일시: <span
+                                th:text="${#dates.format(board.createdAt, 'yyyy-MM-dd HH:mm:ss')}">날짜시간</span>
+                        </div>
+                        <div>
+                            조회수: <span th:text="${board.cnt}+1">조회수</span>
+                        </div>
                     </div>
-                    <div>
-                        조회수: <span th:text="${board.cnt}+1">조회수</span>
-                    </div>
-
                 </div>
+                <hr>
+                <img class="thumbnail"
+                     th:if="${board.img}"
+                     th:src="@{/uploadImages/{fileName}(fileName=${board.img})}"
+                     alt="Image">
 
-                				<img class="thumbnail"
-                					th:if="${board.img}"
-                					th:src="@{/uploadImages/{fileName}(fileName=${board.img})}"
-                					alt="Image">
+                <p class="content" id="content" th:utext="${board.content}">내용</p>
 
-                				<p class="content" id="content" th:utext="${board.content}">내용</p>
-
+                <hr>
                 <div class="btn-group">
                     <!-- 작성자만 수정 및 삭제 버튼을 볼 수 있도록 -->
                     <a th:if="${isAuthor}"
@@ -49,10 +51,9 @@
                           th:action="@{'/board_delete/' + ${board.bseq}}" method="post">
                         <button type="submit" class="button">삭제하기</button>
                     </form>
-
-                    <!-- 목록으로 돌아가기 -->
-                    <a th:href="@{/board_list(page=${pageInfo.number +1})}" class="button">목록으로 돌아가기</a>
                 </div>
+                <!-- 목록으로 돌아가기 -->
+                <a th:href="@{/board_list(page=${pageInfo.number +1})}" class="button">목록으로 돌아가기</a>
             </div>
         </div>
     </div>

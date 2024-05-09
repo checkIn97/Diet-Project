@@ -419,7 +419,7 @@ function updateValue(val) {
 document.getElementById("toggleButtonControl").addEventListener("click", function() {
     var toggleButton = document.getElementById("toggleButton");
     if (toggleButton.style.display === "none") {
-        toggleButton.style.display = "flex";
+        toggleButton.style.display = "block";
     } else {
         toggleButton.style.display = "none";
     }
@@ -441,3 +441,5 @@ const toggleButton = document.getElementById('toggleButton');
 
 // 테이블 요소를 가져옵니다
 var ingredientsTable = document.getElementById('ingredientsTable');
+
+

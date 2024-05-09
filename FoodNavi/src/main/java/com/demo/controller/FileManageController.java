@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -14,7 +15,7 @@ import java.io.InputStream;
 import java.util.UUID;
 
 
-@Controller
+@RestController
 public class FileManageController {
 
     @PostMapping(value="/uploadSummernoteImageFile", produces = "application/json")

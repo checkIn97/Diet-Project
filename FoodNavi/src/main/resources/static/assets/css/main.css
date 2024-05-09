@@ -486,11 +486,17 @@ textarea {
 
 /* Box */
 
+#box {
+    width: auto;
+    background: rgba(35, 37, 45, 0.85);
+    padding: 4em;
+    border-radius: 10px;
+}
+
 .box {
     border-radius: 4px;
     /*border: solid 1px #ffffff;*/
     margin-bottom: 2rem;
-    padding: 1.5em;
 }
 
 .box > :last-child,
@@ -507,7 +513,7 @@ textarea {
 .box {
     width: auto;
     background: rgba(35, 37, 45, 0.85);
-    padding: 25px;
+    padding: 3em;
     border-radius: 10px;
 }
 
@@ -1130,9 +1136,28 @@ button {
 }
 
 #header .foodLogo {
-    width: 4.5rem;
-    height: 4.5rem;
-    line-height: 5.5rem;
+    width: 3.5rem;
+    height: 3.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.foodLogo{
+    transform: translateX(-2px);
+}
+
+@media screen and (max-width: 600px) {
+    .foodLogo {
+        max-width: 100%;
+        height: auto;
+    }
+}
+
+div.logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #header .logo {
@@ -1662,25 +1687,28 @@ input[type=range]::-moz-range-thumb {
 
 
 /* toggleButton.css */
-#toggleButtonControl {
-    position: absolute;
-    right: 250px;
-}
+/*#toggleButtonControl {*/
+/*    position: fixed;*/
+/*    right: 0;*/
+/*    bottom: 0;*/
+/*}*/
 
 #toggleButton {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    right: 250px;
-    top: 150px;
+    display: none;
+    /*position: fixed;*/
+    right: 0;
+    bottom: 0;
 }
 
-#box {
-    width: auto;
-    background: rgba(35, 37, 45, 0.85);
-    padding: 25px;
-    border-radius: 10px;
+#toggleButton.box{
+    margin-top: 20px;
 }
+
+.blur-effect {
+    filter: blur(5px);
+}
+
+
 
 input[type="number"]{
     background: transparent;
@@ -1701,4 +1729,95 @@ input[type="number"]{
 
 .searchWord {
     width: 70%;
+}
+
+/*탄단지 차트*/
+
+.chart-container {
+    display: flex;
+    /*flex-direction: column;*/
+    justify-content: space-around;
+    align-items: center;
+}
+
+.chart-bar {
+    height: 100%;
+    /*background-color: #7ddcde; !* 차트의 현재 값을 나타내는 바의 색상 *!*/
+    width: 0;
+    transition: width 0.5s;
+    border-radius: 20px;
+}
+
+.chart {
+    border: #eaeaea 2px solid;
+    flex: 1;
+    height: 10px;
+    width: 150px;
+    background-color: #797979; /* 차트의 전체 길이를 나타내는 바의 색상 */
+    margin-bottom: 10px;
+    border-radius: 30px;
+}
+
+#carbohydrateChart .chart-bar {
+    background-color: #97c9e1; /* 탄수화물 차트를 빨간색으로 설정 */
+}
+
+#proteinChart .chart-bar {
+    background-color: #87bba2; /* 단백질 차트를 초록색으로 설정 */
+}
+
+#fatChart .chart-bar {
+    background-color: #c9e4ca; /* 지방 차트를 파란색으로 설정 */
+}
+
+
+/*칼로리 차트*/
+
+#kcalChart {
+    position: relative;
+    width: 400px;
+    height: 50px;
+    margin: 0 auto; /* 차트를 가운데로 이동 */
+}
+
+#kcalChart .chart-bar {
+    height: 100%;
+    background-color: #e74c3c; /* 차트의 현재 값을 나타내는 바의 색상 */
+    width: 0;
+    transition: width 0.5s;
+    border-radius: 30px;
+}
+
+.userBodyText {
+    font-size: 1.1em;
+}
+
+.userBodyNum {
+    font-size: 1.1em;
+}
+
+.btn-group {
+    display: flex;
+    flex-direction: row;
+}
+
+.btn-group button {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.foodReco {
+    margin-top: 20px;
+}
+
+#foodRecoButton {
+    border-radius: 50px;
+    width: 150px;
+    height: 70px;
+    font-size: 20px;
+
+}
+
+.adminButton {
+    margin-top: 20px;
 }

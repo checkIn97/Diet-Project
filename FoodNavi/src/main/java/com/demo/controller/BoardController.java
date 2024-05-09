@@ -7,22 +7,15 @@ import com.demo.service.BoardCommentsService;
 import com.demo.service.BoardService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.UUID;
 
 @Controller
 public class BoardController {
@@ -43,7 +36,7 @@ public class BoardController {
         if (user == null) {
             // 로그인 알림을 포함한 경고 메시지를 설정합니다.
             request.setAttribute("message", "로그인 후 게시글을 작성할 수 있습니다.");
-            return "/user_login_form"; // 로그인 페이지로 이동.
+            return "redirect:/user_login_form"; // 로그인 페이지로 이동.
         } else {
 
             return "board/boardInsert"; //게시글 작성페이지로 이동.
@@ -52,13 +45,12 @@ public class BoardController {
     }
 
 
-    private static final String UPLOAD_DIRECTORY = "C:/Diet-Project/FoodNavi/src/main/resources/static/uploadImages/";
+
 
     // 게시글 작성
     @PostMapping("/board_insert")
     public String saveBoard(@RequestParam("title") String title,
                             @RequestParam("content") String content,
-                            @RequestParam("img") MultipartFile file,
                             HttpSession session,
                             HttpServletRequest request) {
 
@@ -69,7 +61,7 @@ public class BoardController {
         if (user == null) {
             // 로그인 알림을 포함한 경고 메시지를 설정합니다.
             request.setAttribute("message", "로그인 후 게시글을 작성할 수 있습니다.");
-            return "/user_login_form"; // 로그인 페이지로 이동.
+            return "redirect:/user_login_form"; // 로그인 페이지로 이동.
         }
 
         Board vo = new Board();
@@ -77,32 +69,8 @@ public class BoardController {
         vo.setContent(content);
         vo.setUser(user); // 사용자 정보 설정
 
-        if (!file.isEmpty()) {
-            try {
-                /*랜덤한 UUID 생성*/
-                String uuid = UUID.randomUUID().toString();
-
-                /*파일 확장자 분리*/
-                String originalFileName = file.getOriginalFilename();
-                String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
-
-                /*랜덤한 UUID를 파일 이름에 추가*/
-                String newFileName = uuid + extension;
-
-                // 업로드 디렉토리에 파일 저장
-                String filePath = UPLOAD_DIRECTORY + newFileName;
-                File dest = new File(filePath);
-                file.transferTo(dest);
-                vo.setImg(newFileName); // 이미지 경로를 게시글에 저장
-                System.out.println(request.getServletContext().getRealPath("/"));
-            } catch (IOException e) {
-                e.printStackTrace();
-                return "이미지 업로드에 실패하였습니다. 다시 시도해주십시오.";
-            }
-        }
-
-
         boardService.insertBoard(vo);
+
         return "redirect:/board_list"; // 저장 후 리스트 페이지로 리다이렉트합니다.
     }
 
@@ -127,7 +95,7 @@ public class BoardController {
         if (user == null) {
             // 로그인 알림을 포함한 경고 메시지를 설정합니다.
             request.setAttribute("message", "로그인 후 게시글을 작성할 수 있습니다.");
-            return "/user_login_form"; // 로그인 페이지로 이동.
+            return "redirect:/user_login_form"; // 로그인 페이지로 이동.
         }
 
         if (page == 0) {
@@ -162,7 +130,7 @@ public class BoardController {
         if (user == null) {
             // 로그인 알림을 포함한 경고 메시지를 설정합니다.
             request.setAttribute("message", "로그인 후 게시글을 작성할 수 있습니다.");
-            return "/user_login_form"; // 로그인 페이지로 이동.
+            return "redirect:/user_login_form"; // 로그인 페이지로 이동.
         }
 
         // 게시글 번호를 통해 해당 게시글 가져오기
@@ -196,7 +164,7 @@ public class BoardController {
         if (user == null) {
             // 로그인 알림을 포함한 경고 메시지를 설정합니다.
             request.setAttribute("message", "로그인 후 게시글을 작성할 수 있습니다.");
-            return "/user_login_form"; // 로그인 페이지로 이동.
+            return "redirect:/user_login_form"; // 로그인 페이지로 이동.
         }
 
         boardCommentService.deletAllComment(bseq);
@@ -218,7 +186,7 @@ public class BoardController {
         if (user == null) {
             // 로그인 알림을 포함한 경고 메시지를 설정합니다.
             request.setAttribute("message", "로그인 후 게시글을 작성할 수 있습니다.");
-            return "/user_login_form"; // 로그인 페이지로 이동.
+            return "redirect:/user_login_form"; // 로그인 페이지로 이동.
         }
 
         // 게시글 번호를 통해 해당 게시글 가져오기
@@ -244,7 +212,7 @@ public class BoardController {
         if (user == null) {
             // 로그인 알림을 포함한 경고 메시지를 설정합니다.
             request.setAttribute("message", "로그인 후 게시글을 작성할 수 있습니다.");
-            return "/user_login_form"; // 로그인 페이지로 이동.
+            return "redirect:/user_login_form"; // 로그인 페이지로 이동.
         }
 
         Board vo = new Board();
@@ -252,19 +220,6 @@ public class BoardController {
         vo.setTitle(title);
         vo.setContent(content);
         vo.setUser(user);
-
-        if (!file.isEmpty()) {
-            try {
-                // 업로드 디렉토리에 파일 저장
-                String filePath = UPLOAD_DIRECTORY + file.getOriginalFilename();
-                File dest = new File(filePath);
-                file.transferTo(dest);
-                vo.setImg(file.getOriginalFilename()); // 이미지 경로를 게시글에 저장
-            } catch (IOException e) {
-                e.printStackTrace();
-                return "Failed to upload image";
-            }
-        }
 
         boardService.editBoard(vo);
         return "redirect:/board_list"; // 저장 후 리스트 페이지로 리다이렉트합니다.
