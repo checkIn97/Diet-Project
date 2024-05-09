@@ -65,7 +65,7 @@ public class UsersController {
 	// 비밀번호 확인
 	@GetMapping("/pw_confirm")
 	public String pwCheck(Users vo, Model model, HttpSession session) {
-		String PATTERN_PW = "^(?=.*[a-zA-Z])((?=.*\\d)|(?=.*\\W)).{8,128}+$";
+		String PATTERN_PW = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[$@$!%*?&])[A-Za-z\\d$@$!%*?&]{8,}";
 		boolean pwPattern = Pattern.matches(PATTERN_PW, vo.getUserpw());
 		int success = -1;
 

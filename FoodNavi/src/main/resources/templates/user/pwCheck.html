@@ -1,33 +1,33 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<title>비밀번호 확인</title>
-<th:block th:insert="~{/includes/header}"></th:block>
-<script type="text/javascript" th:inline="javascript">
-function pwok(){
-	/*<![CDATA[*/
-  	var sessionpw = /*[[${sessionpw}]]*/'';
-	if (($("#userpw").val()) != sessionpw) {
-		alert("비밀번호가 일치하지 않습니다.");
-		$("#userpw").focus();
-	} else {
-		alert("비밀번호가 일치합니다.")
-		window.location.href="user_mypage_view";
-	}
-  	/*]]>*/
-}
-</script>
+    <meta charset="UTF-8">
+    <title>비밀번호 확인</title>
+    <th:block th:insert="~{/includes/headerLogin}"></th:block>
+    <script type="text/javascript" th:inline="javascript">
+        function pwok() {
+            /*<![CDATA[*/
+            var sessionpw = /*[[${sessionpw}]]*/'';
+            if (($("#userpw").val()) != sessionpw) {
+                alert("비밀번호가 일치하지 않습니다.");
+                $("#userpw").focus();
+            } else {
+                alert("비밀번호가 일치합니다.")
+                window.location.href = "user_mypage_view";
+            }
+            /*]]>*/
+        }
+    </script>
 </head>
 <body>
 <div id="wrap">
-  <h1>비밀번호 확인</h1>
-  <form method=get name=formm id="theform" style="margin-right:0 "
-  		action="#" >
-    User Pwd <input type=password name="userpw" id="userpw"> 
-            <input type=button value="확인" onclick="pwok()"><br>  
-  </form>
-</div>  
+    <h1>비밀번호 확인</h1>
+    <form method=get name=formm id="theform" style="margin-right:0 "
+          action="#">
+        User Pwd <input type=password name="userpw" id="userpw">
+        <input type=button value="확인" onclick="pwok()"><br>
+    </form>
+</div>
 </body>
 <th:block th:insert="~{includes/footer}"></th:block>
 </html>
