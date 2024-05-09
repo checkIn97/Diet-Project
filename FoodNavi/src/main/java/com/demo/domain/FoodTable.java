@@ -2,19 +2,15 @@ package com.demo.domain;
 
 import java.util.Date;
 
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,24 +27,22 @@ import lombok.ToString;
 @DynamicInsert
 @DynamicUpdate
 @Entity
-public class Exercise {
+public class FoodTable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int eseq;
+	private int tseq;
 	
 	@ManyToOne
 	@JoinColumn(name="useq", nullable=false)
 	private Users user;
 	
-	@Temporal(value=TemporalType.TIMESTAMP)
-	@ColumnDefault("sysdate")
-	@Column(updatable=false)
-	private Date exerciseDate;
+	@ManyToOne
+	@JoinColumn(name="fseq", nullable=false)
+	private Food food;
 	
-	private String exerciseType;
+	private int serveNumber;
 	
-	private int time;
+	private String mealType;
 	
-	
-	
+	private Date servedDate;
 }
