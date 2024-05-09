@@ -12,15 +12,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.demo.domain.Food;
-import com.demo.domain.History;
+import com.demo.domain.FoodTable;
 import com.demo.domain.Users;
 import com.demo.dto.FoodScanVo;
 import com.demo.dto.UserVo;
-import com.demo.service.DataInOutService;
 import com.demo.service.FoodScanService;
-import com.demo.service.HistoryService;
+import com.demo.service.FoodTableService;
 import com.demo.service.UsersService;
 
 import jakarta.servlet.http.HttpSession;
@@ -32,13 +32,10 @@ public class FoodScanController {
 	FoodScanService foodScanService;
 	
 	@Autowired
-	HistoryService historyService;
+	FoodTableService foodTableService;
 	
 	@Autowired
 	UsersService usersService;
-	
-	@Autowired
-	DataInOutService dataInOutService;
 	
 	// food 검색창에서의 리스트를 생성한다.
 	// 만들어진 리스트는 검색조건과 함께 foodScanVo에 담겨저 세션 영역에 저장된다.
@@ -147,17 +144,16 @@ public class FoodScanController {
 	}
 	
 	// 상세보기에서 상차림으로 데이터를 보낸다.
-	// 이미 존재하면 새로 추가하지 않고 개수만 늘린다.
-	@PostMapping("/history_in")
-	public String historyIn(HttpSession session, Users user, Food food) {
+	@PostMapping("/food_table_in")
+	public String foodTableIn(HttpSession session, Users user, Food food) {
 		user = usersService.getUser(user.getUseq());
 		food = foodScanService.getFood(food.getFseq());
 		
-		History history = new History();
-		history.setUser(user);
-		history.setFood(food);
-		history.setServeNumber(1);
-		historyService.historyIn(history);	
+		FoodTable foodTable = new FoodTable();
+		foodTable.setUser(user);
+		foodTable.setFood(food);
+		foodTable.setServeNumber(1);
+		foodTableService.foodTableIn(foodTable);	
 		
 		FoodScanVo foodScanVo = (FoodScanVo)session.getAttribute("foodScanVo");
 		
@@ -165,39 +161,38 @@ public class FoodScanController {
 	}
 	
 	// 상차림에서 데이터를 갱신한다.
-	@PostMapping("/history_update")
-	public String historyUpdate(History history) {
+	@PostMapping("/food_table_update")
+	public String foodTableUpdate(FoodTable foodTable) {
 		
-		if (history.getServeNumber() == 0) {
-			historyService.historyOut(history);
+		if (foodTable.getServeNumber() == 0) {
+			foodTableService.foodTableOut(foodTable);
 		} else {
-			historyService.historyUpdate(history);
+			foodTableService.foodTableUpdate(foodTable);
 		}		
 		
-		return "redirect:mypage_history";
+		return "redirect:mypage_table";
 	}
 	
 	// 상차림에서 데이터를 제거한다.
-	@PostMapping("/history_out")
-	public String historyOut(History history) {
-		historyService.historyOut(history);
-		return "redirect:mypage_history";
+	@PostMapping("/food_table_out")
+	public String foodTableOut(FoodTable foodTable) {
+		foodTableService.foodTableOut(foodTable);
+		return "redirect:mypage_table";
 	}
 	
 	// 상차림 후 현재시각을 기록한다..
 	@Transactional
-	@GetMapping("/history_confirm")
-	public String historyServe(HttpSession session, Users user) {
+	@GetMapping("/food_table_serve")
+	public String foodTableServe(HttpSession session, Users user) {
 		Users userVo = usersService.getUser(user.getUseq());
 		
-		List<History> historyList = historyService.getHistoryListNotServedYet(userVo);
+		List<FoodTable> myTableList = foodTableService.getFoodTableListNotServedYet(userVo);
 		Date now = new Date();
 		
-		for (History history : historyList) {
-			history.setServedDate(now);
-			historyService.historyUpdate(history);
+		for (FoodTable foodTable : myTableList) {
+			foodTable.setServedDate(now);
+			foodTableService.foodTableUpdate(foodTable);
 		}
-		dataInOutService.historyListToCsv("HistoryListToCsv.py", historyList);
 		
 		FoodScanVo foodScanVo = (FoodScanVo)session.getAttribute("foodScanVo");
 		
