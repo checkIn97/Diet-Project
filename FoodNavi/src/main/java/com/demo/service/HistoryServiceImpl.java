@@ -46,15 +46,20 @@ public class HistoryServiceImpl implements HistoryService {
 	}
 	
 	@Override
-	public List<History> getHistoryListNotServedYet(Users user) {
+	public List<History> getHistoryListNotConfirmedYet(Users user) {
 		return historyRepo.getHistoryListNotConfirmedYet(user);
 	}
 
 	@Override
-	public List<History> getHistoryListServed(Users user) {
+	public List<History> getHistoryListConfirmed(Users user) {
 		return historyRepo.getHistoryListConfirmed(user);
-	}	
-
+	}
+	
+	@Override
+	public List<History> getHistoryListConfirmed() {
+		return historyRepo.getHistoryListConfirmed();
+	}
+	
 	@Override
 	public float totalKcalToday(Users user) {
 		List<History> historyList = historyRepo.getHistoryListConfirmed(user);

@@ -10,8 +10,9 @@ public interface HistoryService {
 	public void historyUpdate(History history);
 	public void historyOut(History history);
 	public History getHistoryByHseq(int hseq);
-	public List<History> getHistoryListNotServedYet(Users user);
-	public List<History> getHistoryListServed(Users user);
+	public List<History> getHistoryListNotConfirmedYet(Users user);
+	public List<History> getHistoryListConfirmed(Users user);
+	public List<History> getHistoryListConfirmed();
 	public float totalKcalToday(Users user);
 	public float totalKcalOnTable(Users user);
 	public float totalCarbToday(Users user);

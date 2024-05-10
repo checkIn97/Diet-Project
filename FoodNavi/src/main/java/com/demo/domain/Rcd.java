@@ -36,6 +36,6 @@ public class Rcd {
 	
 	@ManyToOne()
 	@JoinColumn(name="fseq", nullable=false)
-	private Food fseq;
+	private Food food;
 	
 }

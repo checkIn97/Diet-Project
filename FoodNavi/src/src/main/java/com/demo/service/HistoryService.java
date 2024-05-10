@@ -2,15 +2,17 @@ package com.demo.service;
 
 import java.util.List;
 
-import com.demo.domain.FoodTable;
+import com.demo.domain.History;
 import com.demo.domain.Users;
 
-public interface FoodTableService {
-	public void foodTableIn(FoodTable foodTable);
-	public void foodTableUpdate(FoodTable foodTable);
-	public void foodTableOut(FoodTable foodTable);
-	public List<FoodTable> getFoodTableListNotServedYet(Users user);
-	public List<FoodTable> getFoodTableListServed(Users user);
+public interface HistoryService {
+	public void historyIn(History history);
+	public void historyUpdate(History history);
+	public void historyOut(History history);
+	public History getHistoryByHseq(int hseq);
+	public List<History> getHistoryListNotConfirmedYet(Users user);
+	public List<History> getHistoryListConfirmed(Users user);
+	public List<History> getHistoryListConfirmed();
 	public float totalKcalToday(Users user);
 	public float totalKcalOnTable(Users user);
 	public float totalCarbToday(Users user);
