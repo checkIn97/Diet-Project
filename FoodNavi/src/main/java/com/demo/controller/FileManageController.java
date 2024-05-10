@@ -2,7 +2,6 @@ package com.demo.controller;
 
 import com.google.gson.JsonObject;
 import org.apache.commons.io.FileUtils;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;

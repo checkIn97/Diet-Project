@@ -26,4 +26,10 @@ public interface HistoryRepository extends JpaRepository<History, Integer> {
 			+ "AND history.food = :food ")
 	public History getHistoryNotConfirmedYetByFood(Users user, Food food);
 	
+	@Query("SELECT history FROM History history "
+			+ "WHERE history.servedDate IS NOT NULL ")
+	public List<History> getHistoryListConfirmed();
+	
+
+	
 }

@@ -306,7 +306,7 @@ public class DataInOutServiceImpl implements DataInOutService {
 	}
 	
 	public void foodTotalSave(Food food, FoodDetail foodDetail, List<FoodIngredient> foodIngredientList) {
-  		foodScanRepo.save(food);
+		foodScanRepo.save(food);
 		food = foodScanRepo.findFirstByOrderByFseqDesc();
 		foodDetail.setFood(food);
 		foodDetailScanRepo.save(foodDetail);
