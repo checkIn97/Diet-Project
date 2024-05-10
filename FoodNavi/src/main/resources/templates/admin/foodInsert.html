@@ -49,25 +49,22 @@
             </thead>
             <tbody>
             <input type="button" class="button" id='btn-add-row' value="행 추가">
-            <tr>
-                <td><input type="text" name="ingredient"></td>
-                <td><input type="number" name="quantity">g</td>
-                <td>
-                    <input type="button" class="button" id="btn-delete-row" value="삭제">
-            </tr>
-            </td>
-            </tr>
+
             </tbody>
         </table>
 
         <script src="//code.jquery.com/jquery.min.js"></script>
         <script>
             $(document).on('keydown', function (event) {
-                if (event.key == "Enter") {
+                if (event.key == "Enter" && document.activeElement.name === "quantity") {
                     event.preventDefault();
                     $('#mytable > tbody:last').append('<tr><td><input type="text" name="ingredient"></td>' +
-                        '<td><input type="number" name="quantity">g</td>' +
+                        '<td><input type="number" name="quantity" min="0">g</td>' +
                         '<td><input type="button" class="button" id="btn-delete-row" value="삭제"></td></tr>');
+                    initAutocomplete();
+                    $('input[name="ingredient"]').focus();
+                } else if (event.key == "Enter") {
+                    $('input[name="quantity"]').focus();
                 }
             });
 
@@ -75,9 +72,11 @@
                 var time = new Date().toLocaleTimeString();
                 event.preventDefault();
                 $('#mytable > tbody:last').append('<tr><td><input type="text" name="ingredient"></td>' +
-                    '<td><input type="number" name="quantity">g</td>' +
+                    '<td><input type="number" name="quantity" min="0">g</td>' +
                     '<td><input type="button" class="button" id="btn-delete-row" value="삭제"></td></tr>');
+                initAutocomplete();
             });
+
 
             $('#mytable').on('click', '#btn-delete-row', function () {
                 event.preventDefault();
@@ -116,3 +115,8 @@
     </a>
 </article>
 <th:block th:insert="~{/includes/footer}"></th:block>
+
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="/assets/js/Autocomplete.js"></script>
