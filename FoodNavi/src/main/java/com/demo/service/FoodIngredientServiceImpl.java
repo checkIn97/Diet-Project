@@ -8,13 +8,13 @@ import com.demo.persistence.FoodIngredientRepository;
 
 @Service
 public class FoodIngredientServiceImpl implements FoodIngredientService {
-	
+
 	@Autowired
 	private FoodIngredientRepository foodIngredientRepo;
-	
 	@Override
 	public void insertFoodIngredient(FoodIngredient foodIngredient) {
 		foodIngredientRepo.save(foodIngredient);
+
 	}
 
 }

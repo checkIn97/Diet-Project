@@ -10,18 +10,19 @@ import com.demo.persistence.IngredientRepository;
 
 @Service
 public class IngredientServiceImpl implements IngredientService {
-	
+
 	@Autowired
 	private IngredientRepository ingredientRepo;
-
-
+	
 	@Override
 	public Optional<Ingredient> findByName(String name) {
+		
 		return ingredientRepo.findByName(name);
 	}
 
 	@Override
 	public Ingredient getIngredientByMaxIseq() {
+		
 		return ingredientRepo.findFirstByOrderByIseqDesc();
 	}
 

@@ -52,4 +52,10 @@ public class AdminUsersServiceImpl implements AdminUsersService {
 		return usersRepo.findById(useq).get();
 	}
 
+	@Override
+	public List<Users> findAll() {
+
+		return usersRepo.findAll();
+	}
+
 }
