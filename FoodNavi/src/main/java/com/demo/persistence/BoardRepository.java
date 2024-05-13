@@ -23,6 +23,14 @@ public interface BoardRepository extends JpaRepository<Board, Integer> {
 	
 	@Query("SELECT board FROM Board board "
 			+ "WHERE board.title LIKE %:title% "
-			+ "AND board.content LIKE %:content% OR board.content IS NULL ")
+			+ "or board.content LIKE %:content% OR board.content IS NULL ")
 	Page<Board> findBoardList(String title, String content, Pageable pageable);
+	
+	Page<Board> findByTitleContaining(String title, Pageable pageable);
+	
+	Page<Board> findByUserUserid(String userid, Pageable pageable);
+	
+	Page<Board> findByContentContaining(String writer, Pageable pageable);
+	
+
 }
