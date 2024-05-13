@@ -1838,3 +1838,17 @@ input[type="number"]{
 .popularPosts {
     font-weight: bold;
 }
+
+.nextContent {
+    transition: all 0.3s ease; /* 부드러운 전환 */
+    font-weight: normal; /* 기본 글꼴 두께 */
+    font-size: 1em; /* 기본 글꼴 크기 */
+    margin-bottom: 0; /* 기본 마진 */
+}
+
+.nextContent:hover {
+    transform: translateX(10px); /* 오른쪽으로 이동 */
+    font-weight: bold; /* 굵은 글꼴 */
+    font-size: 1.2em; /* 글꼴 크기 증가 */
+    margin-bottom: 10px; /* 하단 마진 추가 */
+}
