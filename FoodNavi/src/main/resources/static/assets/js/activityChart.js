@@ -14,24 +14,4 @@ var myChart = new Chart(ctx, {
             borderWidth: 1
         }]
     },
-    options: {
-        scales: {
-            y: {
-                beginAtZero: true,
-                ticks: {
-                    fontColor: 'white' // y축 레이블의 글씨 색상을 흰색으로 변경
-                }
-            },
-            x: {
-                ticks: {
-                    fontColor: 'white' // x축 레이블의 글씨 색상을 흰색으로 변경
-                }
-            }
-        },
-        legend: {
-            labels: {
-                fontColor: 'white' // 범례의 글씨 색상을 흰색으로 변경
-            }
-        }
-    }
 });
