@@ -215,9 +215,10 @@ public class BoardController {
         // 게시글 번호를 통해 해당 게시글 가져오기
         Board board = boardService.getBoard(bseq);
         boardService.updateCnt(bseq);
-
+        int useq = board.getUser().getUseq();
         // 모델에 게시글 추가
         model.addAttribute("board", board);
+        model.addAttribute("authorList", boardService.getAuthorBoardList(useq));
 
         // 게시글의 작성자와 현재 사용자가 같은지 확인하여 모델에 추가
         model.addAttribute("isAuthor", board.getUser().getUseq() == user.getUseq());
