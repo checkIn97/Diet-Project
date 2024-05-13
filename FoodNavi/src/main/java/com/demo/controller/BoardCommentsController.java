@@ -17,7 +17,6 @@ import com.demo.domain.Comments;
 import com.demo.domain.Users;
 import com.demo.service.BoardCommentsService;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @RestController
@@ -27,63 +26,60 @@ public class BoardCommentsController {
 	@Autowired
 	private BoardCommentsService boardCommentsService;
 
-	@GetMapping("/current-user")
+	@GetMapping(value = "/list")
 	@ResponseBody
-	public int getCurrentUser(HttpSession session, HttpServletRequest request) {
-		
-		// 세션에서 사용자 정보 가져오기
-    	Users user = (Users) session.getAttribute("loginUser");
-        
-    	
-		int currentUser = user.getUseq();
-		
-		
-		return currentUser;
+	public Map<String, Object> getComments(@RequestParam(value = "bseq") int bseq, HttpSession session) {
+	    Map<String, Object> result = new HashMap<>();
 	    
-	 
+	    // 세션에서 사용자 정보 가져오기
+	    Users user = (Users) session.getAttribute("loginUser");
+	    int currentUser = user.getUseq();
+	    
+	    // 댓글 목록 가져오기
+	    List<Comments> commentList = boardCommentsService.getCommentList(bseq);
+	    
+	    result.put("currentUser", currentUser);
+	    result.put("commentList", commentList);
+	    result.put("commentCount", commentList.size());
+	    
+	    return result;
 	}
-	
-	
-	@GetMapping("/list")
-	public Map<String, Object> commentList(@RequestParam(value = "bseq") int bseq) {
-		Map<String, Object> commentInfo = new HashMap<>();
 
-		List<Comments> commentList = boardCommentsService.getCommentList(bseq);
-
-		commentInfo.put("commentList", commentList);
-		commentInfo.put("commentCount", commentList.size());
-
-		return commentInfo;
-	}
 
 	@PostMapping(value = "/save")
-	public Map<String, Object> saveCommentAction(Comments vo, @RequestParam(value = "bseq") int bseq,
-			HttpSession session) {
+	public Map<String, Object> saveCommentAction(@RequestParam(value = "bseq") int bseq, 
+	        @RequestParam(value = "CommentContent") String content,
+	        HttpSession session) {
 
-		Map<String, Object> map = new HashMap<>();
+	    Map<String, Object> map = new HashMap<>();
 
-		Users user = (Users) session.getAttribute("loginUser");
+	    Users user = (Users) session.getAttribute("loginUser");
 
-		if (user == null) { // 로그인 되어 있지 않음.
-			map.put("result", "not_logedin");
+	    if (user == null) { // 로그인 되어 있지 않음.
+	        map.put("result", "not_logedin");
 
-		} else if (vo.getContent() == null) {
+	    } else if (content == null || content.isEmpty()) {
+	        map.put("result", "fail");
 
-			map.put("result", "fail");
+	    } else {
+	        Comments vo = new Comments(); // Comments 객체 생성
+	        vo.setUser(user);
+	        
+	        Board b = new Board();
+	        b.setBseq(bseq);
+	        vo.setBoard(b);
+	        vo.setContent(content);
 
-		} else {
-			vo.setUser(user);
+	        try {
+	            boardCommentsService.saveComment(vo);
+	            map.put("result", "success");
+	        } catch (Exception e) {
+	            map.put("result", "fail");
+	            e.printStackTrace(); // 에러 로그 출력
+	        }
+	    }
 
-			Board b = new Board();
-			b.setBseq(bseq);
-			vo.setBoard(b);
-
-			boardCommentsService.saveComment(vo);
-
-			map.put("result", "success");
-		}
-
-		return map;
+	    return map;
 	}
 
 	// 댓글 삭제

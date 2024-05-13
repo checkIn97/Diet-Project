@@ -17,7 +17,7 @@ public interface BoardService {
 	List<Board> getBoardList(String userid);
 	
 	Page<Board> findBoardList(BoardScanVo boardScanVo, int page, int size);
-
+	
 	Page<Board> getListAllBoard(Pageable pageable);
 	
 	void editBoard(Board vo);
