@@ -1,5 +1,9 @@
 package com.demo.controller;
 
+
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,7 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
@@ -33,22 +37,16 @@ public class UsersController {
 
 	@PostMapping("/user_join")
 	public String joinAction(Users vo, Model model, HttpSession session) {
-		int success = (int)session.getAttribute("success");
 
 		if (vo.getUserid() == null || vo.getUserpw() == null || vo.getName() == null || vo.getSex() == null) {
 			return "redirect:user_membership";
 		}
+		
+		Users user = Users.builder().userid(vo.getUserid()).userpw(vo.getUserpw()).name(vo.getName()).sex(vo.getSex())
+				.userGoal(vo.getUserGoal()).useyn("y").build();
+		session.setAttribute("joinUser", user);
 
-		if (success == -1) {
-			model.addAttribute("msg", "비밀번호를 정확히 입력해주세요.");
-			return "user/alertPage";
-		} else {
-			Users user = Users.builder().userid(vo.getUserid()).userpw(vo.getUserpw()).name(vo.getName()).sex(vo.getSex())
-					.userGoal(vo.getUserGoal()).useyn("y").build();
-			session.setAttribute("joinUser", user);
-
-			return "user/bmi";
-		}
+		return "user/bmi";
 	}
 
 	//	ID 중복 확인 처리
@@ -69,23 +67,23 @@ public class UsersController {
 	}
 
 	// 비밀번호 확인
-	@GetMapping("/pw_confirm")
-	public String pwCheck(Users vo, Model model, HttpSession session) {
-		String PATTERN_PW = "^(?=.*[a-zA-Z])((?=.*\\d)|(?=.*\\W)).{8,128}+$";
-		boolean pwPattern = Pattern.matches(PATTERN_PW, vo.getUserpw());
-		int success = -1;
-
-		if (!pwPattern) {
-			model.addAttribute("msg", "비밀번호는 영문 소문자, 대문자, 숫자, 특수문자를 반드시 하나씩 포함하여 8자리 이상 입력하셔야 합니다.");
-			session.setAttribute("success", success);
-		} else {
-			success = 1;
-			model.addAttribute("msg", "비밀번호가 일치합니다.");
-			session.setAttribute("success", success);
-		}
-
-		return "user/pwConfirm";
-	}
+//	@GetMapping("/pw_confirm")
+//	public String pwCheck(Users vo, Model model, HttpSession session) {
+//		String PATTERN_PW = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,128}$";
+//		boolean pwPattern = Pattern.matches(PATTERN_PW, vo.getUserpw());
+//		int success = -1;
+//
+//		if (!pwPattern) {
+//			model.addAttribute("msg", "비밀번호는 영문 소문자, 대문자, 숫자, 특수문자를 반드시 하나씩 포함하여 8자리 이상 입력하셔야 합니다.");
+//			session.setAttribute("success", success);
+//		} else {
+//			success = 1;
+//			model.addAttribute("msg", "비밀번호가 일치합니다.");
+//			session.setAttribute("success", success);
+//		}
+//
+//		return "user/pwConfirm";
+//	}
 
 	@PostMapping("/user_insertBMI")
 	public String insertBMI(Users vo, HttpSession session) {

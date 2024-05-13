@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <th:block th:insert="~{/includes/header}"></th:block>
 <meta charset="UTF-8">
 <title>회원가입</title>
@@ -26,6 +27,8 @@
             </div>
             <div class="field">
                 <input type="button" value="비밀번호 확인" onclick="pwconfirm()">
+                <div id="pwResult"></div>
+                <!--  <a href="javascript:pwconfirm('pw_confrim',{'userpw':$(#userpw).val(), 'userpwCheck':$(#userpwCheck).val()})">비밀번호 확인</a>-->
             </div>
             <div class="field half">
                 <label for="userName">이름</label>
