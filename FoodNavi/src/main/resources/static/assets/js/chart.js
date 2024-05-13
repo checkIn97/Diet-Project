@@ -39,28 +39,3 @@ function animateChart(chartId, currentValue, maxValue) {
     }, 20); // 20ms 간격으로 너비를 증가시킵니다.
 }
 
-var ctx = document.getElementById('myChart').getContext('2d');
-var myChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-        datasets: [{
-            label: 'Exercise Time',
-            data: [12, 19, 3, 5, 2, 3, 7],
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            borderColor: 'rgba(75, 192, 192, 1)',
-            borderWidth: 1
-        }]
-    },
-    options: {
-        scales: {
-            y: {
-                beginAtZero: true
-            }
-        }
-    }
-});
-
-document.getElementById('btn-chart').addEventListener('click', function() {
-    document.getElementById('myChart').style.display = 'block';
-});
