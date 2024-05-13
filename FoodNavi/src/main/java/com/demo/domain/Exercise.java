@@ -51,8 +51,4 @@ public class Exercise {
 	
 	private int time;
 	
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name= "exercise_option_eoseq", referencedColumnName="eoseq")
-	private ExerciseOption exerciseOption;
-	
 }

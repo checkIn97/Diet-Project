@@ -35,4 +35,7 @@ public class ExerciseOption {
 	private String type; // 운동이름
 	private String fomula; // 운동별 계산식
 	
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name= "exercise_eseq", referencedColumnName="eseq")
+	private Exercise exercise;
 }
