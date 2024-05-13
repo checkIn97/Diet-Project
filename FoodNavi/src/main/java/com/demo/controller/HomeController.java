@@ -26,14 +26,23 @@ public class HomeController {
 		return "index";
 	}
 	
+
 	@GetMapping("/mainpage")
 	public String mainpage(HttpSession session, Model model) {
-		List<Board> boardList = new ArrayList<Board>();
 
-		model.addAttribute("boardList", boardList);
-		UserVo userVo = new UserVo((Users)(session.getAttribute("loginUser")));
-		
-		model.addAttribute("userVo", userVo);
-		return "mainpage";
-	}
+        Users user = (Users) session.getAttribute("loginUser");
+        // 세션에 로그인 정보가 없는 경우
+        if (user == null) {
+            // 로그인 알림을 포함한 경고 메시지를 설정합니다.
+            model.addAttribute("msg", "로그인 후 이용해주세요.");
+            model.addAttribute("redirectTo", "/user_login_form");
+            return "board/board_alert";
+        }
+
+        UserVo userVo = new UserVo((Users) (session.getAttribute("loginUser")));
+
+
+        model.addAttribute("userVo", userVo);
+        return "mainpage";
+    }
 }
