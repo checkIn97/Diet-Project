@@ -28,7 +28,7 @@ public interface BoardService {
 
 	List<Board> getBestBoardList();
 	
-	
+	List<Board> getAuthorBoardList(int useq);
 	
 	
 }

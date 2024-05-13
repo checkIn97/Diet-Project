@@ -65,6 +65,11 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
+	public List<Board> getAuthorBoardList(int useq) {
+		return boardRepo.findAuthorList(useq);
+	}
+
+	@Override
 	public Page<Board> findBoardList(BoardScanVo boardScanVo, int page, int size) {
 	    Pageable pageable = null;
 	    if (boardScanVo.getSortDirection().equals("ASC")) {

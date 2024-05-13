@@ -37,6 +37,21 @@
 
                 				<p class="content" id="content" th:utext="${board.content}">내용</p>
 
+                <!--작성자의 최신글 목록 -->
+                <div th:if="${authorList}">
+                    <h3><span th:text="${board.user.userid}"></span>님의 글 더보기</h3>
+                    <table>
+                        <tbody>
+                        <tr th:each="author, iterStat : ${authorList}" th:if="${iterStat.index < 3}">
+                            <td>
+                                <a th:href="@{'/board_detail/' + ${author.bseq}}" th:text="${author.title}"></a>
+                                <input type="hidden" id="bseq" name="bseq" th:value="${board.bseq}" />
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
                 <div class="btn-group">
                     <!-- 작성자만 수정 및 삭제 버튼을 볼 수 있도록 -->
                     <a th:if="${isAuthor}"
@@ -53,7 +68,10 @@
             </div>
         </div>
     </div>
- <th:block th:insert="~{/board/boardComments}"></th:block>
+
+
+
+    <th:block th:insert="~{/board/boardComments}"></th:block>
    
 </article>
 <script>

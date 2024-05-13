@@ -35,7 +35,8 @@ public interface BoardRepository extends JpaRepository<Board, Integer> {
 	@Query("SELECT b FROM Board b ORDER BY b.cnt DESC")
 	List<Board> findBestList();
 
-
+	@Query("SELECT b FROM Board b WHERE b.user.useq = ?1 ORDER BY b.createdAt DESC")
+	List<Board> findAuthorList(int useq);
 
 
 }
