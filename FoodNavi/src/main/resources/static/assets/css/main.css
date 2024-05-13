@@ -1830,3 +1830,7 @@ input[type="number"]{
     padding: 0;
     margin-top: 20px;
 }
+
+#commentsDel {
+    float: right;
+}
