@@ -10,26 +10,6 @@
 </h1>
 
 <article id="box">
-    <h2>인기 게시글 목록</h2>
-    <table>
-        <thead>
-        <tr>
-            <th>제목</th>
-            <th>작성자</th>
-            <th>작성일시</th>
-            <th>조회수</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="board, iterStat : ${boardBestList}" th:if="${iterStat.index < 3}">
-            <td><a th:href="@{'/board_detail/' + ${board.bseq}}" th:text="${board.title}"></a>
-                <input type="hidden" id="bseq" name="bseq" th:value="${board.bseq}" /></td>
-            <td th:text="${board.user.userid}"></td>
-            <td th:text="${#dates.format(board.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
-            <td th:text="${board.cnt}"></td>
-        </tr>
-        </tbody>
-    </table>
 
     <h2>커뮤니티 게시글 목록</h2>
     <table>
@@ -42,6 +22,14 @@
         </tr>
         </thead>
         <tbody>
+        <tr th:each="board, iterStat : ${boardBestList}" th:if="${iterStat.index < 3}">
+            <td><div class="popularPosts">[인기] <a th:href="@{'/board_detail/' + ${board.bseq}}" th:text="${board.title}"></a></div>
+                <input type="hidden" name="bseq" th:value="${board.bseq}" /></td>
+            <td th:text="${board.user.userid}"></td>
+            <td th:text="${#dates.format(board.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
+            <td th:text="${board.cnt}"></td>
+        </tr>
+
         <tr th:each="board : ${boardList}">
 
             <td><a th:href="@{'/board_detail/' + ${board.bseq}}"
