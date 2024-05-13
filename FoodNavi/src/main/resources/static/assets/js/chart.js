@@ -60,3 +60,7 @@ var myChart = new Chart(ctx, {
         }
     }
 });
+
+document.getElementById('btn-chart').addEventListener('click', function() {
+    document.getElementById('myChart').style.display = 'block';
+});
