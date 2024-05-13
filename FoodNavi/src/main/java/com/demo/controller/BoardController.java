@@ -27,7 +27,7 @@ public class BoardController {
 
     //게시글 작성으로 이동
     @GetMapping("/board_insert_form")
-    public String showWriteForm(HttpServletRequest request, HttpSession session, Model model) {
+    public String showWriteForm(HttpSession session, Model model) {
         // 세션에서 사용자 정보 가져오기
         Users user = (Users) session.getAttribute("loginUser");
 
@@ -93,7 +93,7 @@ public class BoardController {
                                 @RequestParam(value = "searchField", defaultValue = "") String searchField,
                                 @RequestParam(value = "searchWord", defaultValue = "") String searchWord,
                                 BoardScanVo boardScanVo,
-                                HttpSession session, HttpServletRequest request) {
+                                HttpSession session) {
 
         // 세션에서 사용자 정보 가져오기
         Users user = (Users) session.getAttribute("loginUser");
