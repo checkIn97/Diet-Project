@@ -39,7 +39,7 @@
 
                 <!--작성자의 최신글 목록 -->
                 <div th:if="${authorList}">
-                    <h3><span th:text="${board.user.userid}"></span>님의 글 더보기</h3>
+                    <h3><span th:text="${board.user.userid}"></span>님의 최신글 더보기</h3>
                     <table>
                         <tbody>
                         <tr th:each="author, iterStat : ${authorList}" th:if="${iterStat.index < 3}">
