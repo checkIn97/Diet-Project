@@ -52,5 +52,4 @@ public class Board {
 	private Date createdAt;
 	
 	private int cnt;
-	private String img;
 }

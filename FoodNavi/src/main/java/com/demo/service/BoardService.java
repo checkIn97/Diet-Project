@@ -25,6 +25,8 @@ public interface BoardService {
 	void deleteBoard(int bseq);
 	
 	int updateCnt(int bseq);
+
+	List<Board> getBestBoardList();
 	
 	
 	

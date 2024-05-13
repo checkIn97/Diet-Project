@@ -60,6 +60,11 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
+	public List<Board> getBestBoardList() {
+		return boardRepo.findBestList();
+	}
+
+	@Override
 	public Page<Board> findBoardList(BoardScanVo boardScanVo, int page, int size) {
 	    Pageable pageable = null;
 	    if (boardScanVo.getSortDirection().equals("ASC")) {
