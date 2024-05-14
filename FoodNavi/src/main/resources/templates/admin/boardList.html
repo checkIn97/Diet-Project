@@ -22,7 +22,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr th:each="board : ${boardList}">
+			<tr class="board_list" th:each="board : ${boardList}">
 
 				<td><a th:href="@{admin_board_detail(bseq=${board.bseq})}"
 					th:text="${board.title}"></a> <input type="hidden" id="bseq"
