@@ -19,7 +19,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="user : ${userList}">
+        <tr class="board_list" th:each="user : ${userList}">
             <td>
                 <a th:href="@{admin_user_detail(useq=${user.useq})}" th:text="${user.userid}"></a>
             </td>
