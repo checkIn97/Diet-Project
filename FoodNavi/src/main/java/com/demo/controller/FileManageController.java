@@ -23,7 +23,7 @@ public class FileManageController {
 
         JsonObject jsonObject = new JsonObject();
 
-        String fileRoot = "/FoodNavi/src/main/resources/static/uploadImages/";	//각자 프로젝트내의 저장될 파일 경로
+        String fileRoot = "/uploadImages/";	//각자 프로젝트내의 저장될 파일 경로
         String originalFileName = multipartFile.getOriginalFilename();	//오리지날 파일명
         String extension = originalFileName.substring(originalFileName.lastIndexOf("."));	//파일 확장자
 
