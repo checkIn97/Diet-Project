@@ -18,7 +18,6 @@ function initAutocomplete() {
             });
         },
         minLength: 1,
-        autoFocus: true,
 
         select: function(event, ui) {
             // 사용자가 자동완성 목록에서 항목을 선택하면 입력 필드의 값을 해당 항목의 값으로 설정합니다.
@@ -34,6 +33,10 @@ function initAutocomplete() {
                 // 경고 메시지를 표시합니다.
                 alert("사용할 수 없는 운동 종류입니다."); // 수정된 메시지
             }
+        },
+        focus: function(event, ui) {
+            // 사용자가 키보드의 방향키를 사용하여 목록 항목에 포커스를 맞추었을 때 입력 필드의 값을 변경하지 않도록 합니다.
+            event.preventDefault();
         }
     });
 }
