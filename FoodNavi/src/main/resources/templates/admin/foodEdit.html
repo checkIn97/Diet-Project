@@ -5,10 +5,9 @@
 <meta charset="UTF-8">
 <title>Food Navigator</title>
 
-<h1><a href="admin_main">FoodNavi</a></h1>
-
 <body>
 	<h2>Food Edit</h2>
+	<article class="box">
 	<form method="post" action="admin_food_edit" enctype="multipart/form-data">
 	<table>
 		<tr>
@@ -38,48 +37,67 @@
 		<tr>
 			<th>맛</th>
 			<td>
-			<select name="tasteType">
-				<option value="all">구분없음</option>
-				<option value="sweet">달달한맛</option>
-				<option value="spicy">매운맛</option>
-				<option value="sour">새콤달콤</option>
-			</select>
+				<div class="field half  checkbox-button">
+					<input class="btn" type="checkbox" name="purpose" id="spicy" value="spicy"/>
+					<label for="spicy">매운맛</label>
+				</div>
+				<div class="field half checkbox-button">
+					<input class="btn" type="checkbox" name="purpose" id="sweetness" value="sweetness"/>
+					<label for="sweetness">단맛</label>
+				</div>
+				<div class="field half checkbox-button">
+					<input class="btn" type="checkbox" name="purpose" id="salty" value="salty"/>
+					<label for="salty">짠맛</label>
+				</div>
+				<div class="field half checkbox-button">
+					<input class="btn" type="checkbox" name="purpose" id="sour" value="sour"/>
+					<label for="sour">신맛</label>
+				</div>
+				<div class="field half checkbox-button">
+					<input class="btn" type="checkbox" name="purpose" id="bitter" value="bitter"/>
+					<label for="bitter">쓴맛</label>
+				</div>
+				<div class="field half checkbox-button">
+					<input class="btn" type="checkbox" name="purpose" id="light" value="light"/>
+					<label for="light">담백한 맛</label>
+				</div>
 			</td>
 		</tr>
 		<tr>
 			<th>채식 여부</th>
 			<td>
-			<select name="veganType">
-				<option value="0">해당 없음</option>
-				<option value="1">채식 1단계</option>
-				<option value="2">채식 2단계</option>
-				<option value="3">채식 3단계</option>
-				<option value="4">채식 4단계</option>
-				<option value="5">채식 5단계</option>
+			<select name="exerciseType" id="vegetarian">
+				<option value="noVegetarian">해당 사항 없음</option>
+				<option value="pollo">폴로(닭과 조류는 먹음)</option>
+				<option value="pesco">페스코(어패류는 먹음)</option>
+				<option value="lactoOvo">락토오보(달걀 우유는 먹음)</option>
+				<option value="lacto">락토(유제품은 먹음)</option>
+				<option value="vegan">비건(순수 채식 만함)</option>
 			</select>
 			</td>
 		</tr>
 		<tr>
-			<th>음식풍</th>
+			<th>나라별 음식</th>
 			<td>
-			<select name="nationType">
-				<option value="all">해당 없음</option>
-				<option value="ko">한식</option>
-				<option value="cn">중식</option>
-				<option value="jp">일식</option>
-				<option value="we">양식</option>
-				<option value="sa">동남아식</option>
+			<select name="exerciseType" id="foodCountry">
+				<option value="koreanFood">한식</option>
+				<option value="westernFood">양식</option>
+				<option value="chineseFood">중식</option>
+				<option value="japaneseFood">일식</option>
+				<option value="asianFood">동남아식</option>
+				<option value="fusionFood">퓨전식</option>
 			</select>
 			</td>
 		</tr>
 		<tr>
-			<th>건강식 여부</th>
+			<th>식단 종류</th>
 			<td>
-			<select name="healthyType">
-				<option value="all">해당 없음</option>
-				<option value="lowna">저염식</option>
-				<option value="diab">당뇨식</option>
-			</select>
+				<select name="exerciseType" id="dietType">
+					<option value="healthyFood">건강식</option>
+					<option value="diabeticDiet">당뇨식</option>
+					<option value="lowSaltDiet">저염식</option>
+					<option value="lowCarbohydrate">저탄고지</option>
+				</select>
 			</td>
 		</tr>
 		<tr>
@@ -91,7 +109,8 @@
 	</table>	
 		<input type="submit" value="수정하기">
 	</form>	
-	<a th:href="admin_food_Detail(fseq=${food.fseq})"><button>수정취소</button></a>
+	<a th:href="@{/admin_food_Detail(fseq=${food.fseq})}"><button>수정취소</button></a>
+	</article>
 </body>
 </html>
 

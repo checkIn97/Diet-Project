@@ -1874,3 +1874,48 @@ input[type="number"]{
 .board_list:hover {
     transform: scale(1.1);
 }
+
+.foodDetailContainer {
+    width: auto;
+}
+
+.food-detail-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.food-detail-row {
+    display: flex;
+    width: 100%;
+}
+
+.food-detail-item {
+    flex: 1;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.food-detail-title {
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.food-detail-value {
+    margin-left: 10px;
+}
+
+.food-detail-Image {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.food-detail-Image img {
+    width: 300px;
+    height: auto;
+}
+
+.food-detail-item-large {
+    font-size: 1.5em; /* 원하는 크기로 조정 */
+}

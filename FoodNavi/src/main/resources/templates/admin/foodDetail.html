@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <th:block th:insert="~{/admin/include/headerAdmin}"></th:block>
 
 <meta charset="UTF-8">
@@ -7,78 +7,99 @@
 
 
 <body>
-	<h2>Food Info</h2>
-	<form method="post" action="admin_food_edit_form">
-	<table>		
-		<tr>
-			<th>이미지</th>
-			<td >없음</td>			
-		</tr>
-		<tr>
-			<th>이름</th>
-			<td>[[${food.name}]]</td>
-		</tr>
-		<tr>
-			<th>칼로리(kcal)</th>
-			<td>[[${food.foodDetail.kcal}]]</td>
-		</tr>
-		<tr>
-			<th>탄수화물(g)</th>
-			<td>[[${food.foodDetail.carb}]]</td>
-		</tr>
-		<tr>
-			<th>단백질(g)</th>
-			<td>[[${food.foodDetail.prt}]]</td>
-		</tr>
-		<tr>
-			<th>지방(g)</th>
-			<td>[[${food.foodDetail.fat}]]</td>
-		</tr>
-		<tr>
-			<th>맛</th>
-			<td th:if="${food.foodDetail.tasteType == 'all'}">구분없음</td>
-			<td th:if="${food.foodDetail.tasteType == 'sweet'}">달달한맛</td>
-			<td th:if="${food.foodDetail.tasteType == 'spicy'}">매운맛</td>
-			<td th:if="${food.foodDetail.tasteType == 'sour'}">새콤한맛</td>			
-		</tr>
-		<tr>
-			<th>채식 여부</th>
-			<td th:if="${food.foodDetail.veganType == '0'}">해당 없음</td>
-			<td th:if="${food.foodDetail.veganType == '1'}">채식 1단계</td>
-			<td th:if="${food.foodDetail.veganType == '2'}">채식 2단계</td>
-			<td th:if="${food.foodDetail.veganType == '3'}">채식 3단계</td>
-			<td th:if="${food.foodDetail.veganType == '4'}">채식 4단계</td>
-			<td th:if="${food.foodDetail.veganType == '5'}">채식 5단계</td>				
-		</tr>
-		<tr>
-			<th>음식풍</th>
-			<td th:if="${food.foodDetail.nationType == 'all'}">구분없음</td>
-			<td th:if="${food.foodDetail.nationType == 'ko'}">한식</td>
-			<td th:if="${food.foodDetail.nationType == 'cn'}">중식</td>
-			<td th:if="${food.foodDetail.nationType == 'jp'}">일식</td>
-			<td th:if="${food.foodDetail.nationType == 'we'}">양식</td>
-			<td th:if="${food.foodDetail.nationType == 'sa'}">동남아식</td>
-		</tr>
-		<tr>
-			<th>건강식 여부</th>
-			<td th:if="${food.foodDetail.healthyType == 'all'}">해당 없음</td>
-			<td th:if="${food.foodDetail.healthyType == 'lowna'}">저염식</td>
-			<td th:if="${food.foodDetail.healthyType == 'diab'}">당뇨식</td>
-		</tr>
-		<tr>
-			<th>재료</th>
-			<td>
-				재료 나열하기
-			</td>
-		</tr>		
-	</table>	
-		<input type="hidden" name="fseq" th:value="${food.fseq}">
-		<input type="submit" value="수정하기">
-	</form>	
-	<a th:href="@{admin_food_delete(fseq=${food.fseq})}"><button>삭제하기</button></a>
-	<a th:href="@{admin_food_list(page=${pageInfo.number +1})}"><button>목록 보기</button></a>
+<h2>Food Info</h2>
+<article class="box">
+    <form method="post" action="admin_food_edit_form">
+
+        <div class="food-detail-Image">
+            <div>
+                <img src="/assets/images/food.png" alt="Food Image"/>
+            </div>
+            <div class="food-detail-item-large">
+                <span class="food-detail-title">이름</span>
+                <span class="food-detail-value">[[${food.name}]]</span>
+            </div>
+        </div>
+        <div class="food-detail-container">
+            <div class="food-detail-row">
+                <div class="food-detail-item">
+                    <span class="food-detail-title">칼로리(kcal)</span>
+                    <span class="food-detail-value">[[${food.foodDetail.kcal}]]</span>
+                </div>
+                <div class="food-detail-item">
+                    <span class="food-detail-title">탄수화물(g)</span>
+                    <span class="food-detail-value">[[${food.foodDetail.carb}]]</span>
+                </div>
+                <div class="food-detail-item">
+                    <span class="food-detail-title">단백질(g)</span>
+                    <span class="food-detail-value">[[${food.foodDetail.prt}]]</span>
+                </div>
+                <div class="food-detail-item">
+                    <span class="food-detail-title">지방(g)</span>
+                    <span class="food-detail-value">[[${food.foodDetail.fat}]]</span>
+                </div>
+            </div>
+            <div class="food-detail-row">
+                <div class="food-detail-item">
+                    <span class="food-detail-title">맛</span>
+                    <span class="food-detail-value" th:if="${food.foodDetail.tasteType == 'all'}">구분없음</span>
+                    <span class="food-detail-value" th:if="${food.foodDetail.tasteType == 'sweetness'}">단맛</span>
+                    <span class="food-detail-value" th:if="${food.foodDetail.tasteType == 'spicy'}">매운맛</span>
+                    <span class="food-detail-value" th:if="${food.foodDetail.tasteType == 'salty'}">짠맛</span>
+                    <span class="food-detail-value" th:if="${food.foodDetail.tasteType == 'sour'}">신맛</span>
+                    <span class="food-detail-value" th:if="${food.foodDetail.tasteType == 'bitter'}">쓴맛</span>
+                    <span class="food-detail-value" th:if="${food.foodDetail.tasteType == 'light'}">담백한 맛</span>
+                </div>
+                <div class="food-detail-item">
+                    <span class="food-detail-title">채식 여부</span>
+                    <span class="food-detail-value" th:if="${food.foodDetail.veganType == '0'}">해당 없음</span>
+                    <span class="food-detail-value" th:if="${food.foodDetail.veganType == '1'}">폴로(닭과 조류는 먹음)</span>
+                    <span class="food-detail-value" th:if="${food.foodDetail.veganType == '2'}">페스코(어패류는 먹음)</span>
+                    <span class="food-detail-value" th:if="${food.foodDetail.veganType == '3'}">락토오보(달걀 우유는 먹음)</span>
+                    <span class="food-detail-value" th:if="${food.foodDetail.veganType == '4'}">락토(유제품은 먹음)</span>
+                    <span class="food-detail-value" th:if="${food.foodDetail.veganType == '5'}">비건(순수 채식 만함)</span>
+                </div>
+                <div class="food-detail-item">
+                    <span class="food-detail-title">나라별 음식</span>
+                    <span class="food-detail-value" th:if="${food.foodDetail.nationType == 'all'}">구분없음</span>
+                    <span class="food-detail-value" th:if="${food.foodDetail.nationType == 'koreanFood'}">한식</span>
+                    <span class="food-detail-value" th:if="${food.foodDetail.nationType == 'chineseFood'}">중식</span>
+                    <span class="food-detail-value" th:if="${food.foodDetail.nationType == 'japaneseFood'}">일식</span>
+                    <span class="food-detail-value" th:if="${food.foodDetail.nationType == 'westernFood'}">양식</span>
+                    <span class="food-detail-value" th:if="${food.foodDetail.nationType == 'asianFood'}">동남아식</span>
+                    <span class="food-detail-value" th:if="${food.foodDetail.nationType == 'fusionFood'}">퓨전식</span>
+                </div>
+                <div class="food-detail-item">
+                    <span class="food-detail-title">식단 종류</span>
+                    <span class="food-detail-value" th:if="${food.foodDetail.healthyType == 'all'}">해당 없음</span>
+                    <span class="food-detail-value" th:if="${food.foodDetail.healthyType == 'healthyFood'}">건강식</span>
+                    <span class="food-detail-value" th:if="${food.foodDetail.healthyType == 'diabeticDiet'}">당뇨식</span>
+                    <span class="food-detail-value" th:if="${food.foodDetail.healthyType == 'lowSaltDiet'}">저염식</span>
+                    <span class="food-detail-value"
+                          th:if="${food.foodDetail.healthyType == 'lowCarbohydrate'}">저탄고지</span>
+                </div>
+            </div>
+            <div class="food-detail-row">
+                <div class="food-detail-item">
+                    <span class="food-detail-title">재료</span>
+                    <input type="text" class="food-detail-value" readonly value="재료나열재료나열재료나열재료나열재료나열">
+                </div>
+            </div>
+        </div>
+
+        <input type="hidden" name="fseq" th:value="${food.fseq}">
+        <input type="submit" value="수정하기">
+    </form>
+    <a th:href="@{admin_food_delete(fseq=${food.fseq})}">
+        <button>삭제하기</button>
+    </a>
+    <a th:href="@{admin_food_list(page=${pageInfo.number +1})}">
+        <button>목록 보기</button>
+    </a>
+</article>
 </body>
 </html>
 
 <th:block th:insert="~{/includes/footer}"></th:block>
-<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.3.min.js"
+        integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>

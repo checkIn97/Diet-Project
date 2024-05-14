@@ -20,8 +20,8 @@
         <tbody>
         <tr th:each="food : ${foodList}">
             <td>[[${food.fseq}]]</td>
-            <td th:if="${food.img == null}">없음</td>
-            <td th:if="${food.img != null}"><img th:src="${food.img}"></td>
+            <td><a th:href="@{admin_food_Detail(fseq=${food.fseq})}" th:if="${food.img == null}">없음</a></td>
+            <td><a th:href="@{admin_food_Detail(fseq=${food.fseq})}" th:if="${food.img != null}"><img th:src="${food.img}"></a></td>
             <td><a th:href="@{admin_food_Detail(fseq=${food.fseq})}" th:text="${food.name}"></a></td>
         </tr>
         </tbody>
