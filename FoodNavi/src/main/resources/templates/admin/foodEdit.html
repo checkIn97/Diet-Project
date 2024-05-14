@@ -1,21 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
+<th:block th:insert="~{/admin/include/headerAdmin}"></th:block>
+
 <meta charset="UTF-8">
 <title>Food Navigator</title>
-<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
-</head>
-<style>
-	table {
-		border: 1px solid black;
-		width: 1600px;
-		border-collapse:collapse;
-	}
-	
-	th, td {
-		border: 1px solid black;
-	}
-</style>
+
+<h1><a href="admin_main">FoodNavi</a></h1>
+
 <body>
 	<h2>Food Edit</h2>
 	<form method="post" action="admin_food_edit" enctype="multipart/form-data">
@@ -103,3 +94,6 @@
 	<a th:href="admin_food_Detail(fseq=${food.fseq})"><button>수정취소</button></a>
 </body>
 </html>
+
+<th:block th:insert="~{/includes/footer}"></th:block>
+<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
