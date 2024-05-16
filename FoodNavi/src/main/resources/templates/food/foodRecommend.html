@@ -17,27 +17,27 @@
             			<!--DB에서 가져온 음식정보들-->
 		                <h2 class="major">추천 음식</h2>
 		                <!--#으로 되어있는 것들은 도메인에서 값을 불러와야합니다.-->
-		                <label th:text="${foodvo.food.name}"></label>
+		                <label id="food_name" th:text="${foodvo.food.name}"></label>
             		</td>
             		<td>
 	            		<h2 class="major">칼로리</h2>
-	                	<p th:text="${foodvo.food.foodDetail.kcal}"></p>
+	                	<p id="food_kcal" th:text="${foodvo.food.foodDetail.kcal}"></p>
             		</td>
             		<td>
 	            		<h2 class="major">탄수화물</h2>
-	                	<p th:text="${foodvo.food.foodDetail.carb}"></p>
+	                	<p id="food_carb" th:text="${foodvo.food.foodDetail.carb}"></p>
             		</td>
             		<td>
 	            		<h2 class="major">단백질</h2>
-	                	<p th:text="${foodvo.food.foodDetail.prt}"></p>
+	                	<p id="food_prt" th:text="${foodvo.food.foodDetail.prt}"></p>
             		</td>
             		<td>
 	            		<h2 class="major">지방</h2>
-	                	<p th:text="${foodvo.food.foodDetail.fat}"></p>
+	                	<p id="food_fat" th:text="${foodvo.food.foodDetail.fat}"></p>
             		</td>
             		<td>
 	            		<h2 class="major">점수</h2>
-	                	<p th:text="${foodvo.score}"></p>
+	                	<p id="food_score" th:text="${foodvo.score}"></p>
             		</td>
             	</tr>
             </table>
@@ -50,6 +50,7 @@
         </ul>
 
         <a href="/foodRecommendation" class="button">이전</a>
+        
 
     </form>
 </article>
