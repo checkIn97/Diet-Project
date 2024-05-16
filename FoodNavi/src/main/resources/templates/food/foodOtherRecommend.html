@@ -13,7 +13,7 @@
             <div class="field">
                 <!--DB에서 가져온 음식정보들-->
                 <table>
-                	<tr th:each="foodvo, iterStat : ${foodRecommendList}" th:if="${iterStat.index > 1 && iterStat.index < 11}">
+                	<tr th:each="foodvo, iterStat : ${foodRecommendList}" th:if="${iterStat.index >= 1 && iterStat.index < 11}">
                 		<td>
                 			<h2 class="major">추천 음식</h2>
 			                <!--#으로 되어있는 것들은 도메인에서 값을 불러와야합니다.-->
@@ -23,10 +23,6 @@
                 			<h2 class="major">칼로리</h2>
                 			<p th:text="${foodvo.food.foodDetail.kcal}"></p>
                 		</td>
-						<td>
-							<h2 class="major">탄수화물</h2>
-	                		<p th:text="${foodvo.food.foodDetail.carb}"></p>
-						</td>
 						<td>
 							<h2 class="major">탄수화물</h2>
                 			<p th:text="${foodvo.food.foodDetail.carb}"></p>

@@ -26,7 +26,7 @@ th, td {
    			<tr><td colspan=3>항목 없음</td></tr>
    		</th:block>
    		<th:block th:unless="${foodScanVo.pageInfo.totalPages == 0}">
-	   		<th:block th:each="food : ${foodScanVo.foodList}">
+	   		<th:block th:each="food : ${foodList}">
 	    		<tr>      
 	     			<td th:if="${food.img == null}">없음</td>
 	     			<td th:if="${food.img != null}"><img th:src="${food.img}"></td>

@@ -9,7 +9,6 @@ my_data = my_data_raw[['user_sex', 'user_age', 'user_height', 'user_weight']]
 import pandas as pd
 import numpy as np
 history_data = pd.read_csv('History.csv', encoding='utf-8')
-print(history_data.head())
 user_data = history_data[['user_sex', 'user_age', 'user_height', 'user_weight']]
 serve_data = history_data[['meal_type', 'served_date']]
 food_data = history_data[['food_kcal', 'food_carb', 'food_prt', 'food_fat']]
@@ -77,29 +76,20 @@ serve_data
 # 표준화된 데이터를 사용
 user_mean = user_data.mean()
 user_std = user_data.std()
-print(user_mean)
-print()
-print(user_std)
-print()
 
 my_data_nor = my_data.copy()
 for col in my_data.columns:
     my_data_nor[col] = abs(float(my_data[col])-user_mean[col]) / user_std[col]
-print(my_data_nor)
-print()
 
 user_data_nor = user_data.copy()
 for col in user_data.columns:
     user_data_nor[col] = abs(user_data_nor[col] - user_mean[col])
     user_data_nor[col] /= user_std[col]
-print(user_data_nor)
-print()
 
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-print(my_data_nor)
-print(user_data_nor)
+
 
 sim_user_data = cosine_similarity(my_data_nor, user_data_nor)
 sim_user_data_sorted_index = sim_user_data[0].argsort()[::-1]
@@ -152,7 +142,7 @@ for i in range(len(food_feature_list_for_test)):
         idx = sim_food_data_sorted_index[j]
         tmp_score = sim_food_data[0][idx]
         if tmp_score >= 0.99:
-            final_food_list.append(idx)
+            final_food_list.append(idx+1)
             final_food_score.append(tmp_score*food_feature_list.iloc[i]['score'])
         else:
             check = 1
@@ -165,12 +155,10 @@ for i in range(len(food_feature_list_for_test)):
             break
     if check == 1:
         break
-print(len(final_food_list))
+
 final_food_recommend_list = pd.DataFrame({'fseq':final_food_list, 'score':final_food_score})
 final_food_recommend_list
 
 final_food_recommend_list.sort_values(by='score', ascending=False, inplace=True)
 
 print(final_food_recommend_list[:60])
-
-print(final_food_recommend_list[60:])

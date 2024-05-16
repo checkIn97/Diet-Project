@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 
 import com.demo.domain.Food;
-import com.demo.dto.FoodScanVo;
+import com.demo.dto.FoodRecommendVo;
 
 
 public interface AdminFoodService {
@@ -14,7 +14,7 @@ public interface AdminFoodService {
 	
 	public Food getFoodByMaxFseq();
 	
-	public Page<Food> getFoodList(FoodScanVo foodScanVo, int page, int size);
+	public Page<Food> getFoodList(FoodRecommendVo foodScanVo, int page, int size);
 	
 	public void insertFood(Food fvo);
 	

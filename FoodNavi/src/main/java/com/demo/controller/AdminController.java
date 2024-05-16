@@ -36,7 +36,7 @@ import com.demo.domain.FoodDetail;
 import com.demo.domain.FoodIngredient;
 import com.demo.domain.Users;
 import com.demo.dto.BoardScanVo;
-import com.demo.dto.FoodScanVo;
+import com.demo.dto.FoodRecommendVo;
 import com.demo.dto.UserScanVo;
 import com.demo.service.AdminBoardCommentsService;
 import com.demo.service.AdminBoardService;
@@ -201,7 +201,7 @@ public class AdminController {
 								@RequestParam(value = "sortDirection", defaultValue = "ASC") String sortDirection,
 								@RequestParam(value = "pageMaxDisplay", defaultValue = "5") int pageMaxDisplay,
 								@RequestParam(value = "searchField", defaultValue = "name") String searchField,
-								@RequestParam(value = "searchWord", defaultValue = "") String searchWord, FoodScanVo foodScanVo,
+								@RequestParam(value = "searchWord", defaultValue = "") String searchWord, FoodRecommendVo foodScanVo,
 								HttpSession session, HttpServletRequest request) {
 
 		// 세션에서 사용자 정보 가져오기
@@ -222,10 +222,15 @@ public class AdminController {
 			foodScanVo.setSortDirection(sortDirection);
 			foodScanVo.setPageMaxDisplay(pageMaxDisplay);
 		} else {
-			foodScanVo = (FoodScanVo) session.getAttribute("foodScanVo");
+			foodScanVo = (FoodRecommendVo) session.getAttribute("foodScanVo");
 		}
 		Page<Food> foodData = foodService.getFoodList(foodScanVo, page, size);
-		foodScanVo.setPageInfo(foodData);
+		List<Food> foodList = foodData.getContent();
+		Map<String, Integer> pageInfo = new HashMap<>();
+		pageInfo.put("number", page);
+		pageInfo.put("size", size);
+		pageInfo.put("totalPages", (foodList.size()+size-1)/size);		
+		foodScanVo.setPageInfo(pageInfo);
 		foodScanVo.setFoodList(foodData.getContent());
 		session.setAttribute("foodScanVo", foodScanVo);
 		model.addAttribute("foodScanVo", foodScanVo);
@@ -253,7 +258,7 @@ public class AdminController {
 
 		Food food = foodService.getFoodByFseq(fseq);
 		model.addAttribute("food", food);
-		FoodScanVo foodScanVo = (FoodScanVo) session.getAttribute("foodScanVo");
+		FoodRecommendVo foodScanVo = (FoodRecommendVo) session.getAttribute("foodScanVo");
 		model.addAttribute("foodScanVo", foodScanVo);
 		model.addAttribute("foodList", foodScanVo.getFoodList());
 		model.addAttribute("pageInfo", foodScanVo.getPageInfo());

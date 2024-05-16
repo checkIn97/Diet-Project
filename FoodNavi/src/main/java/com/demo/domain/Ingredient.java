@@ -1,5 +1,6 @@
 package com.demo.domain;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -34,5 +35,8 @@ public class Ingredient {
 	private float carb;
 	private float prt;
 	private float fat;
+	
+	@ColumnDefault(value="0")
+	private int veganValue;
 	
 }

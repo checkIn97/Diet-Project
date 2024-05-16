@@ -25,10 +25,8 @@ public class FoodRecommendServiceImpl implements FoodRecommendService {
 	public List<FoodVo> getFoodRecommendList(String pyFile, UserVo userVo, List<Food> filteredList) {
 		List<FoodVo> foodRecommendList = new ArrayList<>();
 		dataInOutService.filteredListToCsv(filteredList);
-		String path = "C:\\Users\\602-01\\git\\Diet-Project\\FoodNavi\\";
-		String python_path = path + pyFile;
 		
-		ProcessBuilder processBuilder = new ProcessBuilder("python", python_path, 
+		ProcessBuilder processBuilder = new ProcessBuilder("python", pyFile, 
 				String.valueOf(userVo.getUser().getUseq()),
 				userVo.getUser().getSex(),
 				String.valueOf(userVo.getUser().getAge()),
@@ -47,7 +45,7 @@ public class FoodRecommendServiceImpl implements FoodRecommendService {
 				}
                 System.out.println("[" + index++ + "]");
                 System.out.println("[" + line + "]");
-                changeLine(line, index, foodRecommendList);
+                foodRecommendList = changeLine(line, index, foodRecommendList);
             }
 			
 			process.waitFor();
@@ -66,7 +64,7 @@ public class FoodRecommendServiceImpl implements FoodRecommendService {
 	
 	public List<FoodVo> changeLine(String line, int index, List<FoodVo> foodVoList) {
 		List<String> dataArr = new ArrayList<>();
-		if(index > 58) {
+		if(index > 1) {
 			String[] lineSplit = line.split(" ");
 			
 			for(int i=0; i<lineSplit.length; i++) {
@@ -77,8 +75,14 @@ public class FoodRecommendServiceImpl implements FoodRecommendService {
 				}
 			}
 			
+			System.out.println("테스트!!!!!!!!!!");
+			for (String s : dataArr) {
+				System.out.println(s);
+			}
+
 			int fseq = Integer.parseInt(dataArr.get(1));
 			float score = Float.parseFloat(dataArr.get(2));
+
 			Food food = (Food) foodScanService.getFoodByFseq(fseq);
 			FoodVo vo = new FoodVo(food);
 			vo.setScore(score);

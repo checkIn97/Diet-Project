@@ -7,7 +7,8 @@
 <!-- dietRecommendation -->
 <article id="box">
     <h2 class="major">식단 추천</h2>
-    <form method="post" action="#">
+    <form id="recommendForm" method="post">
+    	<input type="hidden" name="mealTime" id="mealTime" value=""/>
         <div class="fields">
             <div class="field">
 
@@ -15,32 +16,29 @@
 
 
                 <div>
-                    <a href="/food_recommend">
-                        <input class="btn" type="button" name="mealTime" id="morning" value="아침">
-                    </a>
-
-                    <a href="/food_recommend">
-                        <input class="btn" type="button" name="mealTime" id="lunch" value="점심"/>
-                    </a>
-
-                    <a href="/food_recommend">
-                        <input class="btn" type="button" name="mealTime" id="dinner" value="저녁"/>
-                    </a>
-
-
-                    <a href="/food_recommend">
-                        <input class="btn" type="button" name="mealTime" id="snack" value="간식"/>
-                    </a>
+                    <button class="btn" onclick="food_recommend('morning')">아침</button>
+                    <button class="btn" onclick="food_recommend('lunch')">점심</button>
+                    <button class="btn" onclick="food_recommend('dinner')">저녁</button>
+                    <button class="btn" onclick="food_recommend('snack')">간식</button>
                 </div>
 
             </div>
         </div>
+        
+        <th:block th:insert="~{includes/toggleButton}"></th:block>
 <!--        <button id="toggleButtonControl">상세 조건</button>-->
     </form>
 </article>
 
-<th:block th:insert="~{includes/toggleButton}"></th:block>
 
 <th:block th:insert="~{includes/footer}"></th:block>
 
 <script src="/assets/js/menuToggle.js"></script>
+
+<script>
+function food_recommend(mealTime) {
+	$("#mealTime").val(mealTime)
+	$("#recommendForm").attr("action", "food_recommend").submit();
+}
+
+</script>

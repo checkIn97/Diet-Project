@@ -52,72 +52,72 @@
 			</tr>
 			<tr>
 				<td>
-					<select name="tasteField">
-						<th:block th:each="field : ${foodScanVo.tasteType}">
-							<th:block th:if="${field[0] == foodScanVo.tasteField}">
+					<select name="taste">
+						<th:block th:each="field : ${foodScanVo.tasteArray}">
+							<th:block th:if="${field[0] == foodScanVo.taste[0]}">
 								<option th:value="${field[0]}" selected>[[${field[1]}]]</option>
 							</th:block>
-							<th:block th:unless="${field[0] == foodScanVo.tasteField}">
+							<th:block th:unless="${field[0] == foodScanVo.taste[0]}">
 								<option th:value="${field[0]}">[[${field[1]}]]</option>
 							</th:block>						
 						</th:block>
 					</select>
 				</td>
 				<td>
-					<select name="weightField">
-						<th:block th:each="field : ${foodScanVo.weightType}">
-							<th:block th:if="${field[0] == foodScanVo.weightField}">
+					<select name="purpose">
+						<th:block th:each="field : ${foodScanVo.purposeCategory}">
+							<th:block th:if="${field[0] == foodScanVo.purpose}">
 								<option th:value="${field[0]}" selected>[[${field[1]}]]</option>
 							</th:block>
-							<th:block th:unless="${field[0] == foodScanVo.weightField}">
+							<th:block th:unless="${field[0] == foodScanVo.purpose}">
 								<option th:value="${field[0]}">[[${field[1]}]]</option>
 							</th:block>						
 						</th:block>
 					</select>
 				</td>
 				<td>
-					<select name="veganField">
-						<th:block th:each="field : ${foodScanVo.veganType}">
-							<th:block th:if="${field[0] == foodScanVo.veganField}">
+					<select name="vegetarian">
+						<th:block th:each="field : ${foodScanVo.vegetarianCategory}">
+							<th:block th:if="${field[0] == foodScanVo.vegetarian}">
 								<option th:value="${field[0]}" selected>[[${field[1]}]]</option>
 							</th:block>
-							<th:block th:unless="${field[0] == foodScanVo.veganField}">
+							<th:block th:unless="${field[0] == foodScanVo.vegetarian}">
 								<option th:value="${field[0]}">[[${field[1]}]]</option>
 							</th:block>						
 						</th:block>
 					</select>
 				</td>
 				<td>
-					<select name="nationField">
-						<th:block th:each="field : ${foodScanVo.nationType}">
-							<th:block th:if="${field[0] == foodScanVo.nationField}">
+					<select name="foodCountry">
+						<th:block th:each="field : ${foodScanVo.foodCountryCategory}">
+							<th:block th:if="${field[0] == foodScanVo.foodCountry}">
 								<option th:value="${field[0]}" selected>[[${field[1]}]]</option>
 							</th:block>
-							<th:block th:unless="${field[0] == foodScanVo.nationField}">
+							<th:block th:unless="${field[0] == foodScanVo.foodCountry}">
 								<option th:value="${field[0]}">[[${field[1]}]]</option>
 							</th:block>						
 						</th:block>
 					</select>
 				</td>
 				<td>
-					<select name="healthyField">
-						<th:block th:each="field : ${foodScanVo.healthyType}">
-							<th:block th:if="${field[0] == foodScanVo.healthyField}">
+					<select name="dietType">
+						<th:block th:each="field : ${foodScanVo.dietTypeCategory}">
+							<th:block th:if="${field[0] == foodScanVo.dietType}">
 								<option th:value="${field[0]}" selected>[[${field[1]}]]</option>
 							</th:block>
-							<th:block th:unless="${field[0] == foodScanVo.healthyField}">
+							<th:block th:unless="${field[0] == foodScanVo.dietType}">
 								<option th:value="${field[0]}">[[${field[1]}]]</option>
 							</th:block>						
 						</th:block>
 					</select>
 				</td>
 				<td>
-					<select name="meahField">
-						<th:block th:each="field : ${foodScanVo.mealType}">
-							<th:block th:if="${field[0] == foodScanVo.mealField}">
+					<select name="mealTime">
+						<th:block th:each="field : ${foodScanVo.mealTimeCategory}">
+							<th:block th:if="${field[0] == foodScanVo.mealTime}">
 								<option th:value="${field[0]}" selected>[[${field[1]}]]</option>
 							</th:block>
-							<th:block th:unless="${field[0] == foodScanVo.mealField}">
+							<th:block th:unless="${field[0] == foodScanVo.mealTime}">
 								<option th:value="${field[0]}">[[${field[1]}]]</option>
 							</th:block>						
 						</th:block>
@@ -143,79 +143,7 @@ function food_scan() {
 }
 
 function food_recommend() {
-	$("#scanForm").attr("action", "food_recommend").submit();
-}
-
-function food_scan_ajax() {
-
-	$.ajax({
-		type: 'post',
-		url: '/food_scan_ajax',
-		dataType: 'json',   // 서버로 전달할 데이터 형식
-		data: $("#scanForm").serialize(), // 여러 데이터를 차례대로 전송
-		headers: {
-			Accept: "application/json; charset=utf-8",
-			"Content-type": "application/json; charset=utf-8"
-		},
-		success: function(data) {
-			foodList = data.foodList;
-			alert(foodList.length);
-			HTML = "<th:block id=\"list_insert\" th:insert=\"~{/food_scan/include/list_area}\"></th:block>";
-			$("#list_insert").html(HTML);
-		},
-		error: function(request, status, error) {
-			alert("테스트");
-		}
-	});
-}
-
-
-function food_scan_ajax0() {
-
-	$.ajax({
-		type: 'post',
-		url: '/food_scan_ajax',
-		dataType: 'json',   // 서버로 전달할 데이터 형식
-		data: $("#scanForm").serialize(), // 여러 데이터를 차례대로 전송
-		headers: {
-			Accept: "application/json; charset=utf-8",
-			"Content-type": "application/json; charset=utf-8"
-		},
-		success: function(data) {
-			foodList = data.foodList;
-			alert(foodList.length);
-			HTML = "";
-			HTML += '<table>';
-			HTML += '<tr>';
-			HTML += '<th>이미지</th>';
-			HTML += '<th>이름</th>';
-			HTML += '<th>칼로리</th>';
-			HTML += '<th>추천수</th>';
-			HTML += '</tr>';
-			if (foodList.length == 0) {
-				HTML += '<tr><td colspan=4><span>조건에 맞는 대상이 없습니다.</span></td></tr>';
-			} else {
-				$.each(foodList, function(index, food) {
-					HTML += '<tr>';
-					if (food.img == null) {
-						HTML += '<td>없음</td>';
-					} else {
-						HTML += '<td>있음</td>';	
-					}
-					HTML += '<td>' + food.name + '</td>';
-					HTML += '<td>' + food.foodDetail.kcal + '</td>';
-					HTML += '<td>' + '' + '</td>';
-					HTML += '</tr>';
-				});
-			}
-			HTML += '</table>';
-			alert(HTML);
-			$("#foodList").html(HTML);
-		},
-		error: function(request, status, error) {
-			alert("테스트3");
-		}
-	});
+	$("#scanForm").attr("action", "food_recommend1").submit();
 }
 
 </script>

@@ -27,23 +27,23 @@
 		</tr>
 		<tr>
 			<th>이름</th>
-			<td>[[${foodVo.name}]]</td>
+			<td>[[${foodVo.food.name}]]</td>
 		</tr>
 		<tr>
 			<th>칼로리</th>
-			<td>[[${foodVo.foodDetail.kcal}]] kcal</td>
+			<td>[[${foodVo.food.foodDetail.kcal}]] kcal</td>
 		</tr>
 		<tr>
 			<th>탄수화물</th>
-			<td>[[${foodVo.foodDetail.carb}]] g</td>
+			<td>[[${foodVo.food.foodDetail.carb}]] g</td>
 		</tr>
 		<tr>
 			<th>단백질</th>
-			<td>[[${foodVo.foodDetail.prt}]] g</td>
+			<td>[[${foodVo.food.foodDetail.prt}]] g</td>
 		</tr>
 		<tr>
 			<th>지방</th>
-			<td>[[${foodVo.foodDetail.fat}]] g</td>
+			<td>[[${foodVo.food.foodDetail.fat}]] g</td>
 		</tr>
 		<tr>
 			<th>추천 적합도</th>
@@ -54,7 +54,7 @@
 			<td></td>
 		</tr>		
 	</table>	
-		<input type="hidden" name="fseq" th:value="${foodVo.fseq}">
+		<input type="hidden" name="fseq" th:value="${foodVo.food.fseq}">
 		<input type="submit" value="밥상에 추가하기">
 	</form>	
 	<a th:href="@{food_scan(page=${pageInfo.number +1})}"><button>목록 보기</button></a>

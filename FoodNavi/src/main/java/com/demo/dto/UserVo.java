@@ -1,14 +1,9 @@
 package com.demo.dto;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.demo.domain.Food;
-import com.demo.domain.History;
 import com.demo.domain.Users;
-import com.demo.service.HistoryService;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,23 +24,30 @@ public class UserVo {
 	private float[] properCarbRatio = null;
 	private float[] properPrtRatio = null;
 	private float[] properFatRatio = null;
-	private float KcalToday = 0;
-	private float KcalOnTable = 0;
-	private float CarbToday = 0;
-	private float CarbOnTable = 0;
-	private float PrtToday = 0;
-	private float PrtOnTable = 0;
-	private float FatToday = 0;
-	private float FatOnTable = 0;
+	private float properCarb = 0;
+	private float properPrt = 0;
+	private float properFat = 0;
+	private int kcalToday = 0;
+	private int kcalOnTable = 0;
+	private float carbToday = 0;
+	private float carbOnTable = 0;
+	private float prtToday = 0;
+	private float prtOnTable = 0;
+	private float fatToday = 0;
+	private float fatOnTable = 0;
+	
 	
 	
 	public UserVo(Users user) {
 		this.user = user;
-		this.BMI = getBMI(user);				
-		this.EER = getEER(user, 1);
-		this.properCarbRatio = getProperCarbRatio(user);
-		this.properPrtRatio = getProperPrtRatio(user);
-		this.properFatRatio = getProperFatRatio(user);
+		BMI = getBMI(user);				
+		EER = getEER(user, 1);
+		properCarbRatio = getProperCarbRatio(user);
+		properPrtRatio = getProperPrtRatio(user);
+		properFatRatio = getProperFatRatio(user);
+		properCarb = Math.round((EER * (properCarbRatio[1]+properCarbRatio[1])/2 /4)*100)/100f;
+		properPrt = Math.round((EER * (properPrtRatio[1]+properPrtRatio[1])/2 /4)*100)/100f;
+		properFat = Math.round((EER * (properFatRatio[1]+properFatRatio[1])/2 /9)*100)/100f;
 	}
 	
 	private float getBMI(Users user) {
@@ -55,27 +57,27 @@ public class UserVo {
 	}
 	
 	private int getEER(Users user, int activeLevel) {
-		int EERE = 0;		 
+		int value = 0;		 
 		if (user.getAge() <= 2) {
-			EER = 89 * user.getWeight() - 100;
+			value = 89 * user.getWeight() - 100;
 		} else if (user.getAge() <= 19) {
 			if (user.getSex().equals("m")) {
 				float[] activeValue = {1.0f, 1.13f, 1.26f, 1.42f};
-				EER = (int)(88.5 - 61.9*user.getAge() + activeValue[activeLevel]*(26.7*user.getWeight() + 9.03*user.getHeight())); 
+				value = (int)(88.5 - 61.9*user.getAge() + activeValue[activeLevel]*(26.7*user.getWeight() + 9.03*user.getHeight())); 
 			} else {
 				float[] activeValue = {1.0f, 1.16f, 1.31f, 1.56f};
-				EER = (int)(135.3 - 30.8*user.getAge() + activeValue[activeLevel]*(10.0*user.getWeight() + 9.34*user.getHeight()));
+				value = (int)(135.3 - 30.8*user.getAge() + activeValue[activeLevel]*(10.0*user.getWeight() + 9.34*user.getHeight()));
 			}
 		} else {
 			if (user.getSex().equals("m")) {
 				float[] activeValue = {1.0f, 1.11f, 1.25f, 1.48f};
-				EER = (int)(662 - 9.53*user.getAge() + activeValue[activeLevel]*(15.91*user.getWeight() + 5.396*user.getHeight())); 
+				value = (int)(662 - 9.53*user.getAge() + activeValue[activeLevel]*(15.91*user.getWeight() + 5.396*user.getHeight())); 
 			} else {
 				float[] activeValue = {1.0f, 1.12f, 1.27f, 1.45f};
-				EER = (int)(354 - 6.91*user.getAge() + activeValue[activeLevel]*(9.36*user.getWeight() + 7.26*user.getHeight()));
+				value = (int)(354 - 6.91*user.getAge() + activeValue[activeLevel]*(9.36*user.getWeight() + 7.26*user.getHeight()));
 			}
 		}
-		return Math.round(EER);
+		return Math.round(value);
 	}
 	
 	private float[] getProperCarbRatio(Users user) {

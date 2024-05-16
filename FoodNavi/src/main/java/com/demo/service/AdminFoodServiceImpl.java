@@ -11,7 +11,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.demo.domain.Food;
-import com.demo.dto.FoodScanVo;
+import com.demo.dto.FoodRecommendVo;
 import com.demo.persistence.AdminFoodRepository;
 
 @Service
@@ -36,7 +36,7 @@ public class AdminFoodServiceImpl implements AdminFoodService {
 	}
 
 	@Override
-	public Page<Food> getFoodList(FoodScanVo foodScanVo, int page, int size) {
+	public Page<Food> getFoodList(FoodRecommendVo foodScanVo, int page, int size) {
 		Pageable pageable = null;
 		if (foodScanVo.getSortDirection().equals("ASC")) {
 			pageable = PageRequest.of(page-1, size, Direction.ASC, foodScanVo.getSortBy());

@@ -83,7 +83,7 @@ public class DataInOutServiceImpl implements DataInOutService {
 			 "태현", "하람", "민혁", "이현", "하민", "성준", "규민", "윤성", "태양", "정민", 
 			 "예찬", "은성", "도훈", "준수", "도하", "준희", "다은", "주안", "이든", "건"},
 			{"mj", "sj", "dy", "yj", "sw", "hj", "jh", "jw", "jh", "jw",
-			 "dh", "js", "gw", "hw", "wj", "jh", "sw", "yj", "uw", "sj",
+			 "dh", "js", "gw", "hw", "wj", "jh", "sw", "yj", "yw", "sj",
 			 "ew", "mj", "hj", "yj", "sy", "jw", "yw", "sw", "jw", "jh", 
 			 "sh", "yc", "jh", "sh", "sm", "sh", "jw", "ms", "ya", "sh",
 			 "jy", "jw", "jy", "sh", "ty", "hg", "ja", "yh", "so", "sw",
@@ -306,7 +306,7 @@ public class DataInOutServiceImpl implements DataInOutService {
 	}
 	
 	public void foodTotalSave(Food food, FoodDetail foodDetail, List<FoodIngredient> foodIngredientList) {
-  		foodScanRepo.save(food);
+		foodScanRepo.save(food);
 		food = foodScanRepo.findFirstByOrderByFseqDesc();
 		foodDetail.setFood(food);
 		foodDetailScanRepo.save(foodDetail);
@@ -807,6 +807,7 @@ public class DataInOutServiceImpl implements DataInOutService {
 							ingredient.setPrt(Float.parseFloat(input[3]));
 							ingredient.setFat(Float.parseFloat(input[4]));
 							ingredient.setCarb(Float.parseFloat(input[5]));
+							ingredient.setVeganValue(Integer.parseInt(input[6]));
 							ingredientRepo.save(ingredient);
 							ingredient = ingredientRepo.findFirstByOrderByIseqDesc();
 							ingredientList.add(ingredient);
