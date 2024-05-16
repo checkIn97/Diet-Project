@@ -21,7 +21,16 @@ public class DataInOutRepositoryTest {
 
     @Autowired
     HistoryService historyService;
-
+    
+    @Disabled
+    @Test
+    public void dataInDummy() {
+    	usersInDummy();
+    	ingredientInFromCsv();
+    	foodInFromCsv();
+    	historyInDummy();
+    }
+    
     @Disabled
     @Test
     public void usersInDummy() {

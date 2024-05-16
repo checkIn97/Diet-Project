@@ -6,24 +6,41 @@
 <h1><a href="/mainpage">FoodNavi</a></h1>
 <!-- myChange -->
 <article id="box">
-    <h2 class="major"># 님을 위한 오늘의 식단</h2>
+    <h2 class="major">[[${userVo.user.name}]] 님을 위한 오늘의 식단</h2>
     <!--action 비워두도록 하겠습니다. 컨트롤러를 참고해서 넣어주세요.-->
-    <form method="post" action="#">
+    <form method="post" action="food_other_recommend">
         <div class="fields">
             <div class="field">
-                <!--DB에서 가져온 음식정보들-->
-                <h2 class="major">추천 음식</h2>
-                <!--#으로 되어있는 것들은 도메인에서 값을 불러와야합니다.-->
-                <label >#</label>
-                <h2 class="major">칼로리</h2>
-                <p>#</p>
-                <h2 class="major">탄수화물</h2>
-                <p>#g</p>
-                <h2 class="major">단백질</h2>
-                <p>#g</p>
-                <h2 class="major">지방</h2>
-                <p>#g</p>
-
+            <table>
+            	<tr th:each="foodvo, iterStat : ${foodRecommendList}" th:if="${iterStat.index < 1}">
+            		<td>
+            			<!--DB에서 가져온 음식정보들-->
+		                <h2 class="major">추천 음식</h2>
+		                <!--#으로 되어있는 것들은 도메인에서 값을 불러와야합니다.-->
+		                <label th:text="${foodvo.food.name}"></label>
+            		</td>
+            		<td>
+	            		<h2 class="major">칼로리</h2>
+	                	<p th:text="${foodvo.food.foodDetail.kcal}"></p>
+            		</td>
+            		<td>
+	            		<h2 class="major">탄수화물</h2>
+	                	<p th:text="${foodvo.food.foodDetail.carb}"></p>
+            		</td>
+            		<td>
+	            		<h2 class="major">단백질</h2>
+	                	<p th:text="${foodvo.food.foodDetail.prt}"></p>
+            		</td>
+            		<td>
+	            		<h2 class="major">지방</h2>
+	                	<p th:text="${foodvo.food.foodDetail.fat}"></p>
+            		</td>
+            		<td>
+	            		<h2 class="major">점수</h2>
+	                	<p th:text="${foodvo.score}"></p>
+            		</td>
+            	</tr>
+            </table>
             </div>
 
         </div>

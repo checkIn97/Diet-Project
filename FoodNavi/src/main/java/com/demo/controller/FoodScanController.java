@@ -108,7 +108,7 @@ public class FoodScanController {
 		return "food_scan/foodScanList";
 	}
 	
-	
+	/*
 	// food 검색창에서의 추천 리스트를 생성한다.
 	// 만들어진 추천 리스트는 검색 및 추천조건과 함께 foodScanVo에 담겨저 세션 영역에 저장된다.
 	// 세부적인 추천 조건이 확정되면 거기에 맞게 검색 쿼리를 작성해야 한다.
@@ -173,7 +173,7 @@ public class FoodScanController {
 		
 		return "food_scan/foodScanList";
 	}
-	
+	*/
 	// 음식의 상세보기를 연다.
 	@GetMapping("/food_detail")
 	public String showFoodDetail(Food food, Model model, HttpSession session, FoodScanVo foodScanVo) {
