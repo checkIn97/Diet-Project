@@ -495,7 +495,7 @@ textarea {
 /* Box */
 
 #box {
-    width: auto;
+    width: 80%;
     background: rgba(35, 37, 45, 0.85);
     padding: 4em;
     border-radius: 10px;
@@ -506,6 +506,7 @@ textarea {
     border-radius: 4px;
     /*border: solid 1px #ffffff;*/
     margin-bottom: 2rem;
+
 }
 
 .box > :last-child,
@@ -1901,14 +1902,15 @@ input[type="number"]{
 }
 
 .food-detail-value {
-    margin-left: 10px;
+    /*margin-left: 10px;*/
 }
 
 .food-detail-Image {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: right;
     align-items: center;
+    margin-bottom: 20px;
 }
 
 .food-detail-Image img {
