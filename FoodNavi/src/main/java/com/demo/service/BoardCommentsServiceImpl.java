@@ -23,9 +23,13 @@ public class BoardCommentsServiceImpl implements BoardCommentsService {
 
 	@Override
 	public List<Comments> getCommentList(int bseq) {
-		return BoardCommentsRepo.findCommentsByBseq(bseq);
+		return BoardCommentsRepo.findParentCommentsByBseq(bseq);
 	}
 
+	@Override
+	public List<Comments> getReplyCommentList(int parentCseq){
+		return BoardCommentsRepo.findRepliesByParentCommentCseq(parentCseq);
+	}
 	@Override
 	public int getCountCommentsList(int bseq) {
 		return 0;

@@ -46,7 +46,11 @@ public class Comments {
 	@ManyToOne
 	@JoinColumn(name="useq", nullable=false)
 	private Users user;
-	
+
+	@ManyToOne // 대댓글이라면 해당 필드는 부모 댓글을 가리킴
+	@JoinColumn(name="parent_cseq", nullable=true) // 부모 댓글이 없을 수도 있으므로 nullable 설정
+	private Comments parentComment; // 대댓글의 경우에만 사용됨
+
 	@Temporal(value=TemporalType.TIMESTAMP)
 	@ColumnDefault("sysdate")
 	@Column(updatable=false)
