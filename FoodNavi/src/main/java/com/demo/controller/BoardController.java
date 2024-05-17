@@ -28,9 +28,6 @@ public class BoardController {
     @Autowired
     BoardCommentsService boardCommentService;
 
-    @Autowired
-    BoardCommentsService boardCommentsService;
-
 
     //게시글 작성으로 이동
     @GetMapping("/board_insert_form")
@@ -307,6 +304,7 @@ public class BoardController {
         vo.setUser(user);
 
         boardService.editBoard(vo);
+        boardCommentService.updateCommentCount(bseq);
         return "redirect:/board_list"; // 저장 후 리스트 페이지로 리다이렉트합니다.
     }
 
