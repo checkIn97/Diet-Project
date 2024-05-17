@@ -30,3 +30,4 @@ document.getElementById("toggleButtonControl").addEventListener("click", functio
         toggleButton.style.display = "none";
     }
 });
+
