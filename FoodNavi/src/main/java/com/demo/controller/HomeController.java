@@ -18,20 +18,24 @@ import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class HomeController {
-	
+
 	@Autowired
 	private HistoryService historyService;
-		
+
 	@GetMapping("/")
 	public String intropage() {
 		return "index";
 	}
-	
+
 	@GetMapping("/mainpage")
 	public String mainpage(HttpSession session, Model model) {
-		List<Board> boardList = new ArrayList<Board>();
 
-		model.addAttribute("boardList", boardList);
+		Users user = (Users)session.getAttribute("loginUser");
+		if(user == null){
+			model.addAttribute("msg","로그인 후 이용해주세요.");
+			model.addAttribute("redirectTo", "/user_login_form");
+			return "board/board_alert";
+		}
 		UserVo userVo = new UserVo((Users)(session.getAttribute("loginUser")));
 		userVo.setKcalToday((int)historyService.totalKcalToday(userVo.getUser()));
 		userVo.setKcalOnTable((int)historyService.totalKcalOnTable(userVo.getUser()));
@@ -42,9 +46,10 @@ public class HomeController {
 		userVo.setFatToday(Math.round(historyService.totalFatToday(userVo.getUser())*100)/100f);
 		userVo.setFatOnTable(Math.round(historyService.totalFatOnTable(userVo.getUser())*100)/100f);
 		model.addAttribute("userVo", userVo);
+
 		return "mainpage";
 	}
-	
+
 	@GetMapping("load_userVo")
 	@ResponseBody
 	public UserVo loadUserVo(HttpSession session) {
