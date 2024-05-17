@@ -1967,3 +1967,57 @@ input[type="number"]{
     width: 100%;
 }
 
+/*foodDay*/
+.foodContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 20px;
+    width: 100%;
+    height: 100%;
+}
+
+.foodContainer .box {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    background: rgba(238, 238, 238, 0.17);
+    height:300px;
+}
+
+
+.foodContainer .btn:hover{
+    background: none;
+}
+
+.foodContainer .box:hover{
+    background: rgba(238, 238, 238, 0.3);
+    /*transform: scale(1.05);*/
+}
+
+.foodContainer .foodIcon{
+    width: 100px;
+
+}
+
+.foodContainer .box {
+    position: relative;
+    /* 기존 스타일 유지 */
+}
+
+.foodContainer .box h2 {
+    position: absolute;
+    top: 15px;
+    left: 20px;
+}
+
+.foodContainer .box .foodDescription {
+    position: absolute;
+    bottom: 15px;
+}
+
+.foodContainer .kalIcon {
+    width: 20px;
+}
