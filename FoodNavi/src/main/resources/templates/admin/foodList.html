@@ -36,7 +36,11 @@
         </table>
     </div>
 
-    <form action="#" method="get">
+    <a href="admin_food_insert_form">
+        <button type="button">추가</button>
+    </a>
+
+    <form th:action="@{/admin_food_list}" method="get">
         <div class="search-container">
             <label> <input type="text" name="searchWord" class="searchWord">
             </label>
