@@ -15,7 +15,6 @@ import java.util.List;
 public interface BoardRepository extends JpaRepository<Board, Integer> {
 
 	Page<Board> findAllByOrderByCreatedAtDesc(Pageable pageable);
-	List<Board> findByContentNotNullOrContentIsNull();
 
 	@Modifying
 	@Query("update Board p set p.cnt = p.cnt+1 where p.bseq = :bseq")
@@ -25,7 +24,10 @@ public interface BoardRepository extends JpaRepository<Board, Integer> {
 			+ "WHERE b.title LIKE %:title% "
 			+ "or b.content LIKE %:content% OR b.content IS NULL ")
 	Page<Board> findBoardList(String title, String content, Pageable pageable);
-	
+
+	@Query("SELECT b FROM Board b ORDER BY b.bseq DESC")
+	List<Board> findAllList();
+
 	Page<Board> findByTitleContaining(String title, Pageable pageable);
 	
 	Page<Board> findByUserUserid(String userid, Pageable pageable);

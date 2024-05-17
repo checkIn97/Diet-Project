@@ -14,12 +14,8 @@ public interface BoardService {
 	
 	Board getBoard(int bseq);
 	
-	List<Board> getBoardList(String userid);
-	
 	Page<Board> findBoardList(BoardScanVo boardScanVo, int page, int size);
-	
-	Page<Board> getListAllBoard(Pageable pageable);
-	
+
 	void editBoard(Board vo);
 	
 	void deleteBoard(int bseq);
@@ -29,6 +25,5 @@ public interface BoardService {
 	List<Board> getBestBoardList();
 	
 	List<Board> getAuthorBoardList(int useq);
-	
-	
+
 }

@@ -2,6 +2,8 @@ package com.demo.service;
 
 import java.util.List;
 
+import com.demo.domain.Board;
+import com.demo.persistence.BoardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,13 +14,14 @@ import com.demo.persistence.BoardCommentsRepository;
 public class BoardCommentsServiceImpl implements BoardCommentsService {
 
 	@Autowired
+	BoardRepository boardRepo;
+	@Autowired
 	BoardCommentsRepository BoardCommentsRepo;
-	
+
 	@Override
 	public void saveComment(Comments vo) {
-		
 		BoardCommentsRepo.save(vo);
-
+		updateCommentCount(vo.getBoard().getBseq());
 	}
 
 	@Override
@@ -27,28 +30,33 @@ public class BoardCommentsServiceImpl implements BoardCommentsService {
 	}
 
 	@Override
-	public List<Comments> getReplyCommentList(int parentCseq){
+	public List<Comments> getReplyCommentList(int parentCseq) {
 		return BoardCommentsRepo.findRepliesByParentCommentCseq(parentCseq);
 	}
-	@Override
-	public int getCountCommentsList(int bseq) {
-		return 0;
-	}
 
-	@Override
-	public int getCommentTotal(int bseq) {
-		return 0;
-	}
 
 	@Override
 	public void deletComment(int cseq) {
-		BoardCommentsRepo.deleteById(cseq); 
-		
+		Comments comment = BoardCommentsRepo.findById(cseq).orElse(null);
+		if (comment != null) {
+			BoardCommentsRepo.deleteById(cseq);
+			updateCommentCount(comment.getBoard().getBseq());
+		}
 	}
 
 	@Override
 	public void deletAllComment(int bseq) {
 		BoardCommentsRepo.deleteByBoardBseq(bseq);
+		updateCommentCount(bseq);
 	}
 
+	@Override
+	public void updateCommentCount(int bseq) {
+		Board board = boardRepo.findById(bseq).orElse(null);
+		if (board != null) {
+			board.setCommentCount(BoardCommentsRepo.countByBoardBseq(bseq));
+			boardRepo.save(board);
+		}
+
+	}
 }

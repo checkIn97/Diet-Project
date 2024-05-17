@@ -23,7 +23,7 @@ import jakarta.servlet.http.HttpSession;
 public class BoardCommentsController {
 
 	@Autowired
-	private BoardCommentsService boardCommentsService;
+	BoardCommentsService boardCommentsService;
 
 	@GetMapping(value = "/list")
 	@ResponseBody

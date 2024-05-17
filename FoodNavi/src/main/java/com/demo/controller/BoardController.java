@@ -5,7 +5,6 @@ import com.demo.domain.Users;
 import com.demo.dto.BoardScanVo;
 import com.demo.service.BoardCommentsService;
 import com.demo.service.BoardService;
-import com.demo.service.BoardServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +16,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Controller
 public class BoardController {
 
@@ -25,6 +27,9 @@ public class BoardController {
 
     @Autowired
     BoardCommentsService boardCommentService;
+
+    @Autowired
+    BoardCommentsService boardCommentsService;
 
 
     //게시글 작성으로 이동
@@ -45,9 +50,6 @@ public class BoardController {
         }
 
     }
-
-
-  
 
     // 게시글 작성
     @PostMapping("/board_insert")
@@ -116,17 +118,16 @@ public class BoardController {
             boardScanVo.setSortBy(sortBy);
             boardScanVo.setSortDirection(sortDirection);
             boardScanVo.setPageMaxDisplay(pageMaxDisplay);
-            
-            
+
         } else {
             boardScanVo = (BoardScanVo) session.getAttribute("boardScanVo");
-
         }
         Page<Board> boardData = boardService.findBoardList(boardScanVo, page, size);
-        
-            // 검색 결과가 있는 경우
-            boardScanVo.setPageInfo(boardData);
-            boardScanVo.setBoardList(boardData.getContent());
+
+        boardScanVo.setPageInfo(boardData);
+        boardScanVo.setBoardList(boardData.getContent());
+
+
             session.setAttribute("boardScanVo", boardScanVo);
             model.addAttribute("boardScanVo", boardScanVo);
             model.addAttribute("boardList", boardScanVo.getBoardList());
@@ -183,13 +184,14 @@ public class BoardController {
             model.addAttribute("redirectTo", "/board_list");
             return "board/board_alert";
         } else {
-            // 검색 결과가 있는 경우
+
             boardScanVo.setPageInfo(boardData);
             boardScanVo.setBoardList(boardData.getContent());
             session.setAttribute("boardScanVo", boardScanVo);
             model.addAttribute("boardScanVo", boardScanVo);
             model.addAttribute("boardList", boardScanVo.getBoardList());
             model.addAttribute("pageInfo", boardScanVo.getPageInfo());
+            model.addAttribute("boardBestList", boardService.getBestBoardList());
 
             return "board/boardList";
         }

@@ -3,7 +3,6 @@ package com.demo.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -33,17 +32,6 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public List<Board> getBoardList(String userid) {
-		return null;
-	}
-
-	@Override
-	public Page<Board> getListAllBoard(Pageable pageable) {
-	    return boardRepo.findAllByOrderByCreatedAtDesc(pageable);
-	}
-
-
-	@Override
 	public void editBoard(Board vo) {
 		boardRepo.save(vo);
 	}
@@ -68,6 +56,7 @@ public class BoardServiceImpl implements BoardService {
 	public List<Board> getAuthorBoardList(int useq) {
 		return boardRepo.findAuthorList(useq);
 	}
+
 
 	@Override
 	public Page<Board> findBoardList(BoardScanVo boardScanVo, int page, int size) {

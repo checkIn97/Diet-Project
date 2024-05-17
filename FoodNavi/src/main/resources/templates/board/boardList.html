@@ -25,7 +25,7 @@
         <tr th:each="board, iterStat : ${boardBestList}" th:if="${iterStat.index < 3}">
             <td>
                 <div class="popularPosts">[인기] <a th:href="@{'/board_detail/' + ${board.bseq}}"
-                                                  th:text="${board.title}"></a></div>
+                                                  th:text="${board.title + ' ' + '[' + board.commentCount + ']'}"></a></div>
                 <input type="hidden" name="bseq" th:value="${board.bseq}"/></td>
             <td th:text="${board.user.userid}"></td>
             <td th:text="${#dates.format(board.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
@@ -37,7 +37,8 @@
             <td>
                 <div class="board_list">
                     <a th:href="@{'/board_detail/' + ${board.bseq}}"
-                       th:text="${board.title}"></a></div>
+                       th:text="${board.title + ' ' + '[' + board.commentCount + ']'}"></a><!-- 댓글 수 출력 -->
+                   </div>
                 <input type="hidden" id="bseq"
                        name="bseq" th:value="${board.bseq}"/></td>
             <td th:text="${board.user.userid}"></td>
