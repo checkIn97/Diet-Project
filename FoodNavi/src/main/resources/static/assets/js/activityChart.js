@@ -19,3 +19,4 @@ fetch('/activities/data/last-week')
             },
         });
     });
+

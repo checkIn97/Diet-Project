@@ -37,26 +37,31 @@ public class ExerciseOptionController {
                 .map(ExerciseOption::getType)
                 .collect(Collectors.toList());
     }
-    
+
     @PostMapping("/exercise_record")
     public void insertRecord(@RequestParam("activityType") String activityType,
-    						 @RequestParam("activityTime") String activityTime,
-    						 HttpSession session, HttpServletResponse response) throws IOException {
-    	Users user = (Users)session.getAttribute("loginUser");
-    	Optional<ExerciseOption> exo = exerciseOptionRepository.findByType(activityType);
-    	if (!exo.isEmpty()) {
-	    	Exercise vo = Exercise.builder()
-	    			.exerciseDate(new Date())
-	    			.exerciseOption(exo.get())
-	    			.exerciseType(activityType)
-	    			.time(Integer.parseInt(activityTime))
-	    			.user(user)
-	    			.build();
-	    	exerciseRepo.save(vo);
-    	} else {
-    		System.out.println("없는 운동");
-    	}
-    	String redirect_uri="http://localhost:8080/user_myactivity_view";
-    	response.sendRedirect(redirect_uri);
+                             @RequestParam("activityTime") String activityTime,
+                             HttpSession session, HttpServletResponse response) throws IOException {
+        Users user = (Users) session.getAttribute("loginUser");
+        Optional<ExerciseOption> exo = exerciseOptionRepository.findByType(activityType);
+        if (!exo.isEmpty()) {
+            Exercise vo = Exercise.builder()
+                    .exerciseDate(new Date())
+                    .exerciseOption(exo.get())
+                    .exerciseType(activityType)
+                    .time(Integer.parseInt(activityTime))
+                    .user(user)
+                    .build();
+            exerciseRepo.save(vo);
+        } else {
+            System.out.println("없는 운동");
+        }
+        String redirect_uri = "http://localhost:8080/user_myactivity_view";
+        response.sendRedirect(redirect_uri);
+    }
+
+    @GetMapping("/activities/validate")
+    public boolean validateActivityType(@RequestParam("type") String type) {
+        return exerciseOptionRepository.findByType(type).isPresent();
     }
 }

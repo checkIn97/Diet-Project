@@ -15,6 +15,7 @@
             <tr>
                 <th>운동종류</th>
                 <th>운동시간</th>
+                <th>날짜</th>
                 <th></th>
             </tr>
             </thead>
@@ -38,12 +39,17 @@
                     event.preventDefault();
                     $('#mytable > tbody:last').append('<tr><td><input type="text" name="activityType"></td>' +
                         '<td><input type="number" name="activityTime" min="0">분</td>' +
+                        '<td><input type="date" id="activityDate" name="activityDate" ></td>' +
                         '<td><input type="button" class="button" id="btn-delete-row" value="삭제"></td></tr>');
+                        document.getElementById('activityDate').value = new Date().toISOString().substring(0, 10);
                     initAutocomplete();
                     $('input[name="activityType"]').focus();
                 } else if (event.key == "Enter") {
                     $('input[name="activityTime"]').focus();
+                } else if (event.key == "Enter") {
+                    $('input[name="activityDate"]').focus();
                 }
+
             });
 
             $('#btn-add-row').click(function () {
@@ -51,7 +57,9 @@
                 event.preventDefault();
                 $('#mytable > tbody:last').append('<tr><td><input type="text" name="activityType"></td>' +
                     '<td><input type="number" name="activityTime" min="0">분</td>' +
+                    '<td><input type="date" id="activityDate" name="activityDate" ></td>' +
                     '<td><input type="button" class="button" id="btn-delete-row" value="삭제"></td></tr>');
+                document.getElementById('activityDate').value = new Date().toISOString().substring(0, 10);
                 initAutocomplete();
             });
 
