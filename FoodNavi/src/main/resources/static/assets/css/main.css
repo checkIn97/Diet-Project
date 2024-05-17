@@ -1932,10 +1932,13 @@ input[type="number"]{
     width: 10%;
     background: transparent;
     border: none;
+    box-shadow: none;
 }
 
 #chatToggleButtonControlImg{
-    width: 50%
+    width: 50%;
+    display: flex;
+
 }
 
 #leftFixed {
