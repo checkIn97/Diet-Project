@@ -1926,6 +1926,8 @@ input[type="number"]{
     font-size: 1.5em; /* 원하는 크기로 조정 */
 }
 
+/* chatToggleButton*/
+
 #chatToggleButtonControl{
     width: 10%;
     background: transparent;
@@ -1955,8 +1957,10 @@ input[type="number"]{
     display: none;
 }
 
+
 #chatInput {
     position: fixed;
     bottom: 0;
     width: 100%;
 }
+
