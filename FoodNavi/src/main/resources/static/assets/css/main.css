@@ -1925,3 +1925,38 @@ input[type="number"]{
 .food-detail-item-large {
     font-size: 1.5em; /* 원하는 크기로 조정 */
 }
+
+#chatToggleButtonControl{
+    width: 10%;
+    background: transparent;
+    border: none;
+}
+
+#chatToggleButtonControlImg{
+    width: 50%
+}
+
+#leftFixed {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+}
+
+.chatBox{
+    width: 30%;
+    height: 100%;
+    background: rgba(35, 37, 45, 0.85);
+    padding: 3em;
+    border-radius: 10px;
+}
+
+.list-group ul li {
+    display: none;
+}
+
+#chatInput {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
