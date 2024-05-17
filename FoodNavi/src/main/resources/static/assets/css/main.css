@@ -1949,7 +1949,7 @@ input[type="number"]{
     width: 30%;
     height: 100%;
     background: rgba(35, 37, 45, 0.85);
-    padding: 3em;
+    padding: 20px;
     border-radius: 10px;
 }
 
