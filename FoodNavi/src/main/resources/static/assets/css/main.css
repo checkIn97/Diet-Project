@@ -1936,7 +1936,7 @@ input[type="number"]{
 }
 
 #chatToggleButtonControlImg{
-    width: 50%;
+    width: 50px;
     display: flex;
 
 }
