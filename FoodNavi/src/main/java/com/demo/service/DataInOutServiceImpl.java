@@ -671,7 +671,7 @@ public class DataInOutServiceImpl implements DataInOutService {
 	}
 
 	@Override
-	public List<History> historyInDummy(String n) {
+	public List<History> historyInDummy(String mealType, String n) {
 		List<History> historyList = new ArrayList<>();
 		List<Users> userList = usersInOutRepo.findAll();
 		int num = 0;
@@ -728,36 +728,52 @@ public class DataInOutServiceImpl implements DataInOutService {
 				randomArray[1] = 1;
 				randomArray[2] = 0;
 			}
-
-			Date now = new Date();
-			int hour = now.getHours();
+			
+			
 			String morning = "|";
 			String lunch = "|";
 			String dinner = "|";
 			String snack = "|";
 			String mealTime = "";
-			if (hour < 5) {
-				mealTime = "snack";
-				snack = mealTime;
-			} else if (hour < 8) {
+			Date now = new Date();
+			if (mealType.equals("random")) {
+				int hour = now.getHours();
+				if (hour < 5) {
+					mealTime = "snack";
+					snack = mealTime;
+				} else if (hour < 8) {
+					mealTime = "morning";
+					morning = mealTime;
+				} else if (hour < 11) {
+					mealTime = "snack";
+					snack = mealTime;
+				} else if (hour < 14) {
+					mealTime = "lunch";
+					lunch = mealTime;
+				} else if (hour < 17) {
+					mealTime = "snack";
+					snack = mealTime;
+				} else if (hour < 20) {
+					mealTime = "dinner";
+					dinner = mealTime;
+				} else {
+					mealTime = "snack";
+					snack = mealTime;
+				}
+			} else if(mealType.equals("morning")) {
 				mealTime = "morning";
 				morning = mealTime;
-			} else if (hour < 11) {
-				mealTime = "snack";
-				snack = mealTime;
-			} else if (hour < 14) {
+			} else if(mealType.equals("lunch")) {
 				mealTime = "lunch";
 				lunch = mealTime;
-			} else if (hour < 17) {
-				mealTime = "snack";
-				snack = mealTime;
-			} else if (hour < 20) {
+			} else if(mealType.equals("dinner")) {
 				mealTime = "dinner";
 				dinner = mealTime;
-			} else {
+			} else if(mealType.equals("snack")) {
 				mealTime = "snack";
 				snack = mealTime;
 			}
+			
 			
 			foodRecommendVo.setMealTime(new String[]{morning, lunch, dinner, snack});
 			foodRecommendVo.setPurpose(user.getUserGoal());

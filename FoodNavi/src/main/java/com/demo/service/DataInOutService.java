@@ -47,7 +47,7 @@ public interface DataInOutService {
 	public void foodIngredientToCsv(List<FoodIngredient> foodIngredientList);
 	
 	public List<History> historyInFromCsv(String csvFile, String n);
-	public List<History> historyInDummy(String n);
+	public List<History> historyInDummy(String mealType, String n);
 	public void historyListToCsv(List<History> historyList);
 	
 	public List<Ingredient> ingredientInFromCsv(String csvFile, String n);
