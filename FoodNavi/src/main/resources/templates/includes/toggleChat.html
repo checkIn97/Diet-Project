@@ -73,7 +73,7 @@
             },
 
             enterRoom: function (roomId) {
-                var sender = prompt('대화명을 입력해 주세요.' + '대화명을 입력하지 않을 시 로그인하신정보( ' + `${userVo.user.name}`+' ) 으로 입장합니다.');
+                var sender = prompt('대화명을 입력해 주세요.\n' + '대화명을 입력하지 않을 시 로그인하신정보( ' + `${userVo.user.name}`+' ) 으로 입장합니다.');
                 if (sender != "") {
                     localStorage.setItem('wschat.sender', sender);
                     localStorage.setItem('wschat.roomId', roomId);

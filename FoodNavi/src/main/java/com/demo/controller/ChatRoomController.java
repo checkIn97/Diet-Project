@@ -1,7 +1,9 @@
 package com.demo.controller;
 
+import com.demo.domain.Users;
 import com.demo.dto.ChatRoom;
 import com.demo.persistence.ChatRoomRepository;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
@@ -20,15 +22,19 @@ public class ChatRoomController {
 
     // 채팅 리스트 화면
     @GetMapping("/room")
-    public String rooms(Model model){
+    public List<ChatRoom> rooms(Model model, HttpSession session){
+        Users user = (Users) session.getAttribute("loginUser");
+        System.out.println(user.getName());
+        session.setAttribute("user_name", user.getName());
         log.info("로그");
-        return "chat/room";
+        return chatRoomRepository.findAllRoom();
     }
 
     // 모든 채팅방 목록
     @GetMapping("/rooms")
     @ResponseBody
     public List<ChatRoom> room() {
+
         return chatRoomRepository.findAllRoom();
     }
 
