@@ -34,7 +34,7 @@ public class BoardController {
     public String showWriteForm(HttpSession session, Model model) {
         // 세션에서 사용자 정보 가져오기
         Users user = (Users) session.getAttribute("loginUser");
-
+        UserVo userVo = new UserVo();
         // 세션에 로그인 정보가 없는 경우
         if (user == null) {
             // 로그인 알림을 포함한 경고 메시지를 설정합니다.
@@ -42,7 +42,7 @@ public class BoardController {
             model.addAttribute("redirectTo","/user_login_form");
             return "board/board_alert"; 
         } else {
-
+            model.addAttribute("userVo", userVo);
             return "board/boardInsert"; //게시글 작성페이지로 이동.
         }
 
@@ -58,7 +58,7 @@ public class BoardController {
 
         // 세션에서 사용자 정보 가져오기
         Users user = (Users) session.getAttribute("loginUser");
-
+        UserVo userVo = new UserVo();
         // 세션에 로그인 정보가 없는 경우
         if (user == null) {
         	 // 로그인 알림을 포함한 경고 메시지를 설정합니다.
@@ -76,7 +76,7 @@ public class BoardController {
         }
         vo.setContent(content);
         vo.setUser(user); // 사용자 정보 설정
-
+        model.addAttribute("userVo", userVo);
         boardService.insertBoard(vo);
         
         return "redirect:/board_list"; // 저장 후 리스트 페이지로 리다이렉트합니다.
@@ -98,7 +98,7 @@ public class BoardController {
 
         // 세션에서 사용자 정보 가져오기
         Users user = (Users) session.getAttribute("loginUser");
-
+        UserVo userVo = new UserVo();
         // 세션에 로그인 정보가 없는 경우
         if (user == null) {
         	 // 로그인 알림을 포함한 경고 메시지를 설정합니다.
@@ -123,7 +123,6 @@ public class BoardController {
 
         boardScanVo.setPageInfo(boardData);
         boardScanVo.setBoardList(boardData.getContent());
-        UserVo userVo = new UserVo(user);
 
             session.setAttribute("boardScanVo", boardScanVo);
             model.addAttribute("boardScanVo", boardScanVo);
@@ -131,7 +130,6 @@ public class BoardController {
             model.addAttribute("pageInfo", boardScanVo.getPageInfo());
             model.addAttribute("boardBestList", boardService.getBestBoardList());
             model.addAttribute("userVo", userVo);
-
             return "board/boardList";
         }
 
@@ -151,7 +149,7 @@ public class BoardController {
 
         // 세션에서 사용자 정보 가져오기
         Users user = (Users) session.getAttribute("loginUser");
-
+        UserVo userVo = new UserVo();
         // 세션에 로그인 정보가 없는 경우
         if (user == null) {
             // 로그인 알림을 포함한 경고 메시지를 설정합니다.
@@ -190,6 +188,7 @@ public class BoardController {
             model.addAttribute("boardList", boardScanVo.getBoardList());
             model.addAttribute("pageInfo", boardScanVo.getPageInfo());
             model.addAttribute("boardBestList", boardService.getBestBoardList());
+            model.addAttribute("userVo", userVo);
 
             return "board/boardList";
         }
@@ -203,7 +202,7 @@ public class BoardController {
 
         // 세션에서 사용자 정보 가져오기
         Users user = (Users) session.getAttribute("loginUser");
-
+        UserVo userVo = new UserVo();
         // 세션에 로그인 정보가 없는 경우
         if (user == null) {
         	 // 로그인 알림을 포함한 경고 메시지를 설정합니다.
@@ -227,7 +226,7 @@ public class BoardController {
         model.addAttribute("boardScanVo", boardScanVo);
         model.addAttribute("boardList", boardScanVo.getBoardList());
         model.addAttribute("pageInfo", boardScanVo.getPageInfo());
-
+        model.addAttribute("userVo", userVo);
         // 게시글 상세보기 페이지로 이동
         return "board/boardDetail";
     }
@@ -240,7 +239,7 @@ public class BoardController {
 
         // 세션에서 사용자 정보 가져오기
         Users user = (Users) session.getAttribute("loginUser");
-
+        UserVo userVo = new UserVo();
         // 세션에 로그인 정보가 없는 경우
         if (user == null) {
         	 // 로그인 알림을 포함한 경고 메시지를 설정합니다.
@@ -248,7 +247,7 @@ public class BoardController {
             model.addAttribute("redirectTo","/user_login_form");
             return "board/board_alert"; 
         }
-
+        model.addAttribute("userVo", userVo);
         boardCommentService.deletAllComment(bseq);
         boardService.deleteBoard(bseq);
 
@@ -263,7 +262,7 @@ public class BoardController {
 
         // 세션에서 사용자 정보 가져오기
         Users user = (Users) session.getAttribute("loginUser");
-
+        UserVo userVo = new UserVo();
         // 세션에 로그인 정보가 없는 경우
         if (user == null) {
         	 // 로그인 알림을 포함한 경고 메시지를 설정합니다.
@@ -275,6 +274,7 @@ public class BoardController {
         // 게시글 번호를 통해 해당 게시글 가져오기
         Board board = boardService.getBoard(bseq);
         // 모델에 게시글 추가
+        model.addAttribute("userVo", userVo);
         model.addAttribute("board", board);
         // 게시글 수정화면으로 이동
         return "board/boardEdit";
@@ -289,7 +289,7 @@ public class BoardController {
 
         // 세션에서 사용자 정보 가져오기
         Users user = (Users) session.getAttribute("loginUser");
-
+        UserVo userVo = new UserVo();
         // 세션에 로그인 정보가 없는 경우
         if (user == null) {
         	 // 로그인 알림을 포함한 경고 메시지를 설정합니다.
@@ -304,6 +304,7 @@ public class BoardController {
         vo.setContent(content);
         vo.setUser(user);
 
+        model.addAttribute("userVo", userVo);
         boardService.editBoard(vo);
         boardCommentService.updateCommentCount(bseq);
         return "redirect:/board_list"; // 저장 후 리스트 페이지로 리다이렉트합니다.
