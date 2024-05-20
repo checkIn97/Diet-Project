@@ -10,6 +10,8 @@ public interface FoodScanService {
 	
 	public Food getFoodByFseq(int fseq);
 	
+	public Food getFoodByName(String name);
+	
 	public List<Food> getFoodScanList(Users user, FoodRecommendVo foodRecommendVo);
 	
 }

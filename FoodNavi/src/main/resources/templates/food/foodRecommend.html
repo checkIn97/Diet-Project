@@ -2,7 +2,30 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <th:block th:insert="~{/includes/headerMain}"></th:block>
 <meta charset="UTF-8">
-
+<script th:inline="javascript">
+	function foodRecord() {
+		var food_name = $("#food_name").text();
+		var food_score = $("#food_score").text();
+		var amount = $("#amount").val();
+		
+		$.ajax({
+            type: "POST",
+            url: "/food_recommend_record",
+            data: JSON.stringify({
+                food_name: food_name,
+                food_score: food_score,
+                amount: amount
+            }),
+            contentType: "application/json",
+            success: function(response) {
+                alert("성공적으로 기록되었습니다.");
+            },
+            error: function(error) {
+                alert("기록에 실패했습니다.");
+            }
+        });
+	}
+</script>
 <h1><a href="/mainpage">FoodNavi</a></h1>
 <!-- myChange -->
 <article id="box">
@@ -39,24 +62,28 @@
 	            		<h2 class="major">점수</h2>
 	                	<p id="food_score" th:text="${foodvo.score}"></p>
             		</td>
+            		<td>
+            			<h2 class="major">수량</h2>
+            			<input type="number" id="amount" name="amount" min="0" th:value="0">개
+            		</td>
+            		<td>
+            			<h2 class="major">선택</h2>
+            			<input type="button" value="기록하기" class="button" onclick="foodRecord()"/>
+            		</td>
             	</tr>
             </table>
             </div>
 
         </div>
         <ul class="actions">
-            <li><input type="submit" value="기록하기" class="primary"/></li>
             <li><input type="submit" value="다른 음식 추천받기" class="button"/></li>
         </ul>
-
+		<a href="/foodTodayHistory_view" class="button">기록 승인</a>
+		<a href="/foodHistory_view" class="button">기록 확인</a>
         <a href="/foodRecommendation" class="button">이전</a>
         
 
     </form>
 </article>
-
-<div class="fixed-bottom">
-	<th:block th:insert="~{includes/toggleChat}"></th:block>
-</div>
 
 <th:block th:insert="~{includes/footer}"></th:block>

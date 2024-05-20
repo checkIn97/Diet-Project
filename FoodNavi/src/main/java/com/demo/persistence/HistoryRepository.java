@@ -1,5 +1,6 @@
 package com.demo.persistence;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -27,9 +28,15 @@ public interface HistoryRepository extends JpaRepository<History, Integer> {
 	public History getHistoryNotConfirmedYetByFood(Users user, Food food);
 	
 	@Query("SELECT history FROM History history "
+			+ "WHERE history.user = :user "
+			+ "AND history.food = :food ")
+	public History getHistoryConfirmedByUserAndFood(Users user, Food food);
+	
+	@Query("SELECT history FROM History history "
 			+ "WHERE history.servedDate IS NOT NULL ")
 	public List<History> getHistoryListConfirmed();
 	
-
-	
+	@Query("SELECT history FROM History history "
+			+ "WHERE history.user = :user ")
+	public List<History> getHistoryListByUser(Users user);
 }

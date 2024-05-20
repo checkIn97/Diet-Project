@@ -29,6 +29,11 @@ public class FoodScanServiceImpl implements FoodScanService {
 	}
 	
 	@Override
+	public Food getFoodByName(String name) {
+		return foodScanRepo.findByName(name);
+	}
+	
+	@Override
 	public List<Food> getFoodScanList(Users user, FoodRecommendVo foodScanVo) {
 				
 		UserVo userVo = new UserVo(user);

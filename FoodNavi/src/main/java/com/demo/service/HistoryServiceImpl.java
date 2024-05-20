@@ -1,11 +1,13 @@
 package com.demo.service;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.demo.domain.Food;
 import com.demo.domain.History;
 import com.demo.domain.Users;
 import com.demo.persistence.HistoryRepository;
@@ -147,5 +149,22 @@ public class HistoryServiceImpl implements HistoryService {
 		}
 		return totalFatToday;
 	}
-	
+
+	@Override
+	public History getHistoryByUserAndFood(Users user, Food food) {
+		
+		return historyRepo.getHistoryNotConfirmedYetByFood(user, food);
+	}
+
+	@Override
+	public List<History> getHistoryListByUser(Users user) {
+		
+		return historyRepo.getHistoryListByUser(user);
+	}
+
+	@Override
+	public History getConfirmedHistoryByUserAndFood(Users user, Food food) {
+		
+		return historyRepo.getHistoryConfirmedByUserAndFood(user, food);
+	}
 }

@@ -1,6 +1,8 @@
 package com.demo.controller;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -41,12 +43,21 @@ public class ExerciseOptionController {
     @PostMapping("/exercise_record")
     public void insertRecord(@RequestParam("activityType") String activityType,
                              @RequestParam("activityTime") String activityTime,
+                             @RequestParam("activityDate") String activityDate,
                              HttpSession session, HttpServletResponse response) throws IOException {
         Users user = (Users) session.getAttribute("loginUser");
         Optional<ExerciseOption> exo = exerciseOptionRepository.findByType(activityType);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date strToDate = null;
+        try {
+            strToDate = formatter.parse(activityDate);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        
         if (!exo.isEmpty()) {
             Exercise vo = Exercise.builder()
-                    .exerciseDate(new Date())
+                    .exerciseDate(strToDate)
                     .exerciseOption(exo.get())
                     .exerciseType(activityType)
                     .time(Integer.parseInt(activityTime))

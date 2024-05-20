@@ -13,6 +13,8 @@ public interface FoodScanRepository extends JpaRepository<Food, Integer> {
 	
 	public Food findFirstByOrderByFseqDesc();
 	
+	public Food findByName(String name);
+	
 	@Query("SELECT COUNT(food) FROM Food food ")
 	public int getTotalFoodCount();
 	
