@@ -1,6 +1,8 @@
 package com.demo.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,6 +61,34 @@ public class FoodRecomController {
     	foodRecommendVo.setDietType(user.getDietType());
     	foodRecommendVo.setVegetarian(user.getVegetarian());
     	model.addAttribute("foodRecommendVo", foodRecommendVo);
+    	
+    	String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date()).toString();
+    	List<History> historyList = historyService.getHistoryListConfirmed(user);
+    	float kcalMorning = 0f;
+    	float kcalLunch = 0f;
+    	float kcalDinner = 0f;
+    	float kcalSnack = 0f;
+    	for (History history : historyList) {
+    		if (today.equals(history.getServedDate().toString().substring(0, 10))) {
+    			float kcal = history.getFood().getFoodDetail().getKcal();
+    			String mealType = history.getMealType();
+    			if (mealType.equals("morning")) {
+    				kcalMorning += kcal;
+    			} else if (mealType.equals("lunch")) {
+    				kcalLunch += kcal;
+    			} else if (mealType.equals("dinner")) {
+    				kcalDinner += kcal;
+    			} else {
+    				kcalSnack += kcal;
+    			}
+    		}
+		}
+    	UserVo userVo = new UserVo(user);
+    	userVo.setKcalMorning((int)kcalMorning);
+    	userVo.setKcalLunch((int)kcalLunch);
+    	userVo.setKcalDinner((int)kcalDinner);
+    	userVo.setKcalSnack((int)kcalSnack);
+    	model.addAttribute("userVo", userVo);
     	
         return "food/foodDay";
     }

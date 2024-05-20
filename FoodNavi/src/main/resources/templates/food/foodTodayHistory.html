@@ -34,9 +34,9 @@ function historyRecord() {
 }
 
 	
-	function subtract_history(button) {
-		$(button).closest('tr').remove();
-	}
+function subtract_history(button) {
+	$(button).closest('tr').remove();
+}
 </script>
 <h1><a href="/mainpage">FoodNavi</a></h1>
 <!-- myChange -->
@@ -58,7 +58,7 @@ function historyRecord() {
             		</td>
             		<td>
             			<h2 class="major">제외</h2>
-            			<input type="button" id="delete_button" th:value="제외" onclick="subtract_history()">
+            			<input type="button" id="delete_button" th:value="제외" onclick="subtract_history(this)">
             		</td>
             		<!-- 
             		<td>

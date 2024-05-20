@@ -81,13 +81,18 @@ public class UsersController {
 
 
 	@GetMapping("/user_login_form")
-	public String loginView() {
+	public String loginView(SessionStatus status, HttpSession session) {
+		
+		if (session.getAttribute("loginUser") != null) {
+			status.setComplete();
+		}
 		return "user/login";
 	}
 
 	@PostMapping("/user_login")
 	public String loginAction(Users vo, HttpSession session, Model model) {
 		int useq = 0;
+		
 		if (usersRepo.findByUserid(vo.getUserid()).isPresent()) {
 			useq = usersRepo.findByUserid(vo.getUserid()).get().getUseq();
 		}

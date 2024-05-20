@@ -54,6 +54,4 @@ public class History {
 	private String dietType;
 	private String vegetarian;
 	
-	
-	
 }

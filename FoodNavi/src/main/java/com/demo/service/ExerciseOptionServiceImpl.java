@@ -24,5 +24,11 @@ public class ExerciseOptionServiceImpl implements ExerciseOptionService {
 		return exerciseOptionRepository.findFirstByOrderByEoseqDesc();
 	}
 
+	@Override
+	public void insertExerciseOption(ExerciseOption eo) {
+
+		exerciseOptionRepository.save(eo);
+	}
+
 
 }

@@ -7,6 +7,6 @@ import java.util.Optional;
 public interface ExerciseOptionService {
 	public Optional<ExerciseOption> findByType(String type);
 	public ExerciseOption getIngredientByMaxEoseq();
-	
+	public void insertExerciseOption(ExerciseOption eo);
 	
 }

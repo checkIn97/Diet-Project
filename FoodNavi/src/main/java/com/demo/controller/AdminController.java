@@ -5,13 +5,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
+import com.demo.domain.*;
 import com.demo.persistence.ExerciseOptionRepository;
+import com.demo.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
@@ -29,24 +27,9 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.demo.domain.Admin;
-import com.demo.domain.Board;
-import com.demo.domain.Comments;
-import com.demo.domain.Food;
-import com.demo.domain.FoodDetail;
-import com.demo.domain.FoodIngredient;
-import com.demo.domain.Users;
 import com.demo.dto.BoardScanVo;
 import com.demo.dto.FoodRecommendVo;
 import com.demo.dto.UserScanVo;
-import com.demo.service.AdminBoardCommentsService;
-import com.demo.service.AdminBoardService;
-import com.demo.service.AdminFoodDetailService;
-import com.demo.service.AdminFoodService;
-import com.demo.service.AdminService;
-import com.demo.service.AdminUsersService;
-import com.demo.service.FoodIngredientService;
-import com.demo.service.IngredientService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -73,7 +56,8 @@ public class AdminController {
 	private FoodIngredientService foodIngredientService;
 	@Autowired
 	private ExerciseOptionRepository exerciseOptionRepository;
-
+	@Autowired
+	private ExerciseOptionService exerciseOptionService;
 
 	// @Value("${com.demo.upload.path}")
 	// private String uploadPath;
@@ -260,11 +244,14 @@ public class AdminController {
 		}
 
 		Food food = foodService.getFoodByFseq(fseq);
+		List<Ingredient> ingredients = ingredientService.getIngredientListInFood(fseq);
+		model.addAttribute("ingredientsList", ingredients);
 		model.addAttribute("food", food);
 		FoodRecommendVo foodScanVo = (FoodRecommendVo) session.getAttribute("foodScanVo");
 		model.addAttribute("foodScanVo", foodScanVo);
 		model.addAttribute("foodList", foodScanVo.getFoodList());
 		model.addAttribute("pageInfo", foodScanVo.getPageInfo());
+
 		return "admin/foodDetail";
 	}
 
@@ -282,9 +269,9 @@ public class AdminController {
 									   @RequestParam(value = "name") String name, @RequestParam(value = "img") MultipartFile uploadFile,
 									   @RequestParam(value = "kcal") float kcal, @RequestParam(value = "carb") float carb,
 									   @RequestParam(value = "prt") float prt, @RequestParam(value = "fat") float fat,
-									   @RequestParam(value = "foodType") String foodType,
 									   @RequestParam(value = "ingredient") String[] ingredient,
-									   @RequestParam(value = "quantity") int [] quantity) {
+									   @RequestParam(value = "quantity") int [] quantity,
+									   @RequestParam(value = "foodType") String foodType) {
 
 		// 세션에서 사용자 정보 가져오기
 		Admin admin = (Admin) session.getAttribute("adminUser");
@@ -318,6 +305,8 @@ public class AdminController {
 		foodDetail.setPrt(prt);
 		foodDetail.setFat(fat);
 		foodDetail.setFoodType(foodType);
+
+
 		foodDetailService.insertFoodDetail(foodDetail);
 
 
@@ -363,9 +352,9 @@ public class AdminController {
 								  @RequestParam(value = "img") MultipartFile uploadFile, @RequestParam(value = "kcal") float kcal,
 								  @RequestParam(value = "carb") float carb, @RequestParam(value = "prt") float prt,
 								  @RequestParam(value = "fat") float fat,
-								  @RequestParam(value = "foodType") String foodType,
 								  @RequestParam(value = "ingredient") String[] ingredient,
-								  @RequestParam(value = "quantity") int[] quantity) {
+								  @RequestParam(value = "quantity") int[] quantity,
+								  @RequestParam(value = "foodType") String foodType) {
 
 		// 세션에서 사용자 정보 가져오기
 		Admin admin = (Admin) session.getAttribute("adminUser");
@@ -587,8 +576,18 @@ public class AdminController {
 	}
 
 	@GetMapping("/admin_exercise_list")
-	public String showExerciseList() {
+	public String adminExerciseWrite(){
 		return "admin/exercise";
+	}
+	@PostMapping("/admin_exercise_list")
+	public String showExerciseList(@RequestParam (value = "exerciseType") String exerciseType,
+								   @RequestParam (value= "exerciseFomula") String exerciseFomula) {
+		ExerciseOption eo = new ExerciseOption();
+		eo.setType(exerciseType);
+		eo.setFomula(exerciseFomula);
+		exerciseOptionService.insertExerciseOption(eo);
+
+		return "/admin/exercise";
 	}
 
 	@GetMapping("/checkExerciseType")
@@ -599,4 +598,7 @@ public class AdminController {
 		response.put("isDuplicated", isDuplicated);
 		return response;
 	}
+
+
+
 }

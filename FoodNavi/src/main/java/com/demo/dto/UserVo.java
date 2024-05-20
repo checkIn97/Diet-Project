@@ -28,6 +28,10 @@ public class UserVo {
 	private float properPrt = 0;
 	private float properFat = 0;
 	private int kcalToday = 0;
+	private int kcalMorning = 0;
+	private int kcalLunch = 0;
+	private int kcalDinner = 0;
+	private int kcalSnack = 0;
 	private int kcalOnTable = 0;
 	private float carbToday = 0;
 	private float carbOnTable = 0;

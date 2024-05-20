@@ -1,9 +1,11 @@
 package com.demo.controller;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.demo.domain.Food;
 import com.demo.domain.History;
 import com.demo.domain.Users;
+import com.demo.dto.FoodRecommendVo;
 import com.demo.dto.UserVo;
 import com.demo.service.FoodScanService;
 import com.demo.service.HistoryService;
@@ -46,29 +49,51 @@ public class HistoryController {
 		if (user == null) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("요청이 실패했습니다.");
 		}
-		System.out.println(foodRecord.getFood_name());
+		
+		if (foodRecord.getAmount().equals("0")) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("요청이 실패했습니다.");
+		}
+		
 		Food food = foodScanService.getFoodByName(foodRecord.getFood_name());
-		System.out.println("-----------테스트-------------");
-		System.out.println(food.getFseq());
-		System.out.println(user.getUseq());
-		System.out.println(foodRecord.getAmount());
 		/*
 		 * 이미 히스토리가 존재하는지 확인하기 위해 유저정보로 히스토리 리스트를 가져오기(히스토리의 수정은 기록확인 페이지에서만 가능)
 		 */
 		List<History> hsList = historyService.getHistoryListByUser(user);
+		FoodRecommendVo vo = (FoodRecommendVo)session.getAttribute("foodRecommendVo");
+		List<String> mealList = Arrays.asList(vo.getMealTime());
+		String mealType = "";
+		for(String meal : mealList) {
+			System.out.println("mealtype:" + meal);
+			if (!meal.equals("")) {
+				mealType = meal;
+				break;
+			}
+		}
 		
 		if (!hsList.isEmpty()) { // 히스토리 리스트가 존재하는 경우
 			for (History history : hsList) {
-				if (history.getFood().equals(food)) { // 현재 기록하려는 음식이 히스토리 상 존재하는지 확인하여 있다면 전송 실패
+				Instant instant = history.getServedDate().toInstant();
+				LocalDate historyLocalDate = instant.atZone(ZoneId.systemDefault()).toLocalDate();
+				LocalDate today = LocalDate.now();
+				
+				if (history.getFood().equals(food) && historyLocalDate.equals(today) && history.getMealType().equals(mealType)) { // 현재 기록하려는 음식이 히스토리 상 존재하는지 확인하여 있다면 전송 실패
 					return ResponseEntity.status(HttpStatus.NOT_FOUND).body("요청이 실패했습니다.");
-				} else { // 없다면 반복문 스킵
-					continue;
+				} else { 
+					History hs = History.builder().user(user).food(food).serveNumber(Integer.parseInt(foodRecord.getAmount()))
+							.servedDate(null).mealType(mealType).no_egg(user.getNo_egg()).no_milk(user.getNo_milk())
+							.no_bean(user.getNo_bean()).no_shellfish(user.getNo_shellfish()).no_ingredient(user.getNo_ingredient())
+							.purpose(user.getUserGoal()).dietType(user.getDietType()).vegetarian(user.getVegetarian()).build();
+					System.out.println("-----------테스트1-------------");
+					historyService.historyUpdate(hs);
+					break;
 				}
 			}
 		} else { // 히스토리 리스트가 존재하지 않는 경우
 			History history = History.builder().user(user).food(food).serveNumber(Integer.parseInt(foodRecord.getAmount()))
-					.servedDate(null).build();
-
+					.servedDate(null).mealType(mealType).no_egg(user.getNo_egg()).no_milk(user.getNo_milk())
+					.no_bean(user.getNo_bean()).no_shellfish(user.getNo_shellfish()).no_ingredient(user.getNo_ingredient())
+					.purpose(user.getUserGoal()).dietType(user.getDietType()).vegetarian(user.getVegetarian()).build();
+			System.out.println("-----------테스트2-------------");
 			historyService.historyUpdate(history);
 		}
 		// 응답 반환
@@ -114,6 +139,9 @@ public class HistoryController {
 			return "/user_login_form"; // 로그인 페이지로 이동.
 		}
 		
+		FoodRecommendVo vo = (FoodRecommendVo)session.getAttribute("foodRecommendVo");
+		List<String> mealList = Arrays.asList(vo.getMealTime());
+		String mealType = mealList.get(0);
 		// 받은 데이터를 처리하는 로직을 작성
 		for (HistoryData historyData : historyDataList) {
 			Food food = foodScanService.getFoodByName(historyData.getFood_name());
@@ -121,6 +149,15 @@ public class HistoryController {
 			History hs = historyService.getHistoryByUserAndFood(user, food);
 			hs.setServeNumber(historyData.getServeNumber());
 			hs.setServedDate(new Date());
+			hs.setNo_egg(user.getNo_egg());
+			hs.setNo_milk(user.getNo_milk());
+			hs.setNo_bean(user.getNo_bean());
+			hs.setNo_shellfish(user.getNo_shellfish());
+			hs.setNo_ingredient(user.getNo_ingredient());
+			hs.setDietType(user.getDietType());
+			hs.setVegetarian(user.getVegetarian());
+			hs.setPurpose(user.getUserGoal());
+			hs.setMealType(mealType);
 			
             historyService.historyUpdate(hs);
 			
