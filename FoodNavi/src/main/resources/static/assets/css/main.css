@@ -2021,3 +2021,109 @@ input[type="number"]{
 .foodContainer .kalIcon {
     width: 20px;
 }
+
+/*food Recommend*/
+
+.foodRecommend {
+    display: flex;
+}
+
+.foodRecommend .section {
+    padding: 20px;
+    margin: 20px;
+    box-sizing: border-box;
+    width: auto;
+    height: auto;
+    background: rgba(35, 37, 45, 0.85);
+    border-radius: 10px;
+}
+
+.foodRecommend .section:hover {
+    scale: 1.1;
+}
+
+.arrow {
+    display: flex;
+    scale: 0.1;
+}
+
+#section1 .arrow {
+    display: none;
+}
+
+#section1 {
+    position: relative; /* section1을 기준으로 위치 설정 */
+}
+
+#section1 #arrowL {
+    position: absolute;
+    top: 140px;
+    right: 165px;
+    transform: translateY(-50%);
+}
+
+#section1 #arrowR {
+    position: absolute; /* 절대 위치 설정 */
+    top: 140px;
+    right: -245px;
+    transform: translateY(-50%);
+}
+
+.food-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.foodRecommend .section h2 {
+    margin-bottom: 20px; /* 원하는 공간만큼 설정 */
+}
+
+.food-info p {
+    margin: 0 0 10px;
+}
+
+.food-detail {
+    font-size: 1.2em; /* 텍스트 크기 */
+    margin-bottom: 10px; /* 아래 여백 */
+}
+
+.food-detail span {
+    font-weight: bold; /* 볼드체 */
+}
+
+.section .foodImg {
+    display: block;
+    width: 150px; /* 원하는 너비로 설정 */
+    object-fit: cover; /* 이미지의 비율을 유지하면서 적절하게 맞춤 */
+    margin: auto; /* 가운데 정렬 */
+}
+
+.star {
+    width: 18px;
+    object-fit: cover;
+}
+
+.food-info td {
+    width: 150px; /* 원하는 너비로 설정 */
+}
+
+.food-name {
+    font-size: 1.7em; /* 원하는 크기로 조정 */
+    font-weight: bold; /* 굵은 글꼴 */
+    white-space: nowrap; /*줄바꿈 금지*/
+}
+
+.section {
+    position: relative; /* 이미지를 중앙에 배치하기 위해 필요 */
+}
+
+.section .checkmark {
+    display: none; /* 기본적으로 이미지를 숨김 */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100px; /* 이미지 크기를 조정 */
+    height: auto;
+}
