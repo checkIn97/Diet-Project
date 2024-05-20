@@ -49,6 +49,11 @@ public class ExerciseOptionController {
         Optional<ExerciseOption> exo = exerciseOptionRepository.findByType(activityType);
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Date strToDate = null;
+        System.out.println("------------운동기록하기 테스트---------------");
+        System.out.println(activityType);
+        System.out.println(activityTime);
+        System.out.println(activityDate);
+        System.out.println("------------운동기록하기 테스트---------------");
         try {
             strToDate = formatter.parse(activityDate);
         } catch (ParseException e) {

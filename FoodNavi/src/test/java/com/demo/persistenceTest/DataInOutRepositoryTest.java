@@ -19,7 +19,7 @@ public class DataInOutRepositoryTest {
 	@Autowired
 	DataInOutService dataInOutService;
 	
-	@Disabled
+	
 	@Test
 	public void totalInput() {
 		// 기본 데이터 입력

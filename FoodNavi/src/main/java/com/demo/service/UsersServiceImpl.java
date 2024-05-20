@@ -25,20 +25,25 @@ public class UsersServiceImpl implements UsersService {
 	@Override
 	public int loginID(Users vo) {
 		int result = -1;
-		int useq = usersRepo.findByUserid(vo.getUserid()).get().getUseq();
-		System.out.println(useq);
+		int useq = 0;
+		if (usersRepo.findByUserid(vo.getUserid()).isPresent()) {
+			useq = usersRepo.findByUserid(vo.getUserid()).get().getUseq();
+		}
+			System.out.println(useq);
+			
+			// Users 테이블에서 사용자 조회
+			Optional<Users> user = usersRepo.findById(useq);
 		
-		// Users 테이블에서 사용자 조회
-		Optional<Users> user = usersRepo.findById(useq);
-	
 		// 결과값 설정 :
 		// 1: ID,PWD 일치, 0: 비밀번호 불일치, -1: ID가 존재하지 않음.
-		if(user.isEmpty()) {
+		if(!user.isPresent()) {
 			result = -1;
-		} else if(user.get().getUserpw().equals(vo.getUserpw())) {
-			result = 1;
 		} else {
-			result = 0; //비밀번호 불일치
+			if (user.get().getUserpw().equals(vo.getUserpw())) {
+				result = 1;
+			} else {
+				result = 0; //비밀번호 불일치
+			}
 		}
 		return result;
 	}

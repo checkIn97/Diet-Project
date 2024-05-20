@@ -106,13 +106,16 @@ public class UsersController {
 
 	@PostMapping("/user_login")
 	public String loginAction(Users vo, HttpSession session, Model model) {
-		int useq = usersRepo.findByUserid(vo.getUserid()).get().getUseq();
+		int useq = 0;
+		if (usersRepo.findByUserid(vo.getUserid()).isPresent()) {
+			useq = usersRepo.findByUserid(vo.getUserid()).get().getUseq();
+		}
 		String url = "";
 		if (usersService.loginID(vo) == 1) { // 정상 사용자
 			session.setAttribute("loginUser", usersService.getUser(useq));
 
 			url = "redirect:mainpage";
-		} else {
+		} else if (usersService.loginID(vo) != 1){
 			model.addAttribute("msg", "없는 아이디 또는 비밀번호 오류 입니다.");
 			url = "user/login_fail";
 			return url;

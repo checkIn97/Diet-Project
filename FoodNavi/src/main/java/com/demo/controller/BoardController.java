@@ -1,12 +1,5 @@
 package com.demo.controller;
 
-import com.demo.domain.Board;
-import com.demo.domain.Users;
-import com.demo.dto.BoardScanVo;
-import com.demo.service.BoardCommentsService;
-import com.demo.service.BoardService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -16,8 +9,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.demo.domain.Board;
+import com.demo.domain.Users;
+import com.demo.dto.BoardScanVo;
+import com.demo.dto.UserVo;
+import com.demo.service.BoardCommentsService;
+import com.demo.service.BoardService;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class BoardController {
@@ -123,13 +123,14 @@ public class BoardController {
 
         boardScanVo.setPageInfo(boardData);
         boardScanVo.setBoardList(boardData.getContent());
-
+        UserVo userVo = new UserVo(user);
 
             session.setAttribute("boardScanVo", boardScanVo);
             model.addAttribute("boardScanVo", boardScanVo);
             model.addAttribute("boardList", boardScanVo.getBoardList());
             model.addAttribute("pageInfo", boardScanVo.getPageInfo());
             model.addAttribute("boardBestList", boardService.getBestBoardList());
+            model.addAttribute("userVo", userVo);
 
             return "board/boardList";
         }
