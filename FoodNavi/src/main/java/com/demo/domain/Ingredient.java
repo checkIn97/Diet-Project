@@ -39,4 +39,9 @@ public class Ingredient {
 	@ColumnDefault(value="0")
 	private int veganValue;
 	
+	private String egg;
+	private String milk;
+	private String bean;
+	private String shellfish;
+	
 }

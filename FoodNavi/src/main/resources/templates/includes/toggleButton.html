@@ -3,106 +3,60 @@
 
 
     <div class="field">
-        <label for="purpose">목적</label>
+        <label for="purpose">목표</label>
         <select name="purpose" id="purpose">
-			<option value="all">선택없음</option>
-            <option value="diet">다이어트</option>
-            <option value="bulkUp">벌크업</option>
-        </select>
+			<th:block th:each="field : ${foodRecommendVo.purposeCategory}">
+				<option th:if="${field[0] == foodRecommendVo.purpose}" th:value="${field[0]}" selected>[[${field[1]}]]</option>
+				<option th:unless="${field[0] == foodRecommendVo.purpose}" th:value="${field[0]}">[[${field[1]}]]</option>
+			</th:block>
+		</select>
     </div>
 
 
     <div class="field">
         <label for="dietType">식단 종류</label>
         <select name="dietType" id="dietType">
-            <option value="all">선택없음</option>
-            <option value="balance">균형식</option>
-            <option value="diabetes">당뇨식</option>
-            <option value="lowSalt">저염식</option>
-            <option value="lowCarb">저탄고지</option>
-        </select>
+			<th:block th:each="field : ${foodRecommendVo.dietTypeCategory}">
+				<option th:if="${field[0] == foodRecommendVo.dietType}" th:value="${field[0]}" selected>[[${field[1]}]]</option>
+				<option th:unless="${field[0] == foodRecommendVo.dietType}" th:value="${field[0]}">[[${field[1]}]]</option>
+			</th:block>
+		</select>
     </div>
 
     <div class="field">
         <label>알레르기 유무</label>
         <div class="field half  checkbox-button">
-            <input class="btn" type="checkbox" name="allergy" id="egg" value="egg"/>
-            <label for="egg">계란/달걀</label>
+            <th:block th:each="field, iterStat : ${foodRecommendVo.allergyArray}">
+				<div class="field half  checkbox-button">
+					<input class="btn" type="checkbox" name="allergys" th:id="${field[0]}" th:value="${field[0]}" th:if="${foodRecommendVo.allergys[iterStat.index] == 'y'}" checked/>
+					<input class="btn" type="checkbox" name="allergys" th:id="${field[0]}" th:value="${field[0]}" th:unless="${foodRecommendVo.allergys[iterStat.index] == 'y'}"/>
+        			<label th:for="${field[0]}">[[${field[1]}]]</label>
+				</div>
+			</th:block>
         </div>
-        <div class="field half checkbox-button">
-            <input class="btn" type="checkbox" name="allergy" id="milk" value="milk"/>
-            <label for="milk">우유</label>
+        <label for="allergyEtc">그 외 알레르기를 유발하는 식재료를 입력하세요:</label>
+        <div class="search-container">
+            <input type="text" id="allergyEtc" name="allergyEtc" th:value="${foodRecommendVo.allergyEtc}" class="searchWord">
         </div>
-        <div class="field half checkbox-button">
-            <input class="btn" type="checkbox" name="allergy" id="bean" value="bean"/>
-            <label for="bean">콩</label>
-        </div>
-        <div class="field half checkbox-button">
-            <input class="btn" type="checkbox" name="allergy" id="shellfish" value="shellfish"/>
-            <label for="shellfish">갑각류</label>
-        </div>
-
-<!--        <label for="allergyEtc">다른 알레르기를 입력하세요:</label>-->
-<!--        <div class="search-container">-->
-<!--            <input type="text" id="allergyEtc" name="allergyEtc" class="searchWord">-->
-<!--            &lt;!&ndash;name, vlue를 넣어주세요.&ndash;&gt;-->
-<!--            <button name="#" value="#" class="searchButton">전송</button>-->
-<!--        </div>-->
     </div>
-
-<!--    <div class="field">-->
-<!--        <label>맛 선택</label>-->
-<!--        <div class="field half  checkbox-button">-->
-<!--            <input class="btn" type="checkbox" name="taste" id="spicy" value="spicy"/>-->
-<!--            <label for="spicy">매운맛</label>-->
-<!--        </div>-->
-<!--        <div class="field half checkbox-button">-->
-<!--            <input class="btn" type="checkbox" name="taste" id="sweet" value="sweet"/>-->
-<!--            <label for="sweet">단맛</label>-->
-<!--        </div>-->
-<!--        <div class="field half checkbox-button">-->
-<!--            <input class="btn" type="checkbox" name="taste" id="salty" value="salty"/>-->
-<!--            <label for="salty">짠맛</label>-->
-<!--        </div>-->
-<!--        <div class="field half checkbox-button">-->
-<!--            <input class="btn" type="checkbox" name="taste" id="sour" value="sour"/>-->
-<!--            <label for="sour">신맛</label>-->
-<!--        </div>-->
-<!--        <div class="field half checkbox-button">-->
-<!--            <input class="btn" type="checkbox" name="taste" id="bitter" value="bitter"/>-->
-<!--            <label for="bitter">쓴맛</label>-->
-<!--        </div>-->
-<!--        <div class="field half checkbox-button">-->
-<!--            <input class="btn" type="checkbox" name="taste" id="light" value="light"/>-->
-<!--            <label for="light">담백한맛</label>-->
-<!--        </div>-->
-<!--    </div>-->
 
     <div class="field">
         <label for="vegetarian">채식 여부</label>
         <select name="vegetarian" id="vegetarian">
-            <option value="0">해당없음</option>
-            <option value="1">폴로-페스코(육상동물 금지)</option>
-            <option value="2">페스코(육상동물+조류 금지)</option>
-            <option value="3">락토-오보(육상동물+조류+어패류 금지)</option>
-            <option value="4">락토(육상동물+조류+어패류+알 금지)</option>
-            <option value="5">비건(육상동물+조류+어패류+알+유제품 금지)</option>
+            <option value="0" th:if="${foodRecommendVo.vegetarian == '0'}" selected>해당없음</option>
+            <option value="0" th:unless="${foodRecommendVo.vegetarian == '0'}">해당없음</option>
+            <option value="1" th:if="${foodRecommendVo.vegetarian == '1'}" selected>폴로-페스코(육상동물 금지)</option>
+            <option value="1" th:unless="${foodRecommendVo.vegetarian == '1'}">폴로-페스코(육상동물 금지)</option>
+            <option value="2" th:if="${foodRecommendVo.vegetarian == '2'}" selected>페스코(육상동물+조류 금지)</option>
+            <option value="2" th:unless="${foodRecommendVo.vegetarian == '2'}">페스코(육상동물+조류 금지)</option>
+            <option value="3" th:if="${foodRecommendVo.vegetarian == '3'}" selected>락토-오보(육상동물+조류+어패류 금지)</option>
+            <option value="3" th:unless="${foodRecommendVo.vegetarian == '3'}">락토-오보(육상동물+조류+어패류 금지)</option>
+            <option value="4" th:if="${foodRecommendVo.vegetarian == '4'}" selected>락토(육상동물+조류+어패류+알 금지)</option>
+            <option value="4" th:unless="${foodRecommendVo.vegetarian == '4'}">락토(육상동물+조류+어패류+알 금지)</option>
+            <option value="5" th:if="${foodRecommendVo.vegetarian == '5'}" selected>비건(육상동물+조류+어패류+알+유제품 금지)</option>
+            <option value="5" th:unless="${foodRecommendVo.vegetarian == '5'}">비건(육상동물+조류+어패류+알+유제품 금지)</option>
         </select>
     </div>
-
-<!--    <div class="field">-->
-<!--        <label for="foodCountry">나라별 음식</label>-->
-<!--        <select name="foodCountry" id="foodCountry">-->
-<!--        	<option value="all">구분없음</option>-->
-<!--            <option value="korean">한식</option>-->
-<!--            <option value="western">양식</option>-->
-<!--            <option value="chinese">중식</option>-->
-<!--            <option value="japanese">일식</option>-->
-<!--            <option value="asian">동남아식</option>-->
-<!--            <option value="fusion">퓨전식</option>-->
-<!--        </select>-->
-<!--    </div>-->
-
 </div>
 
 <input type="button" id="toggleButtonControl" class="primary" value="상세조건">

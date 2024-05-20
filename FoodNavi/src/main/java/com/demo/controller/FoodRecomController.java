@@ -1,23 +1,19 @@
 package com.demo.controller;
 
-import java.util.Date;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.demo.domain.Food;
-import com.demo.domain.FoodDetail;
 import com.demo.domain.History;
 import com.demo.domain.Users;
 import com.demo.dto.FoodRecommendVo;
@@ -26,6 +22,7 @@ import com.demo.dto.UserVo;
 import com.demo.service.FoodRecommendService;
 import com.demo.service.FoodScanService;
 import com.demo.service.HistoryService;
+import com.demo.service.UsersService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -39,9 +36,30 @@ public class FoodRecomController {
 	
 	@Autowired
 	private HistoryService historyService;
+	
+	@Autowired
+	private UsersService usersService;
 
     @GetMapping("/foodRecommendation")
-    public String dietRecommendation() {
+    public String dietRecommendation(HttpSession session, Model model) {
+    	// 세션에서 사용자 정보 가져오기
+    	Users user = (Users) session.getAttribute("loginUser");
+    	// 세션에 로그인 정보가 없는 경우
+        if (user == null) {
+            return "redirect:user_login_form"; // 로그인 페이지로 이동.
+        }
+    	FoodRecommendVo foodRecommendVo = new FoodRecommendVo();
+    	String no_egg = user.getNo_egg();
+    	String no_milk = user.getNo_milk();
+    	String no_bean = user.getNo_bean();
+    	String no_shellfish = user.getNo_shellfish();
+    	foodRecommendVo.setAllergys(new String[] {no_egg, no_milk, no_bean, no_shellfish});
+    	foodRecommendVo.setAllergyEtc(user.getNo_ingredient());
+    	foodRecommendVo.setPurpose(user.getUserGoal());
+    	foodRecommendVo.setDietType(user.getDietType());
+    	foodRecommendVo.setVegetarian(user.getVegetarian());
+    	model.addAttribute("foodRecommendVo", foodRecommendVo);
+    	
         return "food/foodDay";
     }
 
@@ -61,26 +79,26 @@ public class FoodRecomController {
 			@RequestParam(value="banWord", defaultValue="") String banWord,
 			@RequestParam(value="searchName", defaultValue="") String searchName,
 			@RequestParam(value="searchIngredient", defaultValue="") String searchIngredient,
-			@RequestParam(value="banName", defaultValue="|") String banName,
-			@RequestParam(value="banIngredient", defaultValue="|") String banIngredient,
+			@RequestParam(value="banName", defaultValue="") String banName,
+			@RequestParam(value="banIngredient", defaultValue="") String banIngredient,
 			@RequestParam(value="mealTime", defaultValue="all") String[] mealTime,
+			@RequestParam(value="foodType", defaultValue="all") String foodType,
 			@RequestParam(value="purpose", defaultValue="all") String purpose,
+			@RequestParam(value="recommend", defaultValue="false") boolean recommend,
 			@RequestParam(value="dietType", defaultValue="all") String dietType,
 			@RequestParam(value="allergys", defaultValue="") String[] allergys,
-			@RequestParam(value="allergyEtc", defaultValue="|") String allergyEtc,
-			@RequestParam(value="taste", defaultValue="all") String[] taste,
+			@RequestParam(value="allergyEtc", defaultValue="") String allergyEtc,
 			@RequestParam(value="vegetarian", defaultValue="0") String vegetarian,
-			@RequestParam(value="foodCountry", defaultValue="all") String foodCountry,
 			FoodRecommendVo foodRecommendVo, Model model, HttpSession session) {
 		
 		// 세션에서 사용자 정보 가져오기
     	Users user = (Users) session.getAttribute("loginUser");
-        
     	// 세션에 로그인 정보가 없는 경우
         if (user == null) {
-            return "/user_login_form"; // 로그인 페이지로 이동.
+            return "redirect:user_login_form"; // 로그인 페이지로 이동.
         }
 		
+		UserVo userVo = new UserVo(user);
 		if (page == 0) {
 			page = 1;
 			foodRecommendVo.setSearchField(searchField);
@@ -91,41 +109,79 @@ public class FoodRecomController {
 			foodRecommendVo.setSearchIngredient(searchIngredient);
 			foodRecommendVo.setBanName(banName);
 			foodRecommendVo.setBanIngredient(banIngredient);
+			
+			List<String> mealTimeList = Arrays.asList(mealTime);
+			mealTime = new String[foodRecommendVo.getMealTimeArray().length];
+			for (int i = 0 ; i < foodRecommendVo.getMealTimeArray().length ; i++) {
+				String meal = foodRecommendVo.getMealTimeArray()[i][0];
+				if (mealTimeList.size() == 0 || mealTimeList.contains(meal)) {
+					mealTime[i] = meal;
+				} else {
+					mealTime[i] = "";
+				}					
+			}
 			foodRecommendVo.setMealTime(mealTime);
+			String mealType = null;
+			if (mealTimeList.size() !=0 )
+				mealType = mealTimeList.get(0);
+			userVo.setLastMealType(mealType);
+
+			foodRecommendVo.setFoodType(foodType);
+			
 			foodRecommendVo.setPurpose(purpose);
+			user.setUserGoal(purpose);
+			
 			foodRecommendVo.setDietType(dietType);
-			foodRecommendVo.setAllergy(allergys);
+			user.setDietType(dietType);
+
+			List<String> allergyList = Arrays.asList(allergys);
+			allergys = new String[foodRecommendVo.getAllergyArray().length];
+			for (int i = 0 ; i < foodRecommendVo.getAllergyArray().length ; i++) {
+				String allergy = foodRecommendVo.getAllergyArray()[i][0];
+				if (allergyList.contains(allergy)) {
+					allergys[i] = "y";
+				} else {
+					allergys[i] = "a";
+				}					
+			}
+			foodRecommendVo.setAllergys(allergys);
+			user.setNo_egg(allergys[0]);
+			user.setNo_milk(allergys[1]);
+			user.setNo_bean(allergys[2]);
+			user.setNo_shellfish(allergys[3]);
+			
 			foodRecommendVo.setAllergyEtc(allergyEtc);
-			foodRecommendVo.setTaste(taste);
+			user.setNo_ingredient(allergyEtc);
+			
 			foodRecommendVo.setVegetarian(vegetarian);
-			foodRecommendVo.setFoodCountry(foodCountry);			
+			user.setVegetarian(vegetarian);
+			usersService.insertUser(user);			
+			
+			foodRecommendVo.setRecommend(recommend);
 			foodRecommendVo.setSortBy(sortBy);
 			foodRecommendVo.setSortDirection(sortDirection);
 			foodRecommendVo.setPageMaxDisplay(pageMaxDisplay);
+			List<Food> filteredList = foodScanService.getFoodScanList(user, foodRecommendVo);
+			foodRecommendVo.setFoodList(filteredList);
+			List<FoodVo> foodRecommendList = foodRecommendService.getFoodRecommendList("Recommend.py", userVo, filteredList);
+			foodRecommendVo.setFoodRecommendList(foodRecommendList);
 		} else {
 			foodRecommendVo = (FoodRecommendVo)session.getAttribute("foodRecommendVo");						
 		}
-		UserVo userVo = new UserVo(user);
-		List<Food> filteredList = foodScanService.getFoodScanList(user, foodRecommendVo);
-		List<FoodVo> foodRecommendList = foodRecommendService.getFoodRecommendList("Recommend.py", userVo, filteredList);
-		
+		List<FoodVo> foodRecommendList = foodRecommendVo.getFoodRecommendList();
 		Map<String, Integer> pageInfo = new HashMap<>();
 		pageInfo.put("number", page);
 		pageInfo.put("size", size);
 		pageInfo.put("totalPages", (foodRecommendList.size()+size-1)/size);
 		foodRecommendVo.setPageInfo(pageInfo);
-				
 		foodRecommendVo.setIndex(1);
 		foodRecommendVo.setTotal(foodRecommendList.size());
-		foodRecommendVo.setFoodRecommendList(foodRecommendList);
-		foodRecommendVo.setRecommend(true);
+		
 		session.setAttribute("foodRecommendVo", foodRecommendVo);
 		model.addAttribute("foodRecommendVo", foodRecommendVo);
-		foodRecommendVo.setFoodList(filteredList);
 		model.addAttribute("foodRecommendList", foodRecommendList);
 		session.setAttribute("foodRecommendList", foodRecommendList);
 		model.addAttribute("userVo", userVo);
-		
  		
  		return "food/foodRecommend";
  	}
@@ -135,15 +191,12 @@ public class FoodRecomController {
     	
     	// 세션에서 사용자 정보 가져오기
     	Users user = (Users) session.getAttribute("loginUser");
-        
     	// 세션에 로그인 정보가 없는 경우
         if (user == null) {
-            return "/user_login_form"; // 로그인 페이지로 이동.
+            return "redirect:user_login_form"; // 로그인 페이지로 이동.
         }
     	
         FoodRecommendVo foodRecommendVo = (FoodRecommendVo)session.getAttribute("foodRecommendVo");
-        System.out.println("테스트!!!!!!!!!");
-        System.out.println(foodRecommendVo.getVegetarian());
     	List<FoodVo> foodRecommendList = (List<FoodVo>) session.getAttribute("foodRecommendList");
     	UserVo userVo = new UserVo(user);
  		model.addAttribute("userVo", userVo);
@@ -156,12 +209,11 @@ public class FoodRecomController {
 	@GetMapping("/food_recommend_show")
 	public String showFoodRecommend(Model model, HttpSession session, FoodRecommendVo foodRecommendVo) {
 		// 세션에서 사용자 정보 가져오기
-	 	Users user = (Users) session.getAttribute("loginUser");
-	     
-	 	// 세션에 로그인 정보가 없는 경우
-	     if (user == null) {
-	         return "/user_login_form"; // 로그인 페이지로 이동.
-	     }
+    	Users user = (Users) session.getAttribute("loginUser");
+    	// 세션에 로그인 정보가 없는 경우
+        if (user == null) {
+            return "redirect:user_login_form"; // 로그인 페이지로 이동.
+        }
 	     
 		FoodVo foodVo = foodRecommendVo.getFoodRecommendList().get(foodRecommendVo.getIndex());
 		model.addAttribute("foodVo", foodVo);		
@@ -177,12 +229,12 @@ public class FoodRecomController {
 	public String historyInFromRecommend(HttpSession session) {
 		
 		// 세션에서 사용자 정보 가져오기
-    	Users user = (Users)session.getAttribute("loginUser");
-        
+    	Users user = (Users) session.getAttribute("loginUser");
     	// 세션에 로그인 정보가 없는 경우
         if (user == null) {
-            return "/user_login_form"; // 로그인 페이지로 이동.
+            return "redirect:user_login_form"; // 로그인 페이지로 이동.
         }
+        
 		FoodRecommendVo foodRecommendVo = (FoodRecommendVo)session.getAttribute("foodRecommend");
 		Food food = foodRecommendVo.getFoodRecommendList().get(foodRecommendVo.getIndex()).getFood();
 		
@@ -194,5 +246,5 @@ public class FoodRecomController {
 		
 		return "";
 	}
-	
+    
 }

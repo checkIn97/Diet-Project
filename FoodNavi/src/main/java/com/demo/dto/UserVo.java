@@ -35,7 +35,7 @@ public class UserVo {
 	private float prtOnTable = 0;
 	private float fatToday = 0;
 	private float fatOnTable = 0;
-	
+	private String lastMealType = "";
 	
 	
 	public UserVo(Users user) {
@@ -57,7 +57,7 @@ public class UserVo {
 	}
 	
 	private int getEER(Users user, int activeLevel) {
-		int value = 0;		 
+		float value = 0;		 
 		if (user.getAge() <= 2) {
 			value = 89 * user.getWeight() - 100;
 		} else if (user.getAge() <= 19) {

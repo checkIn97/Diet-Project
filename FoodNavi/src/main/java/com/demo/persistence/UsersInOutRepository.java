@@ -1,5 +1,7 @@
 package com.demo.persistence;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -14,5 +16,7 @@ public interface UsersInOutRepository extends JpaRepository<Users, Integer> {
 	public int getTotalUsersCount();
 	
 	public Users findFirstByOrderByUseqDesc();
+	
+	public List<Users> findAll();
 	
 }

@@ -18,24 +18,27 @@ import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class HomeController {
-
+	
 	@Autowired
 	private HistoryService historyService;
-
+		
 	@GetMapping("/")
 	public String intropage() {
 		return "index";
 	}
-
+	
 	@GetMapping("/mainpage")
 	public String mainpage(HttpSession session, Model model) {
+		// 세션에서 사용자 정보 가져오기
+    	Users user = (Users) session.getAttribute("loginUser");
+    	// 세션에 로그인 정보가 없는 경우
+        if (user == null) {
+            return "redirect:user_login_form"; // 로그인 페이지로 이동.
+        }	
+		
+		List<Board> boardList = new ArrayList<Board>();
 
-		Users user = (Users)session.getAttribute("loginUser");
-		if(user == null){
-			model.addAttribute("msg","로그인 후 이용해주세요.");
-			model.addAttribute("redirectTo", "/user_login_form");
-			return "board/board_alert";
-		}
+		model.addAttribute("boardList", boardList);
 		UserVo userVo = new UserVo((Users)(session.getAttribute("loginUser")));
 		userVo.setKcalToday((int)historyService.totalKcalToday(userVo.getUser()));
 		userVo.setKcalOnTable((int)historyService.totalKcalOnTable(userVo.getUser()));
@@ -46,10 +49,14 @@ public class HomeController {
 		userVo.setFatToday(Math.round(historyService.totalFatToday(userVo.getUser())*100)/100f);
 		userVo.setFatOnTable(Math.round(historyService.totalFatOnTable(userVo.getUser())*100)/100f);
 		model.addAttribute("userVo", userVo);
-
+		System.out.println();
+		System.out.println(userVo.getProperCarbRatio());
+		System.out.println(userVo.getProperPrtRatio());
+		System.out.println(userVo.getProperFatRatio());
+		System.out.println();
 		return "mainpage";
 	}
-
+	
 	@GetMapping("load_userVo")
 	@ResponseBody
 	public UserVo loadUserVo(HttpSession session) {

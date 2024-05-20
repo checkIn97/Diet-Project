@@ -9,21 +9,39 @@
     <h2 class="major">식단 추천</h2>
     <form id="recommendForm" method="post">
     	<input type="hidden" name="mealTime" id="mealTime" value=""/>
-        <div class="fields">
-            <div class="field">
+		<input type="hidden" name="recommend" id="recommend" value=true />
+            <div class="foodContainer">
 
-                <!--id랑 value, href는 컨트롤러와 도메인 확인하셔서 수정하셔야 합니다.-->
-
-
-                <div>
-                    <button class="btn" onclick="food_recommend('morning')">아침</button>
-                    <button class="btn" onclick="food_recommend('lunch')">점심</button>
-                    <button class="btn" onclick="food_recommend('dinner')">저녁</button>
-                    <button class="btn" onclick="food_recommend('snack')">간식</button>
+                <div class="box" onclick="food_recommend('morning')">
+                    <h2>아침</h2>
+                    <img src="/assets/images/fresh.png" alt="아침" class="foodIcon">
+                    <div class="foodDescription">
+                    <img src="/assets/images/fire.png" alt="불" class="kalIcon"> 총 200kal를 섭취하였습니다 <img src="/assets/images/fire.png" alt="불" class="kalIcon">
+                    </div>
+                </div>
+                <div class="box" onclick="food_recommend('lunch')">
+                    <h2>점심</h2>
+                    <img src="/assets/images/rice.png" alt="점심" class="foodIcon">
+                    <div class="foodDescription">
+                        <img src="/assets/images/fire.png" alt="불" class="kalIcon"> 총 200kal를 섭취하였습니다 <img src="/assets/images/fire.png" alt="불" class="kalIcon">
+                    </div>
+                </div>
+                <div class="box" onclick="food_recommend('dinner')">
+                    <h2>저녁</h2>
+                    <img src="/assets/images/steak.png" alt="저녁" class="foodIcon">
+                    <div class="foodDescription">
+                        <img src="/assets/images/fire.png" alt="불" class="kalIcon"> 총 200kal를 섭취하였습니다 <img src="/assets/images/fire.png" alt="불" class="kalIcon">
+                    </div>
+                </div>
+                <div class="box" onclick="food_recommend('snack')">
+                    <h2>간식</h2>
+                    <img src="/assets/images/snack.png" alt="간식" class="foodIcon">
+                    <div class="foodDescription">
+                        <img src="/assets/images/fire.png" alt="불" class="kalIcon"> 총 200kal를 섭취하였습니다 <img src="/assets/images/fire.png" alt="불" class="kalIcon">
+                    </div>
                 </div>
 
             </div>
-        </div>
 
 
         

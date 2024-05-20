@@ -25,6 +25,7 @@ import com.demo.domain.Ingredient;
 import com.demo.domain.Rcd;
 import com.demo.domain.UserChange;
 import com.demo.domain.Users;
+import com.demo.dto.FoodRecommendVo;
 import com.demo.dto.UserVo;
 import com.demo.persistence.AdminRepository;
 import com.demo.persistence.FoodDetailScanRepository;
@@ -44,6 +45,9 @@ public class DataInOutServiceImpl implements DataInOutService {
 	private FoodScanRepository foodScanRepo;
 	
 	@Autowired
+	private FoodScanService foodScanService;
+	
+	@Autowired
 	private FoodDetailScanRepository foodDetailScanRepo;
 	
 	@Autowired
@@ -51,6 +55,9 @@ public class DataInOutServiceImpl implements DataInOutService {
 	
 	@Autowired
 	private HistoryRepository historyRepo;
+	
+	@Autowired
+	private HistoryService historyService;
 	
 	@Autowired
 	private IngredientRepository ingredientRepo;
@@ -419,19 +426,9 @@ public class DataInOutServiceImpl implements DataInOutService {
 							}
 
 							if (input[7] == null) {
-								foodDetail.setTasteType(null);
+								foodDetail.setFoodType(null);
 							} else {
-								foodDetail.setTasteType(input[7]);
-							}							
-							if (input[8] == null) {
-								foodDetail.setNationType(null);
-							} else {
-								foodDetail.setNationType(input[8]);
-							}
-							if (input[9] == null) {
-								foodDetail.setHealthyType(null);
-							} else {
-								foodDetail.setHealthyType(input[9]);
+								foodDetail.setFoodType(input[7]);
 							}
 							
 						}
@@ -530,10 +527,7 @@ public class DataInOutServiceImpl implements DataInOutService {
 					foodDetailVo.setCarb((int)(Math.random()*30 + 40));
 					foodDetailVo.setPrt((int)(Math.random()*40 + 30));
 					foodDetailVo.setKcal(foodDetailVo.getCarb()*4 + foodDetailVo.getPrt()*4 + foodDetailVo.getFat()*9);
-					foodDetailVo.setTasteType("all");
-					foodDetailVo.setNationType("all");
-					foodDetailVo.setHealthyType("all");
-					foodDetailVo.setVeganType(0);
+					foodDetailVo.setFoodType("all");
 					foodDetailScanRepo.save(foodDetailVo);
 					foodList.add(foodVo);
 					count++;
@@ -584,6 +578,7 @@ public class DataInOutServiceImpl implements DataInOutService {
 			fileWriter.close();
 			ProcessBuilder processBuilder = new ProcessBuilder("python", pyFile, csvFile);
 			Process process = processBuilder.start();
+			process.waitFor();
 			System.out.println("food 데이터 내보내기 성공");			
 		}catch (Exception e) {
 			e.printStackTrace();
@@ -678,31 +673,170 @@ public class DataInOutServiceImpl implements DataInOutService {
 	@Override
 	public List<History> historyInDummy(String n) {
 		List<History> historyList = new ArrayList<>();
-		int num = Integer.parseInt(n);
-		int totalUserCount = usersInOutRepo.getTotalUsersCount();
-		int totalFoodCount = foodScanRepo.getTotalFoodCount();
+		List<Users> userList = usersInOutRepo.findAll();
+		int num = 0;
+		if (n.equals("all")) {
+			num = userList.size();
+		} else {
+			num = Integer.parseInt(n);
+		}
+		if (num > userList.size())
+			num = userList.size();
 		for (int i = 0 ; i < num ; i++) {
-			int tmp_useq = (int)(Math.random()*totalUserCount+1);
-			History tmp_history = new History();
-			Users tmp_user = usersInOutRepo.findById(tmp_useq).get();
-			UserVo tmp_userVo = new UserVo(tmp_user);
-			float bmi = tmp_userVo.getBMI();
-			float eer = tmp_userVo.getEER();
-			int tmp_fseq = (int)(Math.random()*totalFoodCount+1);
-			Food tmp_food = foodScanRepo.findById(tmp_fseq).get();
-			int serveNumber = (int)(Math.random()*3+1);
-			tmp_history.setUser(tmp_user);
-			tmp_history.setFood(tmp_food);
-			tmp_history.setServeNumber(serveNumber);			
-			historyRepo.save(tmp_history);
-			tmp_history = historyRepo.getHistoryListNotConfirmedYet(tmp_user).get(0);
-			tmp_history.setServedDate(new Date());
-			historyRepo.save(tmp_history);
-			historyList.add(tmp_history);
+			FoodRecommendVo foodRecommendVo = new FoodRecommendVo();
+			foodRecommendVo.setRecommend(false);
+			int useq = (int)(Math.random()*userList.size());
+			Users user = userList.get(useq);
+			UserVo userVo = new UserVo(user);
+
+			int[] kcalLimit = {0, 0};
+			if (user.getUserGoal().equals("diet")) {
+				kcalLimit[0] = 0;
+				kcalLimit[1] = (int)(0.7f*userVo.getEER()/3);
+			} else if (user.getUserGoal().equals("bulkup")) {
+				kcalLimit[0] = (int)(1.0f*userVo.getEER()/3);
+				kcalLimit[1] = (int)(1.3f*userVo.getEER()/3);
+			} else {
+				kcalLimit[0] = (int)(0.9f*userVo.getEER()/3);
+				kcalLimit[1] = (int)(1.1f*userVo.getEER()/3);
+			}
+			
+			int[] randomArray = new int[3];
+			int r = (int)(Math.random()*6);
+			if (r == 0) {
+				randomArray[0] = 0;
+				randomArray[1] = 1;
+				randomArray[2] = 2;
+			} else if (r == 1) {
+				randomArray[0] = 0;
+				randomArray[1] = 2;
+				randomArray[2] = 1;
+			} else if (r == 2) {
+				randomArray[0] = 1;
+				randomArray[1] = 0;
+				randomArray[2] = 2;
+			} else if (r == 3) {
+				randomArray[0] = 1;
+				randomArray[1] = 2;
+				randomArray[2] = 0;
+			} else if (r == 4) {
+				randomArray[0] = 2;
+				randomArray[1] = 0;
+				randomArray[2] = 1;
+			} else if (r == 5) {
+				randomArray[0] = 2;
+				randomArray[1] = 1;
+				randomArray[2] = 0;
+			}
+
+			Date now = new Date();
+			int hour = now.getHours();
+			String morning = "|";
+			String lunch = "|";
+			String dinner = "|";
+			String snack = "|";
+			String mealTime = "";
+			if (hour < 5) {
+				mealTime = "snack";
+				snack = mealTime;
+			} else if (hour < 8) {
+				mealTime = "morning";
+				morning = mealTime;
+			} else if (hour < 11) {
+				mealTime = "snack";
+				snack = mealTime;
+			} else if (hour < 14) {
+				mealTime = "lunch";
+				lunch = mealTime;
+			} else if (hour < 17) {
+				mealTime = "snack";
+				snack = mealTime;
+			} else if (hour < 20) {
+				mealTime = "dinner";
+				dinner = mealTime;
+			} else {
+				mealTime = "snack";
+				snack = mealTime;
+			}
+			
+			foodRecommendVo.setMealTime(new String[]{morning, lunch, dinner, snack});
+			foodRecommendVo.setPurpose(user.getUserGoal());
+			foodRecommendVo.setDietType(user.getDietType());
+			String[] allergys = new String[foodRecommendVo.getAllergyArray().length];
+			if (user.getNo_egg().equals("y"))
+				allergys[0] = "y";
+			else {
+				allergys[0] = "a";
+			}
+			if (user.getNo_milk().equals("y")) {
+				allergys[1] = "y";
+			} else {
+				allergys[1] = "a";
+			}
+			if (user.getNo_bean().equals("y")) {
+				allergys[2] = "y";
+			} else {
+				allergys[2] = "a";
+			}
+			if (user.getNo_shellfish().equals("y")) {
+				allergys[3] = "y";
+			} else {
+				allergys[3]= "a";
+			}
+			foodRecommendVo.setAllergys(allergys);
+			foodRecommendVo.setVegetarian(user.getVegetarian());
+			
+			for (int j : randomArray) {
+				History history = new History();
+				history.setUser(user);
+				history.setServeNumber(1);
+				history.setMealType(mealTime);
+				history.setNo_egg(user.getNo_egg());
+				history.setNo_milk(user.getNo_milk());
+				history.setNo_bean(user.getNo_bean());
+				history.setNo_shellfish(user.getNo_shellfish());
+				history.setNo_ingredient("");
+				history.setPurpose(foodRecommendVo.getPurpose());
+				history.setDietType(foodRecommendVo.getDietType());
+				history.setVegetarian(foodRecommendVo.getVegetarian());
+
+				float kcalOnTable = historyService.totalKcalOnTable(user);
+
+				if (kcalOnTable > kcalLimit[0] && kcalOnTable < kcalLimit[1]) {
+					if (Math.random()*5 > 3) {
+						foodRecommendVo.setFoodType(foodRecommendVo.getFoodTypeCategory()[j+1][0]);
+						List<Food> foodList = foodScanService.getFoodScanList(user, foodRecommendVo);
+						if (foodList.size() != 0) {
+							Food food = foodList.get((int)(Math.random()*foodList.size()));
+							history.setFood(food);
+							historyRepo.save(history);
+						}
+					} else {
+						break;						
+					}
+				} else if (kcalOnTable <= kcalLimit[0]) {
+					foodRecommendVo.setFoodType(foodRecommendVo.getFoodTypeCategory()[j+1][0]);
+					List<Food> foodList = foodScanService.getFoodScanList(user, foodRecommendVo);
+					if (foodList.size() != 0) {
+						Food food = foodList.get((int)(Math.random()*foodList.size()));
+						history.setFood(food);
+						historyRepo.save(history);
+					}
+				} else if (kcalOnTable > kcalLimit[1]) {
+					break;
+				}
+			}
+			
+			List<History> historyListNotConfirmedYet = historyRepo.getHistoryListNotConfirmedYet(user);
+			for (History history : historyListNotConfirmedYet) {
+				history.setServedDate(now);
+				historyRepo.save(history);
+				historyList.add(history);
+			}
+			userList.remove(useq);
 		}
 		
-		historyListToCsv(historyList);
-		
+		System.out.println("사이즈 : "+historyList.size());
 		return historyList;
 		
 	}
@@ -716,11 +850,19 @@ public class DataInOutServiceImpl implements DataInOutService {
 		stringBuilder
 			.append("hseq,")
 			.append("useq,")
-			.append("user_sex,")
-			.append("user_age,")
-			.append("user_height,")
-			.append("user_weight,")
+			.append("sex,")
+			.append("age,")
+			.append("height,")
+			.append("weight,")
 			.append("meal_type,")
+			.append("no_egg,")
+			.append("no_milk,")
+			.append("no_bean,")
+			.append("no_shellfish,")
+			.append("no_ingredient,")
+			.append("purpose,")
+			.append("diet_type,")
+			.append("vegetarian,")
 			.append("served_date,")
 			.append("served_number,")
 			.append("fseq,")
@@ -738,7 +880,15 @@ public class DataInOutServiceImpl implements DataInOutService {
 				.append(history.getUser().getAge()).append(",")
 				.append(history.getUser().getHeight()).append(",")
 				.append(history.getUser().getWeight()).append(",")
-				.append((history.getMealType() == null ? "구분없음" : history.getMealType())).append(",")
+				.append(((history.getMealType() == null) || (history.getMealType().equals("|")) ? "구분없음" : history.getMealType())).append(",")
+				.append(((history.getNo_egg().equals("y")) ? "y" : "n")).append(",")
+				.append(((history.getNo_milk().equals("y")) ? "y" : "n")).append(",")
+				.append(((history.getNo_bean().equals("y")) ? "y" : "n")).append(",")
+				.append(((history.getNo_shellfish().equals("y")) ? "y" : "n")).append(",")
+				.append(((history.getNo_ingredient() == null) || (history.getNo_ingredient().equals("|")) ? "없음" : history.getNo_ingredient())).append(",")
+				.append(history.getPurpose()).append(",")
+				.append(history.getDietType()).append(",")
+				.append(history.getVegetarian()).append(",")
 				.append(String.valueOf(history.getServedDate())).append(",")
 				.append(history.getServeNumber()).append(",")
 				.append(history.getFood().getFseq()).append(",")
@@ -748,7 +898,6 @@ public class DataInOutServiceImpl implements DataInOutService {
 				.append(history.getFood().getFoodDetail().getPrt()).append(",")
 				.append(history.getFood().getFoodDetail().getFat()).append("\n");
 		}
-
 		try {
 			FileWriter fileWriter = new FileWriter(csvFile);
 			try (BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
@@ -758,6 +907,7 @@ public class DataInOutServiceImpl implements DataInOutService {
 			fileWriter.close();
 			ProcessBuilder processBuilder = new ProcessBuilder("python", pyFile, csvFile);
 			Process process = processBuilder.start();
+			process.waitFor();
 			System.out.println("History 데이터 내보내기 성공");			
 		}catch (Exception e) {
 			e.printStackTrace();
@@ -808,6 +958,10 @@ public class DataInOutServiceImpl implements DataInOutService {
 							ingredient.setFat(Float.parseFloat(input[4]));
 							ingredient.setCarb(Float.parseFloat(input[5]));
 							ingredient.setVeganValue(Integer.parseInt(input[6]));
+							ingredient.setEgg(input[7]);
+							ingredient.setMilk(input[8]);
+							ingredient.setBean(input[9]);
+							ingredient.setShellfish(input[10]);
 							ingredientRepo.save(ingredient);
 							ingredient = ingredientRepo.findFirstByOrderByIseqDesc();
 							ingredientList.add(ingredient);
@@ -926,7 +1080,7 @@ public class DataInOutServiceImpl implements DataInOutService {
 		if (num >= 0) {
 			try {
 				while (count < num) {
-					Users userVo = new Users();
+					Users user = new Users();
 					int sex = (int)(Math.random()*2);
 					int age = (int)(Math.random()*40 + 15);
 					int heightIncrease = 0;
@@ -974,20 +1128,80 @@ public class DataInOutServiceImpl implements DataInOutService {
 					if (tmp_user != null)
 						continue;					
 					
-					userVo.setUserid(id);
-					userVo.setUserpw("1234");
-					userVo.setName(name);
+					user.setUserid(id);
+					user.setUserpw("1234");
+					user.setName(name);
 					if (sex == 0) {
-						userVo.setSex("m");
+						user.setSex("m");
 					} else {
-						userVo.setSex("f");
+						user.setSex("f");
 					}
-					userVo.setAge(age);
-					userVo.setHeight(height);
-					userVo.setWeight(weight);
-					usersInOutRepo.save(userVo);
-					userVo = usersInOutRepo.findFirstByOrderByUseqDesc();
-					usersList.add(userVo);
+					user.setAge(age);
+					user.setHeight(height);
+					user.setWeight(weight);
+					user.setUseyn("y");
+					if (Math.random()*100 < 3) {
+						user.setNo_egg("y");
+					} else {
+						user.setNo_egg("n");
+					}
+					if (Math.random()*100 < 3) {
+						user.setNo_milk("y");
+					} else {
+						user.setNo_milk("n");
+					}
+					if (Math.random()*100 < 3) {
+						user.setNo_bean("y");
+					} else {
+						user.setNo_bean("n");
+					}
+					if (Math.random()*100 < 3) {
+						user.setNo_shellfish("y");
+					} else {
+						user.setNo_shellfish("n");
+					}
+					user.setNo_ingredient("");
+					
+					int tmp_random = (int)(Math.random()*100);
+					if (tmp_random < 5) {
+						user.setDietType("balance");
+					} else if (tmp_random > 94) {
+						user.setDietType("lowCarb");
+					} else {
+						user.setDietType("all");
+					}
+					
+					tmp_random = (int)(Math.random()*100);
+					if (tmp_random < 50) {
+						user.setVegetarian("0");
+					} else {
+						int tmp = (int)(tmp_random-50)/10 + 1;
+						user.setVegetarian(String.valueOf(tmp));
+					}
+					
+					usersInOutRepo.save(user);
+					user = usersInOutRepo.findFirstByOrderByUseqDesc();
+					UserVo userVo = new UserVo(user);
+					if (user.getSex().equals("m")) {
+						if (userVo.getBMI() > 28) {
+							user.setUserGoal("diet");
+						} else if (userVo.getBMI() < 22) {
+							user.setUserGoal("bulkup");
+						} else {
+							user.setUserGoal("all");
+						}
+					} else {
+						if (userVo.getBMI() > 25) {
+							user.setUserGoal("diet");
+						} else if (userVo.getBMI() < 18) {
+							user.setUserGoal("bulkup");
+						} else {
+							user.setUserGoal("all");
+						}
+					}
+					
+					usersInOutRepo.save(user);
+					usersList.add(user);
 					count++;
 				}
 			} catch (Exception e) {

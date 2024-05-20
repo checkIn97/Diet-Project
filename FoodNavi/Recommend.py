@@ -2,74 +2,131 @@ import sys
 import os
 import pandas as pd
 import warnings; warnings.filterwarnings('ignore')
-
-my_data_raw = pd.DataFrame({'user_useq':[sys.argv[1]], 'user_sex':[sys.argv[2]], 'user_age':[sys.argv[3]], 'user_height':[sys.argv[4]], 'user_weight':[sys.argv[5]]})
-my_data = my_data_raw[['user_sex', 'user_age', 'user_height', 'user_weight']]
-
-import pandas as pd
-import numpy as np
-history_data = pd.read_csv('History.csv', encoding='utf-8')
-user_data = history_data[['user_sex', 'user_age', 'user_height', 'user_weight']]
-serve_data = history_data[['meal_type', 'served_date']]
-food_data = history_data[['food_kcal', 'food_carb', 'food_prt', 'food_fat']]
-
-def assign_meal_type_value(x, hour):
-    if x == '구분없음':
-        if 5 <= int(hour) <= 9:
-            x = '아침'
-        elif 11 <= int(hour) <= 15:
-            x = '점심'
-        elif 17 <= int(hour) <= 21:
-            x = '저녁'
-        else:
-            x = '간식'
-    if x == '아침':
-        x = 1
-    elif x == '점심':
-        x = 2
-    elif x == '저녁':
-        x = 3
-    elif x == '간식':
-        x = 4
-    else:
-        x = 0
-    return x
-
-def assign_user_sex_value(x):
-    if x == 'm':
-        return 1
-    elif x == 'f':
-        return 2
-    return 0
-
-def getDay(x):
-    a = list(x.split())
-    return a[0]
+from datetime import datetime
+from dateutil.parser import parse
 
 def getHour(x):
-    a = list(x.split())
-    return int(a[3][:2])
+    return x.hour
 
-def getFromNow(x):
-    return x
+def getWeekday(x):
+    return x.weekday()
 
-my_data['user_sex'] = my_data['user_sex'].apply(assign_user_sex_value)
-user_data['user_sex'] = user_data['user_sex'].apply(assign_user_sex_value)
-serve_data['day'] = serve_data['served_date'].apply(getDay)
-serve_data['hour'] = serve_data['served_date'].apply(getHour)
+def getDate(x):
+    return x.date()
 
-for i in serve_data.index:
-    hour = serve_data['hour'][i]
-    if 6 <= hour <= 9:
-        serve_data['meal_type'] = '아침'
-    elif 11 <= hour <= 14:
-        serve_data['meal_type'] = '점심'
-    elif 17 <= hour <= 20:
-        serve_data['meal_type'] = '저녁'
+now = datetime.today()
+
+
+# my_data_raw = pd.DataFrame({'useq':[1001], 'sex':['m'], 'age':[37], 'height':[181.0], 'weight':[100.0], 
+#                            'no_egg':['n'], 'no_milk':['n'], 'no_bean':['n'], 'no_shellfish':['n'], 
+#                            'purpose':['all'], 'diet_type':['all'], 'vegetarian':['0'], 
+#                            'meal_type':['구분없음'], 'date':[now]})
+
+args_arr = sys.argv[1].split(sep=',')
+my_data_raw = pd.DataFrame({'useq':[int(args_arr[0])], 'sex':[args_arr[1]], 'age':[int(args_arr[2])], 
+                            'height':[float(args_arr[3])], 'weight':[float(args_arr[4])], 'no_egg':[args_arr[5]], 
+                            'no_milk':[args_arr[6]], 'no_bean':[args_arr[7]], 'no_shellfish':[args_arr[8]], 
+                            'purpose':[args_arr[9]], 'diet_type':[args_arr[10]], 'vegetarian':[args_arr[11]], 
+                            'meal_type':[args_arr[12]], 'date':[now]})
+
+my_useq = my_data_raw['useq']
+my_data = my_data_raw[['sex', 'age', 'height', 'weight', 'no_egg', 'no_milk', 'no_bean', 'no_shellfish', 'purpose', 'diet_type', 'vegetarian', 'meal_type', 'date']]
+my_data['sex'] = my_data['sex'].apply(lambda x: 0 if x == 'm' else 1)
+my_data['hour'] = my_data['date'].apply(getHour)
+my_data['day'] = my_data['date'].apply(getWeekday)
+my_data['date'] = my_data['date'].apply(getDate)
+my_data['no_egg'] = my_data['no_egg'].apply(lambda x: 1 if x == 'y' else 0)
+my_data['no_milk'] = my_data['no_milk'].apply(lambda x: 1 if x == 'y' else 0)
+my_data['no_bean'] = my_data['no_bean'].apply(lambda x: 1 if x == 'y' else 0)
+my_data['no_shellfish'] = my_data['no_shellfish'].apply(lambda x: 1 if x == 'y' else 0)
+my_data['purpose'] = my_data['purpose'].apply(lambda x: 1 if x == 'diet' else 2 if x == 'bulkup' else 0)
+my_data['diet_type'] = my_data['diet_type'].apply(lambda x: 1 if x == 'balance' else 2 if x == 'lowCarb' else 0)
+my_data['vegetarian'] = my_data['vegetarian'].apply(lambda x: int(x))
+
+tmp_data = my_data.copy()
+for i in tmp_data.index:
+    hour = tmp_data['hour'][i]
+    if tmp_data['meal_type'][i] == 'morning':
+        tmp_data['meal_type'][i] = 1
+    elif tmp_data['meal_type'][i] == 'lunch':
+        tmp_data['meal_type'][i] = 2
+    elif tmp_data['meal_type'][i] == 'dinner':
+        tmp_data['meal_type'][i] = 3
+    elif tmp_data['meal_type'][i] == 'snack':
+        tmp_data['meal_type'][i] = 4
+    elif 5 <= tmp_data['hour'][i] <= 8:
+        tmp_data['meal_type'][i] = 1
+    elif 11 <= tmp_data['hour'][i] <= 14:
+        tmp_data['meal_type'][i] = 2
+    elif 17 <= tmp_data['hour'][i] <= 20:
+        tmp_data['meal_type'][i] = 3
     else:
-        serve_data['meal_type'] = '간식'
+        tmp_data['meal_type'][i] = 4
+my_data=tmp_data.copy()
 
-serve_data
+
+
+my_data2 = my_data.copy()
+
+history_data_raw = pd.read_csv('History.csv', encoding='utf-8')
+history_data_raw.rename(columns=({'served_date':'date'}), inplace=True)
+history_data = history_data_raw.copy()
+
+food_data_in_history_raw = history_data[['food_kcal', 'food_carb', 'food_prt', 'food_fat']]
+
+user_data_raw = history_data[['useq', 'sex', 'age', 'height', 'weight', 'no_egg', 'no_milk', 'no_bean', 'no_shellfish', 'purpose', 'diet_type', 'vegetarian', 'meal_type', 'date']]
+user_data_raw.columns = my_data_raw.columns
+
+user_data = user_data_raw.copy()
+user_data.set_index('useq', inplace=True)
+
+try:
+    user_data.drop(my_useq, inplace=True)
+except:
+    pass
+
+user_data.reset_index(inplace=True)
+user_data.drop('useq', axis=1, inplace=True)
+
+user_data['sex'] = user_data['sex'].apply(lambda x: 0 if x == 'm' else 1)
+user_data['date'] = user_data['date'].apply(parse)
+user_data['hour'] = user_data['date'].apply(getHour)
+user_data['day'] = user_data['date'].apply(getWeekday)
+user_data['date'] = user_data['date'].apply(getDate)
+user_data['no_egg'] = user_data['no_egg'].apply(lambda x: 1 if x == 'y' else 0)
+user_data['no_milk'] = user_data['no_milk'].apply(lambda x: 1 if x == 'y' else 0)
+user_data['no_bean'] = user_data['no_bean'].apply(lambda x: 1 if x == 'y' else 0)
+user_data['no_shellfish'] = user_data['no_shellfish'].apply(lambda x: 1 if x == 'y' else 0)
+user_data['purpose'] = user_data['purpose'].apply(lambda x: 1 if x == 'diet' else 2 if x == 'bulkup' else 0)
+user_data['diet_type'] = user_data['diet_type'].apply(lambda x: 1 if x == 'balance' else 2 if x == 'lowCarb' else 0)
+user_data['vegetarian'] = user_data['vegetarian'].apply(lambda x: int(x))
+
+tmp_data = user_data.copy()
+for i in tmp_data.index:
+    hour = tmp_data['hour'][i]
+    if tmp_data['meal_type'][i] == 'morning':
+        tmp_data['meal_type'][i] = 1
+    elif tmp_data['meal_type'][i] == 'lunch':
+        tmp_data['meal_type'][i] = 2
+    elif tmp_data['meal_type'][i] == 'dinner':
+        tmp_data['meal_type'][i] = 3
+    elif tmp_data['meal_type'][i] == 'snack':
+        tmp_data['meal_type'][i] = 4
+    elif 5 <= tmp_data['hour'][i] <= 8:
+        tmp_data['meal_type'][i] = 1
+    elif 11 <= tmp_data['hour'][i] <= 14:
+        tmp_data['meal_type'][i] = 2
+    elif 17 <= tmp_data['hour'][i] <= 20:
+        tmp_data['meal_type'][i] = 3
+    else:
+        tmp_data['meal_type'][i] = 4
+user_data=tmp_data.copy()
+
+user_data_raw['date_diff'] = user_data['date'].apply(lambda x: (my_data2.iloc[0]['date'] - x).days)
+my_data2.drop('date', axis=1, inplace=True)
+user_data.drop('date', axis=1, inplace=True)
+
+
 
 # 성별과 나이대를 좀 더 강하게 적용하는 방법을 추가해야 함
 
@@ -77,50 +134,59 @@ serve_data
 user_mean = user_data.mean()
 user_std = user_data.std()
 
-my_data_nor = my_data.copy()
-for col in my_data.columns:
-    my_data_nor[col] = abs(float(my_data[col])-user_mean[col]) / user_std[col]
+my_data_nor = my_data2.copy()
+for col in my_data2.columns:
+    if user_std[col] == 0:
+        my_data_nor[col] = 0
+    else:
+        my_data_nor[col] = abs(my_data[col]-user_mean[col]) / user_std[col]
 
 user_data_nor = user_data.copy()
 for col in user_data.columns:
-    user_data_nor[col] = abs(user_data_nor[col] - user_mean[col])
-    user_data_nor[col] /= user_std[col]
+    if user_std[col] == 0:
+        user_data_nor[col] = 0
+    else:
+        user_data_nor[col] = abs(user_data_nor[col] - user_mean[col])
+        user_data_nor[col] /= user_std[col]
 
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-
-
 sim_user_data = cosine_similarity(my_data_nor, user_data_nor)
 sim_user_data_sorted_index = sim_user_data[0].argsort()[::-1]
 
-food_feature_list = food_data.loc[sim_user_data_sorted_index[:]]
+food_feature_list_raw = food_data_in_history_raw.loc[sim_user_data_sorted_index[:]]
+food_feature_list = food_feature_list_raw.copy()
+food_feature_list_raw['date_diff'] = user_data_raw.loc[sim_user_data_sorted_index[:]]['date_diff']
 
 user_score_list = []
 for i in range(len(user_data_nor)):
     user_score_list.append(sim_user_data[0][sim_user_data_sorted_index[i]])
 food_feature_score = pd.DataFrame({'score':user_score_list})
-food_feature_list['score'] = user_score_list
-food_feature_list
 
-import pandas as pd
-import numpy as np
+food_feature_list['user_score'] = user_score_list
+
+
+
 food_data_raw = pd.read_csv('Food.csv', encoding='utf-8')
 food_data_raw.dropna(inplace=True)
 food_data_mean = food_data_raw[['kcal', 'carb', 'prt', 'fat']].mean()
 food_data_std = food_data_raw[['kcal', 'carb', 'prt', 'fat']].std()
 
 
-# 필터링 입력
+# 필터링 적용
+food_data_filtered_raw = pd.read_csv('tmp_filtered.csv', encoding='utf-8')
+food_data_raw.set_index('fseq', inplace=True)
+food_data_filtered = food_data_raw.loc[food_data_filtered_raw['fseq']]
 
-food_data_filtered = food_data_raw
-food_data_filtered
+
 
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 cols = ['kcal', 'carb', 'prt', 'fat']
 food_data_filtered_for_test = food_data_filtered[cols]
+
 food_feature_list.columns = ['kcal', 'carb', 'prt', 'fat', 'score']
 food_feature_list.reset_index(inplace=True)
 food_feature_list.drop('index', axis= 1, inplace=True)
@@ -128,10 +194,21 @@ food_feature_list.drop('index', axis= 1, inplace=True)
 food_feature_list_for_test = food_feature_list[cols]
 
 for n in cols:
-    food_feature_list[n] = abs(food_feature_list[n] - food_data_mean[n]) / food_data_std[n]
+    if food_data_std[n] == 0:
+        food_feature_list_for_test[n] = 0
+        food_data_filtered_for_test[n] = 0
+    else:
+        food_feature_list_for_test[n] = abs(food_feature_list_for_test[n] - food_data_mean[n]) / food_data_std[n]
+        food_data_filtered_for_test[n] = abs(food_data_filtered_for_test[n] - food_data_mean[n]) / food_data_std[n]
+    
 
 final_food_list = []
-final_food_score = []
+final_food_count = []
+tmp_score_list = []
+tmp_adjusted_score_list = []
+final_food_score_list = []
+
+
 
 for i in range(len(food_feature_list_for_test)):
     sim_food_data = cosine_similarity(food_feature_list_for_test.iloc[i:i+1], food_data_filtered_for_test)
@@ -141,9 +218,25 @@ for i in range(len(food_feature_list_for_test)):
     for j in range(len(sim_food_data[0])):
         idx = sim_food_data_sorted_index[j]
         tmp_score = sim_food_data[0][idx]
-        if tmp_score >= 0.99:
-            final_food_list.append(idx+1)
-            final_food_score.append(tmp_score*food_feature_list.iloc[i]['score'])
+        fseq = food_data_filtered_for_test.index[idx]
+        if tmp_score >= 0.70:
+            date_diff = food_feature_list_raw.iloc[i]['date_diff']
+            decrease_ratio = 1-0.01*date_diff
+            if decrease_ratio <= 0:
+                decrease_ratio = 0
+            if fseq not in final_food_list:
+                final_food_list.append(fseq)
+                final_food_count.append(1)
+                tmp_score_list.append(tmp_score)
+                tmp_adjusted_score_list.append(tmp_score*decrease_ratio)
+                final_food_score_list.append(tmp_score*decrease_ratio*food_feature_list.iloc[i]['score'])
+            else:
+                idx2 = final_food_list.index(fseq)
+                final_food_count[idx2] += 1
+                if final_food_score_list[idx2] < tmp_score*decrease_ratio*food_feature_list.iloc[i]['score']:
+                    tmp_score_list[idx2] = tmp_score
+                    tmp_adjusted_score_list[idx2] = tmp_score*decrease_ratio
+                    final_food_score_list[idx2] = tmp_score*decrease_ratio*food_feature_list.iloc[i]['score']
         else:
             check = 1
             break
@@ -156,9 +249,27 @@ for i in range(len(food_feature_list_for_test)):
     if check == 1:
         break
 
-final_food_recommend_list = pd.DataFrame({'fseq':final_food_list, 'score':final_food_score})
-final_food_recommend_list
+all_score_view = pd.DataFrame({'fseq':final_food_list, 'count':final_food_count, 'tmp_score':tmp_score_list, 'tmp_adjusted_score':tmp_adjusted_score_list, 'total_score':final_food_score_list})
 
-final_food_recommend_list.sort_values(by='score', ascending=False, inplace=True)
+final_food_recommend_score_list = []
+for i in range(len(final_food_list)):
+    count = final_food_count[i]
+    if count >= 10:
+        count = 10
+    final_food_recommend_score_list.append(final_food_score_list[i]*(0.9+0.01*count))
+    
+final_result = pd.DataFrame({'fseq':final_food_list, 'score':final_food_recommend_score_list})
 
-print(final_food_recommend_list[:60])
+
+
+
+final_result.sort_values(by='score', ascending=False, inplace=True)
+final_result.set_index('fseq', inplace=True)
+tmp_csv = 'tmp_recommendList.csv'
+final_result.to_csv(tmp_csv, sep=',', encoding='utf-8')
+
+while True:
+    if os.path.exists(tmp_csv):
+        break
+
+print('success')

@@ -1,8 +1,8 @@
 package com.demo.service;
 
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,74 +25,76 @@ public class FoodRecommendServiceImpl implements FoodRecommendService {
 	public List<FoodVo> getFoodRecommendList(String pyFile, UserVo userVo, List<Food> filteredList) {
 		List<FoodVo> foodRecommendList = new ArrayList<>();
 		dataInOutService.filteredListToCsv(filteredList);
-		
-		ProcessBuilder processBuilder = new ProcessBuilder("python", pyFile, 
-				String.valueOf(userVo.getUser().getUseq()),
-				userVo.getUser().getSex(),
-				String.valueOf(userVo.getUser().getAge()),
-				String.valueOf(userVo.getUser().getHeight()),
-				String.valueOf(userVo.getUser().getWeight())).redirectErrorStream(true);
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder
+			.append(String.valueOf(userVo.getUser().getUseq())).append(",")
+			.append(userVo.getUser().getSex()).append(",")
+			.append(String.valueOf(userVo.getUser().getAge())).append(",")
+			.append(String.valueOf(userVo.getUser().getHeight())).append(",")
+			.append(String.valueOf(userVo.getUser().getWeight())).append(",")
+			.append(userVo.getUser().getNo_egg()).append(",")
+			.append(userVo.getUser().getNo_milk()).append(",")
+			.append(userVo.getUser().getNo_bean()).append(",")
+			.append(userVo.getUser().getNo_shellfish()).append(",")
+			.append(userVo.getUser().getUserGoal()).append(",")
+			.append(userVo.getUser().getDietType()).append(",")
+			.append(userVo.getUser().getVegetarian()).append(",")
+			.append(userVo.getLastMealType()).append("\n");
+			
+		ProcessBuilder processBuilder = new ProcessBuilder("python", pyFile, stringBuilder.toString());
 		try {
 			Process process = processBuilder.start();
-			// 받아오기 프로세스 입력
-			BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
-			String line;
-			int index = 0;
-			while ((line = br.readLine()) != null) {
-				if(index == 116) {
-					index++;
-					continue;
-				}
-                System.out.println("[" + index++ + "]");
-                System.out.println("[" + line + "]");
-                foodRecommendList = changeLine(line, index, foodRecommendList);
-            }
+			System.out.println("파이썬 프로그램 실행 성공!");
+			try {
+				process.waitFor();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			
-			process.waitFor();
-			process.destroy();
 			
 		} catch (IOException e) {
 			e.printStackTrace();
-		} catch (InterruptedException e) {
+			System.out.println("파이썬 프로그램 실행 실패!");
+		}
+		// 받아오기 프로세스 입력
+		int check = -1;
+		int count = 0;
+		String text = "";
+		
+		try {
+			FileReader fr = new FileReader("tmp_recommendList.csv");
+			BufferedReader br = new BufferedReader(fr);
+
+			while(true) {
+				text = br.readLine();
+				if (text == null)
+					break;			
+
+				if (check != -1) {
+					String[] input = text.split(",");
+					Food food = foodScanService.getFoodByFseq(Integer.parseInt(input[0]));
+					FoodVo foodVo = new FoodVo(food, Float.parseFloat(input[1]));
+					boolean isEqual = foodRecommendList.contains(foodVo);
+					if (!isEqual) {
+						foodRecommendList.add(foodVo);
+					}							
+					text = "";
+				} else {
+					check = 0;
+					text = "";
+				}	
+			}
+			
+			br.close();
+			fr.close();			
+		} catch (IOException e) {
+			System.out.println((count+1)+"번 데이터 입력 중 오류 발생!");
 			e.printStackTrace();
 		}
-		System.out.println("History 데이터 내보내기 성공");			
 		
+		System.out.println(stringBuilder.toString());
 		return foodRecommendList;
 		
-	}
-	
-	public List<FoodVo> changeLine(String line, int index, List<FoodVo> foodVoList) {
-		List<String> dataArr = new ArrayList<>();
-		if(index > 1) {
-			String[] lineSplit = line.split(" ");
-			
-			for(int i=0; i<lineSplit.length; i++) {
-				if (!lineSplit[i].equals("")) {
-					dataArr.add(lineSplit[i]);
-				} else {
-					continue;
-				}
-			}
-			
-			System.out.println("테스트!!!!!!!!!!");
-			for (String s : dataArr) {
-				System.out.println(s);
-			}
-
-			int fseq = Integer.parseInt(dataArr.get(1));
-			float score = Float.parseFloat(dataArr.get(2));
-
-			Food food = (Food) foodScanService.getFoodByFseq(fseq);
-			FoodVo vo = new FoodVo(food);
-			vo.setScore(score);
-			boolean isEqual = foodVoList.contains(vo);
-			if (!isEqual) {
-				foodVoList.add(vo);
-			}
-		}
-		
-		return foodVoList;
 	}
 	
 }
