@@ -279,8 +279,7 @@ public class AdminController {
 									   @RequestParam(value = "name") String name, @RequestParam(value = "img") MultipartFile uploadFile,
 									   @RequestParam(value = "kcal") float kcal, @RequestParam(value = "carb") float carb,
 									   @RequestParam(value = "prt") float prt, @RequestParam(value = "fat") float fat,
-									   @RequestParam(value = "healthyType") String healthyType,
-									   @RequestParam(value = "nationType") String nationType,
+									   @RequestParam(value = "foodType") String foodType,
 									   @RequestParam(value = "ingredient") String[] ingredient,
 									   @RequestParam(value = "quantity") int [] quantity) {
 
@@ -315,8 +314,7 @@ public class AdminController {
 		foodDetail.setCarb(carb);
 		foodDetail.setPrt(prt);
 		foodDetail.setFat(fat);
-		foodDetail.setHealthyType(healthyType);
-		foodDetail.setNationType(nationType);
+		foodDetail.setFoodType(foodType);
 		foodDetailService.insertFoodDetail(foodDetail);
 
 
@@ -362,8 +360,7 @@ public class AdminController {
 								  @RequestParam(value = "img") MultipartFile uploadFile, @RequestParam(value = "kcal") float kcal,
 								  @RequestParam(value = "carb") float carb, @RequestParam(value = "prt") float prt,
 								  @RequestParam(value = "fat") float fat,
-								  @RequestParam(value = "healthyType") String healthyType,
-								  @RequestParam(value = "NationType") String nationType,
+								  @RequestParam(value = "foodType") String foodType,
 								  @RequestParam(value = "ingredient") String[] ingredient,
 								  @RequestParam(value = "quantity") int[] quantity) {
 
@@ -397,8 +394,7 @@ public class AdminController {
 		foodDetail.setCarb(carb);
 		foodDetail.setPrt(prt);
 		foodDetail.setFat(fat);
-		foodDetail.setHealthyType(healthyType);
-		foodDetail.setNationType(nationType);
+		foodDetail.setFoodType(foodType);
 		foodDetailService.updateFoodDetail(foodDetail);
 
 		for (int i = 0 ; i < ingredient.length ; i++) {
@@ -568,8 +564,7 @@ public class AdminController {
 		ProcessBuilder processBuilder = new ProcessBuilder("python", "E:/Student/MachineLearning/new_food_insert.py",
 				Integer.toString(food.getFseq()), food.getName(), Double.toString(foodDetail.getKcal()),
 				Double.toString(foodDetail.getCarb()), Double.toString(foodDetail.getPrt()),
-				Double.toString(foodDetail.getFat()), foodDetail.getHealthyType(),
-				foodDetail.getNationType());
+				Double.toString(foodDetail.getFat()), foodDetail.getFoodType());
 
 		try {
 			Process process = processBuilder.start();

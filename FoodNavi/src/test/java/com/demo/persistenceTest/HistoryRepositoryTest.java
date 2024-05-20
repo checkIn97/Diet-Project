@@ -25,6 +25,14 @@ public class HistoryRepositoryTest {
 	
 	@Disabled
 	@Test
+	public void test() {
+		List<History> historyList = historyRepo.findAll();
+		String a = historyList.get(0).getServedDate().toString();
+		System.out.println(a);
+	}
+	
+	@Disabled
+	@Test
 	public void getHistoryListNotServedYet() {
 		Users user = usersInOutRepo.findById(100).get();
 		List<History> historyList = historyRepo.getHistoryListNotConfirmedYet(user);

@@ -40,9 +40,20 @@ public class History {
 	@JoinColumn(name="fseq", nullable=false)
 	private Food food;
 	
-	private int serveNumber;
-	
-	private String mealType;
-	
+	private int serveNumber;	
 	private Date servedDate;
+	
+	// 추천조건설정 기록
+	private String mealType;
+	private String no_egg;
+	private String no_milk;
+	private String no_bean;
+	private String no_shellfish;
+	private String no_ingredient;
+	private String purpose;
+	private String dietType;
+	private String vegetarian;
+	
+	
+	
 }

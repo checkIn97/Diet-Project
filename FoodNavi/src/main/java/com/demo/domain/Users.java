@@ -3,6 +3,7 @@ package com.demo.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -45,12 +46,23 @@ public class Users {
 	private String sex;
 	
 	private int age;
-	private int height;
-	private int weight;
+	private float height;
+	private float weight;
+	
+	private String useyn;	
+	
+	// 검색조건 기본값 설정
+	private String no_egg;
+	private String no_milk;
+	private String no_bean;
+	private String no_shellfish;
+	private String no_ingredient;
 	private String userGoal;
-	private String useyn;
+	private String dietType;
+	@ColumnDefault(value="0")
+	private String vegetarian;
 	
 	@OneToMany(mappedBy="user", fetch=FetchType.EAGER)
 	private List<Rcd> likeList = new ArrayList<>();
-		
+	
 }

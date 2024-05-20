@@ -27,7 +27,7 @@ public class FoodScanServiceImpl implements FoodScanService {
 	public Food getFoodByFseq(int fseq) {
 		return foodScanRepo.findById(fseq).get();
 	}
-	
+
 	@Override
 	public Food getFoodByName(String name) {
 		return foodScanRepo.findByName(name);
@@ -35,11 +35,12 @@ public class FoodScanServiceImpl implements FoodScanService {
 	
 	@Override
 	public List<Food> getFoodScanList(Users user, FoodRecommendVo foodScanVo) {
-				
+
 		UserVo userVo = new UserVo(user);
 		
 		String[][] searchType = foodScanVo.getSearchType();
 		
+		// 검색어 반영
 		String searchField = foodScanVo.getSearchField();
 		String searchWord = foodScanVo.getSearchWord();
 		List<String> searchParams = new ArrayList<>();
@@ -52,6 +53,7 @@ public class FoodScanServiceImpl implements FoodScanService {
 			}
 		}
 		
+		// 금지어 반영
 		String banField = foodScanVo.getBanField();
 		String banWord = foodScanVo.getBanWord();
 		List<String> banParams = new ArrayList<>();
@@ -64,66 +66,29 @@ public class FoodScanServiceImpl implements FoodScanService {
 			}
 		}
 		
-		
-		String[][] mealTimeCategory = foodScanVo.getMealTimeCategory();
-		List<String> mealTime = Arrays.asList(foodScanVo.getMealTime());
-		List<String> mealParams = new ArrayList<>();
-		for (String[] field : mealTimeCategory) {
-			if (mealTime.size() == 0) {
-				mealParams.add("");
-			} else if (mealTime.contains(field[0])) {
-				mealParams.add(field[0]);
-			} else {
-				mealParams.add("|");
-			}
-		}
-		
-				
+		// 한끼유형 반영
+		List<String> mealParams = Arrays.asList(foodScanVo.getMealTime());
 
-		List<String> allergyFieldList = Arrays.asList(foodScanVo.getAllergy());
-		List<String> allergyParams = new ArrayList<>();
-		for (String[] s : foodScanVo.getAllergyArray()) {
-			if (allergyFieldList.contains(s[0])) {
-				allergyParams.add(s[0]);
-			} else {
-				allergyParams.add("|");
-			}
+		
+		// 음식유형 반영
+		String foodType = foodScanVo.getFoodType();
+		if (foodType.equals("all")) {
+			foodType = "";
 		}
 		
-				
-		List<String> tasteFieldList = Arrays.asList(foodScanVo.getTaste());
-		List<String> tasteParams = new ArrayList<>();
-		for (String[] s : foodScanVo.getTasteArray()) {
-			if (tasteFieldList.contains(s[0])) {
-				tasteParams.add(s[0]);
-			} else {
-				tasteParams.add("|");
-			}
+		// 알레르기 반영
+		List<String> allergyParams = Arrays.asList(foodScanVo.getAllergys());
+		String allergyEtc = foodScanVo.getAllergyEtc();
+		if (allergyEtc.equals("")) {
+			allergyEtc = "|";
 		}
 		
-		
+		// 채식여부 반영	
 		int vegetarian = 0;
 		String vegetarianField = foodScanVo.getVegetarian();
 		if (!vegetarianField.equals("0")) {
 			vegetarian = Integer.parseInt(vegetarianField);
 		}
-		
-
-		
-		String[][] foodCountryCategory = foodScanVo.getFoodCountryCategory();
-		String foodCountry = foodScanVo.getFoodCountry();
-		List<String> foodCountryParams = new ArrayList<>();
-		for (String[] field : foodCountryCategory) {
-			if (foodCountry.equals("all")) {
-				foodCountryParams.add("");
-			} else if (field[0].equals(foodCountry)) {
-				foodCountryParams.add(field[0]);
-			} else {
-				foodCountryParams.add("|");
-			}
-		}
-		
-		
 		
 		float kcalMin = 0f;
 		float kcalMax = 1000000f;
@@ -134,9 +99,10 @@ public class FoodScanServiceImpl implements FoodScanService {
 		float fatMin = 0f;
 		float fatMax = 1000000f;
 		String purpose = foodScanVo.getPurpose();
+		// 목적에 따라 수치 변경
 		if (purpose.equals("diet")) {
 			kcalMin = 0f;
-			kcalMax = 500f;
+			kcalMax = userVo.getEER()/3*0.7f;
 			carbMin = 0f;
 			carbMax = 1000000f;
 			prtMin = 0f;
@@ -144,8 +110,8 @@ public class FoodScanServiceImpl implements FoodScanService {
 			fatMin = 0f;
 			fatMax = 1000000f;
 		} else if (purpose.equals("bulkup")) {
-			kcalMin = 500f;
-			kcalMax = 1000000f;
+			kcalMin = userVo.getEER()/3*1.0f;
+			kcalMax = userVo.getEER()/3*1.3f;
 			carbMin = 0f;
 			carbMax = 1000000f;
 			prtMin = 0f;
@@ -160,52 +126,51 @@ public class FoodScanServiceImpl implements FoodScanService {
 		float ratioPrtMax = 1000000f;
 		float ratioFatMin = 0f;
 		float ratioFatMax = 1000000f;
-		String no_salt = "|";
-		String no_sugar = "|";
-		String no_wheat = "|";
-		String no_ricecake = "|";
-		String no_sweetpotato = "|";
 		String dietType = foodScanVo.getDietType();
 		// 균형식 : 탄단지 균형 비율 기준
-		// 저염식 : 소금의 양 또는 소금/된장 사용하지 않음
-		// 당뇨식 : 잡곡밥, 현미밥, 채소, 설탕x, 빵x, 떡x, 국수x, 고구마x
 		// 저탄고지 : 탄단지 비율 1:2:7
-		if (dietType.equals("lowSalt")) {
-			no_salt = "소금";
-		} else if (dietType.equals("diabetes")) {
-			no_sugar = "설탕";
-			no_wheat = "밀가루";
-			no_ricecake = "떡";
-			no_sweetpotato = "고구마";
-		} else if (dietType.equals("lowCarb")) {
-			ratioCarbMin = 0.09f;
-			ratioCarbMax = 0.11f;
-			ratioPrtMin = 0.19f;
-			ratioPrtMax = 0.21f;
-			ratioFatMin = 0.69f;
-			ratioFatMax = 0.71f;
-		} else if (dietType.equals("balance")) {
+		if (dietType.equals("balance")) {
 			ratioCarbMin = userVo.getProperCarbRatio()[0];
 			ratioCarbMax = userVo.getProperCarbRatio()[1];
 			ratioPrtMin = userVo.getProperPrtRatio()[0];
 			ratioPrtMax = userVo.getProperPrtRatio()[1];
 			ratioFatMin = userVo.getProperFatRatio()[0];
 			ratioFatMax = userVo.getProperFatRatio()[1];
+		} else if (dietType.equals("lowCarb")) {
+			ratioCarbMin = 0.0f;
+			ratioCarbMax = 0.3f;
+			ratioPrtMin = 0.0f;
+			ratioPrtMax = 1.0f;
+			ratioFatMin = 0.2f;
+			ratioFatMax = 1.0f;
 		}
 		
+		List<Food> foodList = null;
+		if (foodScanVo.isRecommend()) {
+			int check = foodScanRepo.getFoodCountByMealTypeInHistory(
+					mealParams.get(0), mealParams.get(1), mealParams.get(2), mealParams.get(3));
+			if (check < 10) {
+				foodScanVo.setRecommend(false);				
+			} 
+		} 
 		
-		// 매운맛, 단맛, 짠맛, 신맛, 쓴맛, 담백한맛
-				
-		List<Food> foodList = foodScanRepo.getFoodScanList(
-				searchParams.get(0), searchParams.get(1), banParams.get(0), banParams.get(1),
-				mealParams.get(0), mealParams.get(1), mealParams.get(2), mealParams.get(3),
-				kcalMin, kcalMax, carbMin, carbMax, prtMin, prtMax, fatMin, fatMax,	
-				ratioCarbMin, ratioCarbMax, ratioPrtMin, ratioPrtMax, ratioFatMin, ratioFatMax, 
-				no_salt, no_sugar, no_wheat, no_ricecake, no_sweetpotato,
-				allergyParams.get(0), allergyParams.get(1), allergyParams.get(2), allergyParams.get(3),
-				tasteParams.get(0), tasteParams.get(1), tasteParams.get(2), tasteParams.get(3), tasteParams.get(4), tasteParams.get(5),  
-				vegetarian,
-				foodCountryParams.get(0), foodCountryParams.get(1), foodCountryParams.get(2), foodCountryParams.get(3), foodCountryParams.get(4), foodCountryParams.get(5));
+		if (foodScanVo.isRecommend()) {
+			foodList = foodScanRepo.getFoodRecommendList(
+					searchParams.get(0), searchParams.get(1), banParams.get(0), banParams.get(1),
+					mealParams.get(0), mealParams.get(1), mealParams.get(2), mealParams.get(3),
+					kcalMin, kcalMax, carbMin, carbMax, prtMin, prtMax, fatMin, fatMax,	
+					ratioCarbMin, ratioCarbMax, ratioPrtMin, ratioPrtMax, ratioFatMin, ratioFatMax, 
+					allergyParams.get(0), allergyParams.get(1), allergyParams.get(2), allergyParams.get(3), allergyEtc, 
+					vegetarian, foodType);
+		} else {
+			foodList = foodScanRepo.getFoodScanList(
+					searchParams.get(0), searchParams.get(1), banParams.get(0), banParams.get(1),
+					kcalMin, kcalMax, carbMin, carbMax, prtMin, prtMax, fatMin, fatMax,	
+					ratioCarbMin, ratioCarbMax, ratioPrtMin, ratioPrtMax, ratioFatMin, ratioFatMax, 
+					allergyParams.get(0), allergyParams.get(1), allergyParams.get(2), allergyParams.get(3), allergyEtc, 
+					vegetarian, foodType);
+		}
+		
 		
 		return foodList;
 	}

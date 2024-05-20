@@ -1,6 +1,7 @@
 package com.demo.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -67,28 +68,27 @@ public class FoodScanController {
 			@RequestParam(value="banWord", defaultValue="") String banWord,
 			@RequestParam(value="searchName", defaultValue="") String searchName,
 			@RequestParam(value="searchIngredient", defaultValue="") String searchIngredient,
-			@RequestParam(value="banName", defaultValue="|") String banName,
-			@RequestParam(value="banIngredient", defaultValue="|") String banIngredient,
-			@RequestParam(value="mealTime", defaultValue="all") String[] mealTime,
+			@RequestParam(value="banName", defaultValue="") String banName,
+			@RequestParam(value="banIngredient", defaultValue="") String banIngredient,
+			@RequestParam(value="mealTime", defaultValue="") String[] mealTime,
+			@RequestParam(value="foodType", defaultValue="all") String foodType,
 			@RequestParam(value="purpose", defaultValue="all") String purpose,
+			@RequestParam(value="recommend", defaultValue="false") boolean recommend,
 			@RequestParam(value="dietType", defaultValue="all") String dietType,
 			@RequestParam(value="allergys", defaultValue="") String[] allergys,
-			@RequestParam(value="allergyEtc", defaultValue="|") String allergyEtc,
-			@RequestParam(value="taste", defaultValue="all") String[] taste,
+			@RequestParam(value="allergyEtc", defaultValue="") String allergyEtc,
 			@RequestParam(value="vegetarian", defaultValue="0") String vegetarian,
-			@RequestParam(value="foodCountry", defaultValue="all") String foodCountry,
+
 			FoodRecommendVo foodScanVo, Model model, HttpSession session) {
 		
 		// 세션에서 사용자 정보 가져오기
     	Users user = (Users) session.getAttribute("loginUser");
-        
     	// 세션에 로그인 정보가 없는 경우
         if (user == null) {
-            return "/user_login_form"; // 로그인 페이지로 이동.
+            return "redirect:user_login_form"; // 로그인 페이지로 이동.
         }
         
         UserVo userVo = new UserVo(user);
-		
 		if (page == 0) {
 			page = 1;
 			foodScanVo.setSearchField(searchField);
@@ -99,14 +99,38 @@ public class FoodScanController {
 			foodScanVo.setSearchIngredient(searchIngredient);
 			foodScanVo.setBanName(banName);
 			foodScanVo.setBanIngredient(banIngredient);
+			
+			List<String> mealTimeList = Arrays.asList(mealTime);
+			mealTime = new String[foodScanVo.getMealTimeArray().length];
+			for (int i = 0 ; i < foodScanVo.getMealTimeArray().length ; i++) {
+				String meal = foodScanVo.getMealTimeArray()[i][0];
+				if (mealTimeList.size() == 0 || mealTimeList.contains(meal)) {
+					mealTime[i] = meal;
+				} else {
+					mealTime[i] = "";
+				}					
+			}
 			foodScanVo.setMealTime(mealTime);
+			
+			foodScanVo.setFoodType(foodType);
 			foodScanVo.setPurpose(purpose);
 			foodScanVo.setDietType(dietType);
-			foodScanVo.setAllergy(allergys);
+
+			List<String> allergyList = Arrays.asList(allergys);
+			allergys = new String[foodScanVo.getAllergyArray().length];
+			for (int i = 0 ; i < foodScanVo.getAllergyArray().length ; i++) {
+				String allergy = foodScanVo.getAllergyArray()[i][0];
+				if (allergyList.contains(allergy)) {
+					allergys[i] = "y";
+				} else {
+					allergys[i] = "a";
+				}					
+			}
+			foodScanVo.setAllergys(allergys);
+			
 			foodScanVo.setAllergyEtc(allergyEtc);
-			foodScanVo.setTaste(taste);
 			foodScanVo.setVegetarian(vegetarian);
-			foodScanVo.setFoodCountry(foodCountry);
+			foodScanVo.setRecommend(recommend);
 			foodScanVo.setSortBy(sortBy);
 			foodScanVo.setSortDirection(sortDirection);
 			foodScanVo.setPageMaxDisplay(pageMaxDisplay);
@@ -133,7 +157,6 @@ public class FoodScanController {
 		model.addAttribute("foodList", currentList);		
 		model.addAttribute("pageInfo", foodScanVo.getPageInfo());
 		model.addAttribute("userVo", userVo);
-				
 		
 		return "food_scan/foodScanList";
 	}
@@ -144,10 +167,9 @@ public class FoodScanController {
 	public String showFoodDetail(Food food, Model model, HttpSession session, FoodRecommendVo foodScanVo) {
 		// 세션에서 사용자 정보 가져오기
     	Users user = (Users) session.getAttribute("loginUser");
-        
     	// 세션에 로그인 정보가 없는 경우
         if (user == null) {
-            return "/user_login_form"; // 로그인 페이지로 이동.
+            return "redirect:user_login_form"; // 로그인 페이지로 이동.
         }
         
         UserVo userVo = new UserVo(user);
@@ -167,13 +189,11 @@ public class FoodScanController {
 	// 이미 존재하면 새로 추가하지 않고 개수만 늘린다.
 	@PostMapping("/history_in_from_detail")
 	public String historyInFromDetail(HttpSession session, Food food) {
-		
 		// 세션에서 사용자 정보 가져오기
-    	Users user = (Users)session.getAttribute("loginUser");
-        
+    	Users user = (Users) session.getAttribute("loginUser");
     	// 세션에 로그인 정보가 없는 경우
         if (user == null) {
-            return "/user_login_form"; // 로그인 페이지로 이동.
+            return "redirect:user_login_form"; // 로그인 페이지로 이동.
         }
 		
 		food = foodScanService.getFoodByFseq(food.getFseq());
@@ -191,7 +211,13 @@ public class FoodScanController {
 	
 	// 상차림에서 데이터를 갱신한다.
 	@PostMapping("/history_update")
-	public String historyUpdate(History history) {
+	public String historyUpdate(HttpSession session, History history) {
+		// 세션에서 사용자 정보 가져오기
+    	Users user = (Users) session.getAttribute("loginUser");
+    	// 세션에 로그인 정보가 없는 경우
+        if (user == null) {
+            return "redirect:user_login_form"; // 로그인 페이지로 이동.
+        }
 		
 		if (history.getServeNumber() == 0) {
 			historyService.historyOut(history);
@@ -204,7 +230,14 @@ public class FoodScanController {
 	
 	// 상차림에서 데이터를 제거한다.
 	@PostMapping("/history_out")
-	public String historyOut(History history) {
+	public String historyOut(HttpSession session, History history) {
+		// 세션에서 사용자 정보 가져오기
+    	Users user = (Users) session.getAttribute("loginUser");
+    	// 세션에 로그인 정보가 없는 경우
+        if (user == null) {
+            return "redirect:user_login_form"; // 로그인 페이지로 이동.
+        }		
+		
 		historyService.historyOut(history);
 		return "redirect:mypage_history";
 	}
@@ -215,11 +248,10 @@ public class FoodScanController {
 	public String historyConfirmed(HttpSession session) {
 		
 		// 세션에서 사용자 정보 가져오기
-    	Users user = (Users)session.getAttribute("loginUser");
-        
+    	Users user = (Users) session.getAttribute("loginUser");
     	// 세션에 로그인 정보가 없는 경우
         if (user == null) {
-            return "/user_login_form"; // 로그인 페이지로 이동.
+            return "redirect:user_login_form"; // 로그인 페이지로 이동.
         }
 		
 		List<History> historyList = historyService.getHistoryListNotConfirmedYet(user);
@@ -238,11 +270,10 @@ public class FoodScanController {
 	@GetMapping("rcd_update")
 	public String rcdUpdate(HttpSession session, Food food, RedirectAttributes re) {
 		// 세션에서 사용자 정보 가져오기
-    	Users user = (Users)session.getAttribute("loginUser");
-        
+    	Users user = (Users) session.getAttribute("loginUser");
     	// 세션에 로그인 정보가 없는 경우
         if (user == null) {
-            return "/user_login_form"; // 로그인 페이지로 이동.
+            return "redirect:user_login_form"; // 로그인 페이지로 이동.
         }
         
         food = foodScanService.getFoodByFseq(food.getFseq());
@@ -255,11 +286,10 @@ public class FoodScanController {
 	@GetMapping("rcd_delete")
 	public String rcdDelete(HttpSession session, Food food, RedirectAttributes re) {
 		// 세션에서 사용자 정보 가져오기
-    	Users user = (Users)session.getAttribute("loginUser");
-        
+    	Users user = (Users) session.getAttribute("loginUser");
     	// 세션에 로그인 정보가 없는 경우
         if (user == null) {
-            return "/user_login_form"; // 로그인 페이지로 이동.
+            return "redirect:user_login_form"; // 로그인 페이지로 이동.
         }
         
         food = foodScanService.getFoodByFseq(food.getFseq());
