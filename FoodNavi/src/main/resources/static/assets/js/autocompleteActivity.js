@@ -48,7 +48,7 @@ function initAutocomplete() {
 
 // 값이 비어 있는 경우
 document.querySelector('form').addEventListener('submit', function (event) {
-    var inputs = document.querySelectorAll('input[type="number"], input[type="text"]');
+    var inputs = document.querySelectorAll('input[name="activityType"], input[name="activityTime"]');
     for (var i = 0; i < inputs.length; i++) {
         if (inputs[i].value === '') {
             // 이벤트를 취소
