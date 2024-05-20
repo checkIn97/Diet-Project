@@ -20,6 +20,8 @@ import lombok.ToString;
 public class FoodVo {
 	private Food food = new Food();
 	private float score = 0f;
+	private float starScore = 0f;
+	private int scoreView = 0;
 	private int totalCount = 0;
 	private int count30 = 0;
 	private List<FoodIngredient> foodIngredientList = null;
