@@ -48,12 +48,8 @@ public class HomeController {
 		userVo.setPrtOnTable(Math.round(historyService.totalPrtOnTable(userVo.getUser())*100)/100f);
 		userVo.setFatToday(Math.round(historyService.totalFatToday(userVo.getUser())*100)/100f);
 		userVo.setFatOnTable(Math.round(historyService.totalFatOnTable(userVo.getUser())*100)/100f);
+		
 		model.addAttribute("userVo", userVo);
-		System.out.println();
-		System.out.println(userVo.getProperCarbRatio());
-		System.out.println(userVo.getProperPrtRatio());
-		System.out.println(userVo.getProperFatRatio());
-		System.out.println();
 		return "mainpage";
 	}
 	
