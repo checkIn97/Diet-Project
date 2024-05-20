@@ -1,5 +1,6 @@
 package com.demo.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,11 @@ public class IngredientServiceImpl implements IngredientService {
 	public Ingredient getIngredientByMaxIseq() {
 		
 		return ingredientRepo.findFirstByOrderByIseqDesc();
+	}
+
+	@Override
+	public List<Ingredient> getIngredientListInFood(int fseq) {
+		return ingredientRepo.getIngredientListInFood(fseq);
 	}
 
 }

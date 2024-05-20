@@ -5,11 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import com.demo.domain.*;
 import com.demo.persistence.ExerciseOptionRepository;
@@ -248,11 +244,14 @@ public class AdminController {
 		}
 
 		Food food = foodService.getFoodByFseq(fseq);
+		List<Ingredient> ingredients = ingredientService.getIngredientListInFood(fseq);
+		model.addAttribute("ingredientsList", ingredients);
 		model.addAttribute("food", food);
 		FoodRecommendVo foodScanVo = (FoodRecommendVo) session.getAttribute("foodScanVo");
 		model.addAttribute("foodScanVo", foodScanVo);
 		model.addAttribute("foodList", foodScanVo.getFoodList());
 		model.addAttribute("pageInfo", foodScanVo.getPageInfo());
+
 		return "admin/foodDetail";
 	}
 
@@ -272,8 +271,7 @@ public class AdminController {
 									   @RequestParam(value = "prt") float prt, @RequestParam(value = "fat") float fat,
 									   @RequestParam(value = "ingredient") String[] ingredient,
 									   @RequestParam(value = "quantity") int [] quantity,
-									   @RequestParam(value = "healthyType") String healthyType,
-									   @RequestParam(value = "nationType") String nationType) {
+									   @RequestParam(value = "foodType") String foodType) {
 
 		// 세션에서 사용자 정보 가져오기
 		Admin admin = (Admin) session.getAttribute("adminUser");
@@ -306,8 +304,8 @@ public class AdminController {
 		foodDetail.setCarb(carb);
 		foodDetail.setPrt(prt);
 		foodDetail.setFat(fat);
-		foodDetail.setHealthyType(healthyType);
-		foodDetail.setNationType(nationType);
+		foodDetail.setFoodType(foodType);
+
 
 		foodDetailService.insertFoodDetail(foodDetail);
 
@@ -356,8 +354,7 @@ public class AdminController {
 								  @RequestParam(value = "fat") float fat,
 								  @RequestParam(value = "ingredient") String[] ingredient,
 								  @RequestParam(value = "quantity") int[] quantity,
-								  @RequestParam(value = "healthyType") String healthyType,
-								  @RequestParam(value = "nationType") String nationType) {
+								  @RequestParam(value = "foodType") String foodType) {
 
 		// 세션에서 사용자 정보 가져오기
 		Admin admin = (Admin) session.getAttribute("adminUser");
@@ -389,8 +386,7 @@ public class AdminController {
 		foodDetail.setCarb(carb);
 		foodDetail.setPrt(prt);
 		foodDetail.setFat(fat);
-		foodDetail.setHealthyType(healthyType);
-		foodDetail.setNationType(nationType);
+		foodDetail.setFoodType(foodType);
 		foodDetailService.updateFoodDetail(foodDetail);
 
 		for (int i = 0 ; i < ingredient.length ; i++) {
@@ -560,7 +556,7 @@ public class AdminController {
 		ProcessBuilder processBuilder = new ProcessBuilder("python", "E:/Student/MachineLearning/new_food_insert.py",
 				Integer.toString(food.getFseq()), food.getName(), Double.toString(foodDetail.getKcal()),
 				Double.toString(foodDetail.getCarb()), Double.toString(foodDetail.getPrt()),
-				Double.toString(foodDetail.getFat()), foodDetail.getHealthyType());
+				Double.toString(foodDetail.getFat()), foodDetail.getFoodType());
 
 		try {
 			Process process = processBuilder.start();
@@ -602,4 +598,7 @@ public class AdminController {
 		response.put("isDuplicated", isDuplicated);
 		return response;
 	}
+
+
+
 }

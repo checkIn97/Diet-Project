@@ -27,7 +27,7 @@
                     <th>단백질(g)</th>
                     <th>지방(g)</th>
                     <th>채식 여부</th>
-                    <th>식단 종류</th>
+                    <th>식사 종류</th>
                 </tr>
                 <tr>
                     <!--칼로리 값-->
@@ -38,26 +38,22 @@
                     <td>[[${food.foodDetail.prt}]]</td>
                     <!--지방 값-->
                     <td>[[${food.foodDetail.fat}]]</td>
-                    <!--채식 여부-->
-                    <td th:if="${food.foodDetail.veganType == '0'}">해당 없음</td>
-                    <td th:if="${food.foodDetail.veganType == '0'}">해당 없음</td>
-                    <td th:if="${food.foodDetail.veganType == '1'}">폴로(닭과 조류는 먹음)</td>
-                    <td th:if="${food.foodDetail.veganType == '2'}">페스코(어패류는 먹음)</td>
-                    <td th:if="${food.foodDetail.veganType == '3'}">락토오보(달걀 우유는 먹음)</td>
-                    <td th:if="${food.foodDetail.veganType == '4'}">락토(유제품은 먹음)</td>
-                    <td th:if="${food.foodDetail.veganType == '5'}">비건(순수 채식 만함)</td>
+
+
                     <!--식탄 종류-->
-                    <td th:if="${food.foodDetail.healthyType == 'all'}">해당 없음</td>
-                    <td th:if="${food.foodDetail.healthyType == 'healthyFood'}">건강식</td>
-                    <td th:if="${food.foodDetail.healthyType == 'diabeticDiet'}">당뇨식</td>
-                    <td th:if="${food.foodDetail.healthyType == 'lowSaltDiet'}">저염식</td>
+                    <td th:if="${food.foodDetail.foodType == '주식'}">주식</td>
+                    <td th:if="${food.foodDetail.foodType == '부식'}">부식</td>
+                    <td th:if="${food.foodDetail.foodType == '간식'}">간식</td>
                 </tr>
             </table>
             <div class="food-detail-row">
                 <div class="food-detail-item">
                     <span class="food-detail-title">재료</span>
-                    <input type="text" class="food-detail-value" readonly value="재료나열재료나열재료나열재료나열재료나열">
+                    <th:block th:each="ingredient : ${ingredientsList}">
+                        [[${ingredient.name}]]&nbsp;
+                    </th:block>
                 </div>
+
             </div>
         </div>
 
