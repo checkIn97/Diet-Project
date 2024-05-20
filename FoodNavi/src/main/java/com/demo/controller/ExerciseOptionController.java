@@ -71,8 +71,4 @@ public class ExerciseOptionController {
         response.sendRedirect(redirect_uri);
     }
 
-    @GetMapping("/activities/validate")
-    public boolean validateActivityType(@RequestParam("type") String type) {
-        return exerciseOptionRepository.findByType(type).isPresent();
-    }
 }

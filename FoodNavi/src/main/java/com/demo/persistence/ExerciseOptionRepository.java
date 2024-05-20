@@ -10,4 +10,5 @@ public interface ExerciseOptionRepository extends JpaRepository<ExerciseOption, 
 	public Optional<ExerciseOption> findByType(String type);
 	public ExerciseOption findFirstByOrderByEoseqDesc();
 	List<ExerciseOption> findByTypeContainingIgnoreCase(String term);
+	boolean existsByType(String type);
 }
