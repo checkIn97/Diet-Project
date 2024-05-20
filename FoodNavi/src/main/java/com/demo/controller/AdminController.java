@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.demo.persistence.ExerciseOptionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
@@ -70,6 +71,8 @@ public class AdminController {
 	private IngredientService ingredientService;
 	@Autowired
 	private FoodIngredientService foodIngredientService;
+	@Autowired
+	private ExerciseOptionRepository exerciseOptionRepository;
 
 
 	// @Value("${com.demo.upload.path}")
@@ -583,4 +586,17 @@ public class AdminController {
 
 	}
 
+	@GetMapping("/admin_exercise_list")
+	public String showExerciseList() {
+		return "admin/exercise";
+	}
+
+	@GetMapping("/checkExerciseType")
+	@ResponseBody
+	public Map<String, Boolean> checkExerciseType(@RequestParam String exerciseType) {
+		boolean isDuplicated = exerciseOptionRepository.existsByType(exerciseType);
+		Map<String, Boolean> response = new HashMap<>();
+		response.put("isDuplicated", isDuplicated);
+		return response;
+	}
 }
