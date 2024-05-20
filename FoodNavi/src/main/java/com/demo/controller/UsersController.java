@@ -66,25 +66,6 @@ public class UsersController {
 		return "user/idcheck";
 	}
 
-	// 비밀번호 확인
-//	@GetMapping("/pw_confirm")
-//	public String pwCheck(Users vo, Model model, HttpSession session) {
-//		String PATTERN_PW = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,128}$";
-//		boolean pwPattern = Pattern.matches(PATTERN_PW, vo.getUserpw());
-//		int success = -1;
-//
-//		if (!pwPattern) {
-//			model.addAttribute("msg", "비밀번호는 영문 소문자, 대문자, 숫자, 특수문자를 반드시 하나씩 포함하여 8자리 이상 입력하셔야 합니다.");
-//			session.setAttribute("success", success);
-//		} else {
-//			success = 1;
-//			model.addAttribute("msg", "비밀번호가 일치합니다.");
-//			session.setAttribute("success", success);
-//		}
-//
-//		return "user/pwConfirm";
-//	}
-
 	@PostMapping("/user_insertBMI")
 	public String insertBMI(Users vo, HttpSession session) {
 		Users user = (Users)session.getAttribute("joinUser");
@@ -200,7 +181,6 @@ public class UsersController {
 		}
 	}
 
-	// 삭제방식 변경 필요
 	@GetMapping("/user_delete")
 	public String deleteAction(HttpSession session, Model model, Users vo) {
 		Users user = (Users)session.getAttribute("loginUser");
