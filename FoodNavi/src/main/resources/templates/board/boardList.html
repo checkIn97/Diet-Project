@@ -27,13 +27,13 @@
                 <div class="popularPosts">[인기] <a th:href="@{'/board_detail/' + ${board.bseq}}"
                                                   th:text="${board.title + ' ' + '[' + board.commentCount + ']'}"></a></div>
                 <input type="hidden" name="bseq" th:value="${board.bseq}"/></td>
-            <td th:text="${board.user.userid}"></td>
+            <td> <a th:href="@{'/board_userList/' + ${board.user.useq}}" th:text="${board.user.userid}"></a>
+             <input type="hidden" name="useq" th:value="${board.user.useq}" /></td>
             <td th:text="${#dates.format(board.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
             <td th:text="${board.cnt}"></td>
         </tr>
 
         <tr th:each="board : ${boardList}">
-
             <td>
                 <div class="board_list">
                     <a th:href="@{'/board_detail/' + ${board.bseq}}"
@@ -41,7 +41,8 @@
                    </div>
                 <input type="hidden" id="bseq"
                        name="bseq" th:value="${board.bseq}"/></td>
-            <td th:text="${board.user.userid}"></td>
+            <td> <a th:href="@{'/board_userList/' + ${board.user.useq}}" th:text="${board.user.userid}"></a>
+                <input type="hidden" name="useq" th:value="${board.user.useq}" /></td>
             <td
                     th:text="${#dates.format(board.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
             <td th:text="${board.cnt}"></td>

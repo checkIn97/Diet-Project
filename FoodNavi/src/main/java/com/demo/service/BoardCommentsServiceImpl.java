@@ -29,6 +29,8 @@ public class BoardCommentsServiceImpl implements BoardCommentsService {
 		return BoardCommentsRepo.findParentCommentsByBseq(bseq);
 	}
 
+
+
 	@Override
 	public List<Comments> getReplyCommentList(int parentCseq) {
 		return BoardCommentsRepo.findRepliesByParentCommentCseq(parentCseq);
@@ -58,5 +60,10 @@ public class BoardCommentsServiceImpl implements BoardCommentsService {
 			boardRepo.save(board);
 		}
 
+	}
+
+	@Override
+	public List<Comments> getCommentUserList(int useq) {
+		return BoardCommentsRepo.findCommentsByUseq(useq);
 	}
 }
