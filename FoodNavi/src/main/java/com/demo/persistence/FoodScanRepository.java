@@ -17,7 +17,7 @@ public interface FoodScanRepository extends JpaRepository<Food, Integer> {
 	public int getTotalFoodCount();
 	
 	@Query(value="SELECT r1.* FROM "
-			+ "(((((((SELECT DISTINCT Food.* FROM Food, Food_Detail, Food_Ingredient, Ingredient "
+			+ "(SELECT DISTINCT Food.* FROM Food, Food_Detail, Food_Ingredient, Ingredient "
 			+ "WHERE Food.fseq = Food_Detail.fseq "
 			+ "AND Food.fseq = Food_Ingredient.fseq "
 			+ "AND Food_Ingredient.iseq = Ingredient.iseq "
