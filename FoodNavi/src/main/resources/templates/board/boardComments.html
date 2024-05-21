@@ -94,7 +94,7 @@ function showHTML(parentComments, repliesMap, commentCount, loginUser) {
 
             // 대댓글 폼
             html += "<div id=\"replyForm_" + parentComment.cseq + "_" + parentComment.board.bseq + "\" style=\"display:none;\">"; // 대댓글 폼의 기본적인 HTML을 추가하고 숨김 처리
-            html += "<textarea rows=\"3\" cols=\"75\" id=\"ReplyContent_" + parentComment.cseq + "_" + parentComment.board.bseq + "\" name=\"ReplyContent\" placeholder=\"답글을 입력하세요\"></textarea>";
+            html += "<textarea rows=\"3\" cols=\"50\" id=\"ReplyContent_" + parentComment.cseq + "_" + parentComment.board.bseq + "\" name=\"ReplyContent\" placeholder=\"답글을 입력하세요\"></textarea>";
             html += "<a href=\"#\" onClick=\"save_reply(" + parentComment.cseq + "," + parentComment.board.bseq + "); return false;\" class=\"btn\">등록</a>"; // 대댓글 등록 버튼
             html += "</div>";
 
