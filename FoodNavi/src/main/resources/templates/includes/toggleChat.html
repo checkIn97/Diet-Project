@@ -96,6 +96,10 @@
                     document.getElementById('roomDetailFrame').src = "/chat/room/enter/" + roomId;
                     document.querySelector('.input-group').style.display = "none"; // 방에 들어가면 input-group이 안보이게 함
                 }
+                if (sender == null) {
+                    alert('대화명을 입력해 주세요.');
+                    return this.enterRoom(roomId);
+                }
             }
         }
     });
