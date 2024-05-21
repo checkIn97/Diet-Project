@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <th:block th:insert="~{/includes/headerMain}"></th:block>
 <meta charset="UTF-8">
 <script th:inline="javascript">
@@ -30,9 +30,16 @@
 
 <article class="foodRecommend">
     <div class="section" id="section1">
-        <img src="/assets/images/check.png" class="checkmark">
+<!--        <span class="arrowBox">-->
+<!--            <img class="arrow" id="arrowL1" src="/assets/images/arrowL.png">-->
+<!--        </span>-->
+<!--        <span class="arrowBox">-->
+<!--            <img class="arrow" id="arrowR1" src="/assets/images/arrowR.png">-->
+<!--        </span>-->
+
+        <img class="checkmark" src="/assets/images/check.png">
         <h2 class="major">메인 요리</h2>
-        <img src="/assets/images/chicken.png" class="foodImg">
+        <img class="foodImg" src="/assets/images/chicken.png">
         <table class="food-info">
             <tr>
                 <td><span class="food-name">닭가슴살 샐러드</span></td>
@@ -60,11 +67,11 @@
             <tr>
                 <td>예상 만족도</td>
                 <td><span class="satisfaction">
-      <img src="/assets/images/star-full.png" class="star">
-      <img src="/assets/images/star-full.png" class="star">
-      <img src="/assets/images/star-full.png" class="star">
-      <img src="/assets/images/star-full.png" class="star">
-      <img src="/assets/images/star-half.png" class="star">
+      <img class="star" src="/assets/images/star-full.png">
+      <img class="star" src="/assets/images/star-full.png">
+      <img class="star" src="/assets/images/star-full.png">
+      <img class="star" src="/assets/images/star-full.png">
+      <img class="star" src="/assets/images/star-half.png">
     </span></td>
             </tr>
             <tr>
@@ -72,7 +79,7 @@
                 <td>
     <span class="quantity">
         <button class="decrease"><img class="pmIcon" src="/assets/images/minus.png"></button>
-        <input type="number" min="0" value="1" class="quantity-input">
+        <input class="quantity-input" min="0" type="number" value="1">
         <button class="increase"><img class="pmIcon" src="/assets/images/plus.png"></button>
     </span>
                 </td>
@@ -80,10 +87,13 @@
         </table>
     </div>
 
+
+
+
     <div class="section" id="section2">
         <h2 class="major">사이드 요리</h2>
-        <img src="/assets/images/check.png" class="checkmark">
-        <img src="/assets/images/rice.png" class="foodImg">
+        <img class="checkmark" src="/assets/images/check.png">
+        <img class="foodImg" src="/assets/images/rice.png">
         <table class="food-info">
             <tr>
                 <td><span class="food-name">잡곡밥</span></td>
@@ -111,11 +121,11 @@
             <tr>
                 <td>예상 만족도</td>
                 <td><span class="satisfaction">
-      <img src="/assets/images/star-full.png" class="star">
-      <img src="/assets/images/star-full.png" class="star">
-      <img src="/assets/images/star-full.png" class="star">
-      <img src="/assets/images/star-half.png" class="star">
-      <img src="/assets/images/star-empty.png" class="star">
+      <img class="star" src="/assets/images/star-full.png">
+      <img class="star" src="/assets/images/star-full.png">
+      <img class="star" src="/assets/images/star-full.png">
+      <img class="star" src="/assets/images/star-half.png">
+      <img class="star" src="/assets/images/star-empty.png">
     </span></td>
             </tr>
             <tr>
@@ -123,17 +133,18 @@
                 <td>
     <span class="quantity">
         <button class="decrease"><img class="pmIcon" src="/assets/images/minus.png"></button>
-        <input type="number" min="0" value="1" class="quantity-input">
+        <input class="quantity-input" min="0" type="number" value="1">
         <button class="increase"><img class="pmIcon" src="/assets/images/plus.png"></button>
     </span>
                 </td>
             </tr>
         </table>
     </div>
+
     <div class="section" id="section3">
         <h2 class="major">디저트</h2>
-        <img src="/assets/images/check.png" class="checkmark">
-        <img src="/assets/images/snack.png" class="foodImg">
+        <img class="checkmark" src="/assets/images/check.png">
+        <img class="foodImg" src="/assets/images/snack.png">
         <table class="food-info">
             <tr>
                 <td><span class="food-name">우유 젤리</span></td>
@@ -161,11 +172,11 @@
             <tr>
                 <td>예상 만족도</td>
                 <td><span class="satisfaction">
-      <img src="/assets/images/star-full.png" class="star">
-      <img src="/assets/images/star-full.png" class="star">
-      <img src="/assets/images/star-full.png" class="star">
-      <img src="/assets/images/star-full.png" class="star">
-      <img src="/assets/images/star-full.png" class="star">
+      <img class="star" src="/assets/images/star-full.png">
+      <img class="star" src="/assets/images/star-full.png">
+      <img class="star" src="/assets/images/star-full.png">
+      <img class="star" src="/assets/images/star-full.png">
+      <img class="star" src="/assets/images/star-full.png">
     </span></td>
 
             </tr>
@@ -174,7 +185,7 @@
                 <td>
     <span class="quantity">
         <button class="decrease"><img class="pmIcon" src="/assets/images/minus.png"></button>
-        <input type="number" min="0" value="1" class="quantity-input">
+        <input class="quantity-input" min="0" type="number" value="1">
         <button class="increase"><img class="pmIcon" src="/assets/images/plus.png"></button>
     </span>
                 </td>
@@ -183,7 +194,7 @@
     </div>
 </article>
 
-<a href="/foodTodayHistory_view" class="button" id="foodRecord">기록</a>
+<a class="button" href="/foodTodayHistory_view" id="foodRecord">기록</a>
 
 <th:block th:insert="~{includes/footer}"></th:block>
 <script src="/assets/js/foodRecommend.js/"></script>
