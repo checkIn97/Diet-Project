@@ -1,4 +1,6 @@
 <!-- room2.html -->
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<input type="hidden" name="userVo_user_name" th:value="${userVo.user.name}">
 <div id="toggleButton" class="chatBox">
     <div class="container" id="app" v-cloak>
         <div class="row">
@@ -27,14 +29,20 @@
     </div>
     <iframe id="roomDetailFrame" style="width:100%; height:500px; display: none;"></iframe>
 </div>
+
 <!-- <form method="get" action="chat/room"> -->
 <button type="submit" id="chatToggleButtonControl" class="primary">
     <img src="/assets/images/chat.png" alt="채팅 아이콘" id="chatToggleButtonControlImg">
 </button>
-
+<script src="/assets/js/jquery.min.js"></script>
+<script src="/assets/js/chatToggle.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16"></script>
 <script src="/webjars/axios/0.17.1/dist/axios.min.js"></script>
 <script>
+    var userVo_user_name = $('input[name=userVo_user_name]').val();
+</script>
+<script>
+
 
     var vm = new Vue({
         el: '#app',
@@ -73,7 +81,7 @@
             },
 
             enterRoom: function (roomId) {
-                var sender = prompt('대화명을 입력해 주세요.\n' + '대화명을 입력하지 않을 시 로그인하신정보( ' + `${userVo.user.name}`+' ) 으로 입장합니다.');
+                var sender = prompt('대화명을 입력해 주세요.\n' + '대화명을 입력하지 않을 시 로그인하신정보( ' + userVo_user_name +' ) 으로 입장합니다.');
                 if (sender != "") {
                     localStorage.setItem('wschat.sender', sender);
                     localStorage.setItem('wschat.roomId', roomId);
@@ -81,7 +89,7 @@
                     document.getElementById('roomDetailFrame').src = "/chat/room/enter/" + roomId;
                     document.querySelector('.input-group').style.display = "none"; // 방에 들어가면 input-group이 안보이게 함
                 } else {
-                    sender = `${userVo.user.name}`;
+                    sender = userVo_user_name;
                     localStorage.setItem('wschat.sender', sender);
                     localStorage.setItem('wschat.roomId', roomId);
                     document.getElementById('roomDetailFrame').style.display = "block";

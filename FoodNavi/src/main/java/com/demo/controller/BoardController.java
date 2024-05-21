@@ -100,7 +100,7 @@ public class BoardController {
 
         // 세션에서 사용자 정보 가져오기
         Users user = (Users) session.getAttribute("loginUser");
-        UserVo userVo = new UserVo();
+        UserVo userVo = new UserVo(user);
         // 세션에 로그인 정보가 없는 경우
         if (user == null) {
         	 // 로그인 알림을 포함한 경고 메시지를 설정합니다.
