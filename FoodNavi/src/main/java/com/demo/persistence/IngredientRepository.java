@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import com.demo.domain.Food;
 import com.demo.domain.Ingredient;
 
 public interface IngredientRepository extends JpaRepository<Ingredient, Integer> {
