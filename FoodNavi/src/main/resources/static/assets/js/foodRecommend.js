@@ -1,51 +1,35 @@
-// 모든 .section 요소를 선택
-var sections = document.querySelectorAll('.foodRecommend .section');
+// // section1 요소를 선택
+// var section1 = document.querySelector('#section1');
+//
+// // 화살표 이미지 요소를 선택
+// var arrowL = document.querySelector('#section1 #arrowL');
+// var arrowR = document.querySelector('#section1 #arrowR');
+//
+// // section1 요소에 마우스가 hover 되었을 때
+// section1.addEventListener('mouseover', function() {
+//     // 화살표 이미지를 표시
+//     arrowL.style.display = 'block';
+//     arrowR.style.display = 'block';
+// });
+//
+// // section1 요소에서 마우스가 떠났을 때
+// section1.addEventListener('mouseout', function() {
+//     // 화살표 이미지를 숨김
+//     arrowL.style.display = 'none';
+//     arrowR.style.display = 'none';
+// });
 
-// 각 .section 요소에 대해 이벤트 리스너를 추가
-sections.forEach(function (section) {
-    // 마우스가 .section 위에 있을 때
-    section.addEventListener('mouseover', function () {
-        // 다른 .section 요소들에 블러 효과를 적용
-        sections.forEach(function (otherSection) {
-            if (otherSection !== section) {
-                otherSection.style.filter = 'blur(2px)';
-            }
-        });
-    });
 
-    // 마우스가 .section을 떠났을 때
-    section.addEventListener('mouseout', function () {
-        // 모든 .section 요소의 블러 효과를 제거
-        sections.forEach(function (otherSection) {
-            otherSection.style.filter = 'none';
-        });
-    });
-});
-
-// section1 요소를 선택
-var section1 = document.querySelector('#section1');
-
-// 화살표 이미지 요소를 선택
-var arrowL = document.querySelector('#section1 #arrowL');
-var arrowR = document.querySelector('#section1 #arrowR');
-
-// section1 요소에 마우스가 hover 되었을 때
-section1.addEventListener('mouseover', function() {
-    // 화살표 이미지를 표시
-    arrowL.style.display = 'block';
-    arrowR.style.display = 'block';
-});
-
-// section1 요소에서 마우스가 떠났을 때
-section1.addEventListener('mouseout', function() {
-    // 화살표 이미지를 숨김
-    arrowL.style.display = 'none';
-    arrowR.style.display = 'none';
-});
-
+// 화면 채크 마크 표시
 var sections = document.getElementsByClassName('section');
 for (var i = 0; i < sections.length; i++) {
-    sections[i].addEventListener('click', function() {
+    sections[i].addEventListener('click', function(event) {
+        // 'quantity' 클래스를 가진 요소를 포함하는 'section' 요소를 클릭한 경우 이벤트 핸들러를 실행하지 않음
+        var quantity = this.querySelector('.quantity');
+        if (quantity && quantity.contains(event.target)) {
+            return;
+        }
+
         var checkmark = this.querySelector('.checkmark');
         if (this.dataset.clicked === 'true') {
             this.style.backgroundColor = ''; // 배경색을 원래대로 복원
@@ -61,4 +45,28 @@ for (var i = 0; i < sections.length; i++) {
             this.dataset.clicked = 'true';
         }
     });
+}
+
+
+// 수량 증가/감소
+var quantities = document.getElementsByClassName('quantity');
+
+for (var i = 0; i < quantities.length; i++) {
+    (function() {
+        var decreaseButton = quantities[i].getElementsByClassName('decrease')[0];
+        var increaseButton = quantities[i].getElementsByClassName('increase')[0];
+        var input = quantities[i].getElementsByClassName('quantity-input')[0];
+
+        decreaseButton.addEventListener('click', function() {
+            var currentValue = Number(input.value);
+            if (currentValue > 0) {
+                input.value = currentValue - 1;
+            }
+        });
+
+        increaseButton.addEventListener('click', function() {
+            var currentValue = Number(input.value);
+            input.value = currentValue + 1;
+        });
+    })();
 }

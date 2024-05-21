@@ -137,7 +137,7 @@ html {
 
 body, input, select, textarea {
     color: #ffffff;
-    font-family: "Source Sans Pro", sans-serif;
+    /*font-family: "Source Sans Pro", sans-serif;*/
     font-weight: 300;
     font-size: 1rem;
     line-height: 1.65;
@@ -2126,4 +2126,27 @@ input[type="number"]{
     transform: translate(-50%, -50%);
     width: 100px; /* 이미지 크기를 조정 */
     height: auto;
+}
+
+.pmIcon {
+    width: 20px;
+    object-fit: cover;
+}
+
+.quantity {
+    display: flex;
+    flex-direction: row;
+}
+
+.quantity button {
+    margin: 8px;
+    width: 19px;
+    height: 25px;
+    padding: 0;
+    box-shadow: none;
+}
+
+.quantity-input {
+    width: 50px;
+    text-align: center;
 }
