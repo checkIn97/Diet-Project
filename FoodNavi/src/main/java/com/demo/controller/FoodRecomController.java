@@ -205,24 +205,38 @@ public class FoodRecomController {
 		foodRecommendVo.setPageInfo(pageInfo);
 		foodRecommendVo.setIndex(1);
 		foodRecommendVo.setTotal(foodRecommendList.size());
-
+		System.out.println("테스트 음식 타입:" + foodRecommendVo.getFoodType());
 		List<IngredientVo> ingredientNameAndAmountList = new ArrayList<>();
+		List<IngredientVo> ingredientNameAndAmountOrderByMainList = new ArrayList<>();
+		List<IngredientVo> ingredientNameAndAmountOrderBySubList = new ArrayList<>();
+		List<IngredientVo> ingredientNameAndAmountOrderByDessertList = new ArrayList<>();
+		List<FoodDetail> foodDetailList = new ArrayList<>();
 		int index = 0;
 		for (FoodVo foodVo : foodRecommendList) {
+			FoodDetail foodDetail = foodRecommendService.getFoodDetailByFseq(foodVo.getFood().getFseq());
 			List<FoodIngredient> foodIngredientList = foodIngredientService.getFoodIngredientListByFood(foodVo.getFood().getFseq());
 			for (FoodIngredient foodIngredient : foodIngredientList) {
 				String ingredientName = ingredientService.findById(foodIngredient.getIngredient().getIseq()).getName();
 				int ingredientAmount = foodIngredient.getAmount();
 				IngredientVo vo = new IngredientVo(index, ingredientName, ingredientAmount);
-				ingredientNameAndAmountList.add(vo);
+//				if (foodDetail.getFoodType().equals("주식")) {
+//					ingredientNameAndAmountOrderByMainList.add(vo);
+//				} else if (foodDetail.getFoodType().equals("부식")) {
+//					ingredientNameAndAmountOrderBySubList.add(vo);
+//				} else if (foodDetail.getFoodType().equals("간식")) {
+//					ingredientNameAndAmountOrderByDessertList.add(vo);
+//				} else {
+					ingredientNameAndAmountList.add(vo);
+//				}
 			}
 			index++;
 		}
-		System.out.println("test!!!!!!!!!!! ingredientName:" + ingredientNameAndAmountList.get(0).getIngredientName());
+		/*
 		for (int i=0; i<ingredientNameAndAmountList.toArray().length; i++) {
 			System.out.println("test!!!!!!!!!!! ingredientIndex:" + ingredientNameAndAmountList.get(i).getCnt());
 			System.out.println("test!!!!!!!!!!! ingredientAmount:" + ingredientNameAndAmountList.get(i).getIngredientAmount());
-		}
+			System.out.println("test!!!!!!!!!!! ingredientName:" + ingredientNameAndAmountList.get(i).getIngredientName());
+		} */
 		System.out.println("-----테스트---------");
 		System.out.println(foodRecommendVo.getFoodRecommendList().get(0).getFood().getName());
 		session.setAttribute("foodRecommendVo", foodRecommendVo);
@@ -231,7 +245,10 @@ public class FoodRecomController {
 		session.setAttribute("foodRecommendList", foodRecommendList);
 		model.addAttribute("userVo", userVo);
 		model.addAttribute("ingredientNameAndAmountList", ingredientNameAndAmountList);
- 		
+		model.addAttribute("ingredientNameAndAmountOrderByMainList", ingredientNameAndAmountOrderByMainList);
+		model.addAttribute("ingredientNameAndAmountOrderBySubList", ingredientNameAndAmountOrderBySubList);
+		model.addAttribute("ingredientNameAndAmountOrderByDessertList", ingredientNameAndAmountOrderByDessertList);
+
  		return "food/foodRecommend";
  	}
 

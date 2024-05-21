@@ -39,28 +39,32 @@
         <h2 class="major">메인 요리</h2>
         <img class="foodImg" src="/assets/images/chicken.png">
         <table class="food-info">
-            <tr>
-                <span class="food-name">닭가슴살 샐러드</span>
+            <tr th:each="foodVo, iterStat : ${foodRecommendVo.foodRecommendList}" th:if="${iterStat.first}">
+                <span class="food-name" th:text="${foodVo.food.name}"></span>
             </tr>
-            <tr>
+            <tr th:each="foodVo, iterStat : ${foodRecommendVo.foodRecommendList}" th:if="${iterStat.first}">
                 <td>칼로리</td>
-                <td><span class="calories">123kal</span></td>
+                <td><span class="calories" th:text="${foodVo.food.foodDetail.kcal}"></span>kal</td>
             </tr>
-            <tr>
+            <tr th:each="foodVo, iterStat : ${foodRecommendVo.foodRecommendList}" th:if="${iterStat.first}">
                 <td>탄수화물</td>
-                <td><span class="carbs">132g</span></td>
+                <td><span class="carbs" th:text="${foodVo.food.foodDetail.carb}"></span>g</td>
             </tr>
-            <tr>
+            <tr th:each="foodVo, iterStat : ${foodRecommendVo.foodRecommendList}" th:if="${iterStat.first}">
                 <td>단백질</td>
-                <td><span class="protein">123g</span></td>
+                <td><span class="protein" th:text="${foodVo.food.foodDetail.prt}"></span>g</td>
             </tr>
-            <tr>
+            <tr th:each="foodVo, iterStat : ${foodRecommendVo.foodRecommendList}" th:if="${iterStat.first}">
                 <td>지방</td>
-                <td><span class="fat">123g</span></td>
+                <td><span class="fat" th:text="${foodVo.food.foodDetail.fat}"></span></td>
             </tr>
             <tr>
                 <td>재료</td>
-                <td><span class="ingredient">샐러드 10g, 닭가슴살 100g, 소금, 10g , 후추,10g, 올리브유 10g</span></td>
+                <td>
+                    <span th:each="ingredientVo : ${ingredientNameAndAmountList}" th:if="${ingredientVo.cnt == 0}">
+                        <span th:text="${ingredientVo.ingredientName + ' ' + ingredientVo.ingredientAmount + 'g'}" th:if="${ingredientVo.cnt == 0}"></span><br>
+                    </span>
+                </td>
             </tr>
             <tr>
                 <td>예상 만족도</td>

@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.demo.domain.FoodDetail;
+import com.demo.persistence.FoodDetailScanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,8 @@ public class FoodRecommendServiceImpl implements FoodRecommendService {
 	private DataInOutService dataInOutService;
 	@Autowired
 	private FoodScanService foodScanService;
+	@Autowired
+	private FoodDetailScanRepository foodDetailScanRepo;
 	
 	@Override
 	public List<FoodVo> getFoodRecommendList(String pyFile, UserVo userVo, List<Food> filteredList) {
@@ -96,5 +100,10 @@ public class FoodRecommendServiceImpl implements FoodRecommendService {
 		return foodRecommendList;
 		
 	}
-	
+
+	@Override
+	public FoodDetail getFoodDetailByFseq(int fseq) {
+		return foodDetailScanRepo.findByFseq(fseq);
+	}
+
 }
