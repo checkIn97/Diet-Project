@@ -2086,6 +2086,7 @@ input[type="number"]{
     font-size: 1.7em; /* 원하는 크기로 조정 */
     font-weight: bold; /* 굵은 글꼴 */
     white-space: nowrap; /*줄바꿈 금지*/
+    margin-top: 10px; /* 위쪽 여백 */
 }
 
 .section {
