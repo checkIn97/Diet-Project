@@ -1,12 +1,11 @@
 package com.demo.controller;
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import com.demo.domain.*;
+import com.demo.dto.IngredientVo;
+import com.demo.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,16 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.demo.domain.Food;
-import com.demo.domain.History;
-import com.demo.domain.Users;
 import com.demo.dto.FoodRecommendVo;
 import com.demo.dto.FoodVo;
 import com.demo.dto.UserVo;
-import com.demo.service.FoodRecommendService;
-import com.demo.service.FoodScanService;
-import com.demo.service.HistoryService;
-import com.demo.service.UsersService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -33,9 +25,16 @@ public class FoodRecomController {
 	
 	@Autowired
 	private FoodScanService foodScanService;
+
 	@Autowired
 	private FoodRecommendService foodRecommendService;
-	
+
+	@Autowired
+	private FoodIngredientService foodIngredientService;
+
+	@Autowired
+	private IngredientService ingredientService;
+
 	@Autowired
 	private HistoryService historyService;
 	
@@ -206,12 +205,32 @@ public class FoodRecomController {
 		foodRecommendVo.setPageInfo(pageInfo);
 		foodRecommendVo.setIndex(1);
 		foodRecommendVo.setTotal(foodRecommendList.size());
-		
+
+		List<IngredientVo> ingredientNameAndAmountList = new ArrayList<>();
+		int index = 0;
+		for (FoodVo foodVo : foodRecommendList) {
+			List<FoodIngredient> foodIngredientList = foodIngredientService.getFoodIngredientListByFood(foodVo.getFood().getFseq());
+			for (FoodIngredient foodIngredient : foodIngredientList) {
+				String ingredientName = ingredientService.findById(foodIngredient.getIngredient().getIseq()).getName();
+				int ingredientAmount = foodIngredient.getAmount();
+				IngredientVo vo = new IngredientVo(index, ingredientName, ingredientAmount);
+				ingredientNameAndAmountList.add(vo);
+			}
+			index++;
+		}
+		System.out.println("test!!!!!!!!!!! ingredientName:" + ingredientNameAndAmountList.get(0).getIngredientName());
+		for (int i=0; i<ingredientNameAndAmountList.toArray().length; i++) {
+			System.out.println("test!!!!!!!!!!! ingredientIndex:" + ingredientNameAndAmountList.get(i).getCnt());
+			System.out.println("test!!!!!!!!!!! ingredientAmount:" + ingredientNameAndAmountList.get(i).getIngredientAmount());
+		}
+		System.out.println("-----테스트---------");
+		System.out.println(foodRecommendVo.getFoodRecommendList().get(0).getFood().getName());
 		session.setAttribute("foodRecommendVo", foodRecommendVo);
 		model.addAttribute("foodRecommendVo", foodRecommendVo);
 		model.addAttribute("foodRecommendList", foodRecommendList);
 		session.setAttribute("foodRecommendList", foodRecommendList);
 		model.addAttribute("userVo", userVo);
+		model.addAttribute("ingredientNameAndAmountList", ingredientNameAndAmountList);
  		
  		return "food/foodRecommend";
  	}
@@ -246,9 +265,22 @@ public class FoodRecomController {
         }
 	     
 		FoodVo foodVo = foodRecommendVo.getFoodRecommendList().get(foodRecommendVo.getIndex());
+		/*
+		List<FoodIngredient> foodIngredientList = foodIngredientService.getFoodIngredientListByFood(foodVo.getFood().getFseq());
+		List<IngredientVo> ingredientNameAndAmountList = new ArrayList<>();
+		int index = 0;
+		for (FoodIngredient foodIngredient : foodIngredientList) {
+			String ingredientName = ingredientService.findById(foodIngredient.getIngredient().getIseq()).getName();
+			int ingredientAmount = foodIngredient.getAmount();
+			IngredientVo vo = new IngredientVo(index, ingredientName, ingredientAmount);
+			ingredientNameAndAmountList.add(vo);
+		}
+		*/
 		model.addAttribute("foodVo", foodVo);		
 		foodRecommendVo = (FoodRecommendVo)session.getAttribute("foodRecommend");
 		model.addAttribute("foodRecommendVo", foodRecommendVo);
+
+		//model.addAttribute("ingredientNameAndAmountList", ingredientNameAndAmountList);
 		
 		return "food/foodRecommend";
 	}

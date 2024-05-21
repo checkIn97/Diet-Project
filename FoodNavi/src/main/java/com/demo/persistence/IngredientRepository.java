@@ -9,10 +9,11 @@ import org.springframework.data.jpa.repository.Query;
 import com.demo.domain.Ingredient;
 
 public interface IngredientRepository extends JpaRepository<Ingredient, Integer> {
+	public Ingredient findById(int iseq);
 	public Optional<Ingredient> findByName(String name);
 	public Ingredient findFirstByOrderByIseqDesc();
 	List<Ingredient> findByNameContainingIgnoreCase(String term);
-	
+
 	@Query("SELECT ingredient FROM Ingredient ingredient, FoodIngredient foodIngredient "
 			+ "WHERE ingredient = foodIngredient.ingredient "
 			+ "AND foodIngredient.food.fseq = :fseq ")

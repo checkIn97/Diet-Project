@@ -181,6 +181,7 @@ public class FoodScanController {
 		model.addAttribute("pageInfo", foodScanVo.getPageInfo());
 		model.addAttribute("foodList", foodScanVo.getFoodList());
 		model.addAttribute("foodScanVo", foodScanVo);
+		session.setAttribute("foodVo", foodVo);
 		
 		return "food_scan/foodDetail";
 	}
@@ -296,5 +297,5 @@ public class FoodScanController {
         rcdService.rcdUpdate(user, food);       
         re.addAttribute("fseq", food.getFseq());
         return "redirect:mypage_like_list";
-	}	
+	}
 }
