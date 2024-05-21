@@ -285,6 +285,8 @@ public class BoardController {
     public String boardEdit(@RequestParam("title") String title,
                             @RequestParam("content") String content,
                             @RequestParam("bseq") int bseq,
+                            @RequestParam("likes") int likes,
+                            @RequestParam("cnt") int cnt,
                             HttpSession session, HttpServletRequest request, Model model) {
 
         // 세션에서 사용자 정보 가져오기
@@ -303,8 +305,10 @@ public class BoardController {
         vo.setTitle(title);
         vo.setContent(content);
         vo.setUser(user);
-
+        vo.setLikes(likes);
+        vo.setCnt(cnt);
         model.addAttribute("userVo", userVo);
+
         boardService.editBoard(vo);
         boardCommentService.updateCommentCount(bseq);
         return "redirect:/board_list"; // 저장 후 리스트 페이지로 리다이렉트합니다.

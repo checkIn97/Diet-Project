@@ -18,6 +18,8 @@
     <h2>커뮤니티 게시글 수정</h2>
     <form name="form" method="post" enctype="multipart/form-data" action="/board_edit">
         <input type="hidden" id="bseq" name="bseq" th:value="${board.bseq}">
+        <input type="hidden" name="likes" th:value="${board.likes}">
+        <input type="hidden" name="cnt" th:value="${board.cnt}">
 
         <div>
             <label for="title">Title:</label>
