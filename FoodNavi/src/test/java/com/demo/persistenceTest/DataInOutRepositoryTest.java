@@ -18,15 +18,24 @@ import com.demo.service.DataInOutService;
 public class DataInOutRepositoryTest {
 	@Autowired
 	DataInOutService dataInOutService;
+
+	@Disabled
+	@Test
+	public void historyInputDummy() {
+		historyInDummy("morning", "50");
+		historyInDummy("lunch", "50");
+		historyInDummy("dinner", "50");
+		historyInDummy("snack", "50");
+	}
 	
-	
+	@Disabled
 	@Test
 	public void totalInput() {
 		// 기본 데이터 입력
 		usersInDummy();
 		ingredientInFromCsv();
 		foodInFromCsv();
-		historyInDummy();
+		historyInputDummy();
 	}
 	
 	@Disabled
@@ -81,12 +90,14 @@ public class DataInOutRepositoryTest {
 	
 	@Disabled
 	@Test
-	public void historyInDummy() {
-		// 현재 생성되어 있는 유저와 음식을 기준으로 완전히 랜덤하게 선택 기록을 생성 
+	public void historyInDummy(String mealTime, String n) {
+		// 현재 생성되어 있는 유저와 음식을 기준으로 완전히 랜덤하게 선택 기록을 생성
+		// 입력매개변수 mealTime은 mealType 생성변수. random : 시간기준, morning : 아침, lunch : 점심, dinner : 저녁, snack : 간식
+		// 입력매개변수 n은 끼니를 생성하는 유저 숫자. all 입력시 모든 User의 끼니 기록 생성. 
 		String csvFile = "tmp_history.csv"; // 생성한 기록이 임시 저장되는 csv 파일
 		String pyFile = "HistoryListToCsv.py"; // 임시 저장된 csv 파일과 기존의 History.csv 파일을 합치는 명령을 수행하는 파이썬 파일
-		String n = "100"; // 새로 생성할 History의 숫자
-		List<History> historyList = dataInOutService.historyInDummy(n);
+		
+		List<History> historyList = dataInOutService.historyInDummy(mealTime, n);
 		dataInOutService.historyListToCsv(historyList);
 	}
 	

@@ -30,4 +30,9 @@ public interface BoardCommentsRepository extends JpaRepository<Comments, Integer
 
 	@Query("SELECT COUNT(c) FROM Comments c WHERE c.board.bseq = :bseq")
 	int countByBoardBseq(int bseq);
+
+	@Query("SELECT c FROM Comments c " +
+			"WHERE c.board.user.useq = ?1 AND c.parentComment IS NULL " +
+			"ORDER BY c.cseq DESC")
+	List<Comments> findCommentsByUseq(int useq);
 }

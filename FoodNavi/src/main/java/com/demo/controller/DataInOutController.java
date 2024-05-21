@@ -56,7 +56,7 @@ public class DataInOutController {
 	// n : 추가할 더미데이터의 숫자
 	@GetMapping("/historyindummy")
 	public String historyInDummy(@RequestParam(value="n", defaultValue="100") String n) {
-		dataInputService.historyInDummy(n);
+		dataInputService.historyInDummy("random", "100");
 		return "redirect:main";
 	}
 	

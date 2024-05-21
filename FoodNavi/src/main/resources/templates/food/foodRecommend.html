@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <th:block th:insert="~{/includes/headerMain}"></th:block>
 <meta charset="UTF-8">
 <script th:inline="javascript">
-	function foodRecord() {
-		var food_name = $("#food_name").text();
-		var food_score = $("#food_score").text();
-		var amount = $("#amount").val();
-		
-		$.ajax({
+    function foodRecord() {
+        var food_name = $("#food_name").text();
+        var food_score = $("#food_score").text();
+        var amount = $("#amount").val();
+
+        $.ajax({
             type: "POST",
             url: "/food_recommend_record",
             data: JSON.stringify({
@@ -17,73 +17,184 @@
                 amount: amount
             }),
             contentType: "application/json",
-            success: function(response) {
+            success: function (response) {
                 alert("성공적으로 기록되었습니다.");
             },
-            error: function(error) {
+            error: function (error) {
                 alert("기록에 실패했습니다.");
             }
         });
-	}
+    }
 </script>
 <h1><a href="/mainpage">FoodNavi</a></h1>
-<!-- myChange -->
-<article id="box">
-    <h2 class="major">[[${userVo.user.name}]] 님을 위한 오늘의 식단</h2>
-    <!--action 비워두도록 하겠습니다. 컨트롤러를 참고해서 넣어주세요.-->
-    <form method="post" action="food_other_recommend">
-        <div class="fields">
-            <div class="field">
-            <table>
-            	<tr th:each="foodvo, iterStat : ${foodRecommendList}" th:if="${iterStat.index < 1}">
-            		<td>
-            			<!--DB에서 가져온 음식정보들-->
-		                <h2 class="major">추천 음식</h2>
-		                <!--#으로 되어있는 것들은 도메인에서 값을 불러와야합니다.-->
-		                <label id="food_name" th:text="${foodvo.food.name}"></label>
-            		</td>
-            		<td>
-	            		<h2 class="major">칼로리</h2>
-	                	<p id="food_kcal" th:text="${foodvo.food.foodDetail.kcal}"></p>
-            		</td>
-            		<td>
-	            		<h2 class="major">탄수화물</h2>
-	                	<p id="food_carb" th:text="${foodvo.food.foodDetail.carb}"></p>
-            		</td>
-            		<td>
-	            		<h2 class="major">단백질</h2>
-	                	<p id="food_prt" th:text="${foodvo.food.foodDetail.prt}"></p>
-            		</td>
-            		<td>
-	            		<h2 class="major">지방</h2>
-	                	<p id="food_fat" th:text="${foodvo.food.foodDetail.fat}"></p>
-            		</td>
-            		<td>
-	            		<h2 class="major">점수</h2>
-	                	<p id="food_score" th:text="${foodvo.score}"></p>
-            		</td>
-            		<td>
-            			<h2 class="major">수량</h2>
-            			<input type="number" id="amount" name="amount" min="0" th:value="0">개
-            		</td>
-            		<td>
-            			<h2 class="major">선택</h2>
-            			<input type="button" value="기록하기" class="button" onclick="foodRecord()"/>
-            		</td>
-            	</tr>
-            </table>
-            </div>
 
-        </div>
-        <ul class="actions">
-            <li><input type="submit" value="다른 음식 추천받기" class="button"/></li>
-        </ul>
-		<a href="/foodTodayHistory_view" class="button">기록 승인</a>
-		<a href="/foodHistory_view" class="button">기록 확인</a>
-        <a href="/foodRecommendation" class="button">이전</a>
-        
+<article class="foodRecommend">
+    <div class="section" id="section1">
+<!--        <span class="arrowBox">-->
+<!--            <img class="arrow" id="arrowL1" src="/assets/images/arrowL.png">-->
+<!--        </span>-->
+<!--        <span class="arrowBox">-->
+<!--            <img class="arrow" id="arrowR1" src="/assets/images/arrowR.png">-->
+<!--        </span>-->
 
-    </form>
+        <img class="checkmark" src="/assets/images/check.png">
+        <h2 class="major">메인 요리</h2>
+        <img class="foodImg" src="/assets/images/chicken.png">
+        <table class="food-info">
+            <tr>
+                <td><span class="food-name">닭가슴살 샐러드</span></td>
+            </tr>
+            <tr>
+                <td>칼로리</td>
+                <td><span class="calories">123kal</span></td>
+            </tr>
+            <tr>
+                <td>탄수화물</td>
+                <td><span class="carbs">132g</span></td>
+            </tr>
+            <tr>
+                <td>단백질</td>
+                <td><span class="protein">123g</span></td>
+            </tr>
+            <tr>
+                <td>지방</td>
+                <td><span class="fat">123g</span></td>
+            </tr>
+            <tr>
+                <td>재료</td>
+                <td><span class="ingredient">샐러드 10g, 닭가슴살 100g, 소금, 10g , 후추,10g, 올리브유 10g</span></td>
+            </tr>
+            <tr>
+                <td>예상 만족도</td>
+                <td><span class="satisfaction">
+      <img class="star" src="/assets/images/star-full.png">
+      <img class="star" src="/assets/images/star-full.png">
+      <img class="star" src="/assets/images/star-full.png">
+      <img class="star" src="/assets/images/star-full.png">
+      <img class="star" src="/assets/images/star-half.png">
+    </span></td>
+            </tr>
+            <tr>
+                <td>수량</td>
+                <td>
+    <span class="quantity">
+        <button class="decrease"><img class="pmIcon" src="/assets/images/minus.png"></button>
+        <input class="quantity-input" min="0" type="number" value="1">
+        <button class="increase"><img class="pmIcon" src="/assets/images/plus.png"></button>
+    </span>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+
+
+
+    <div class="section" id="section2">
+        <h2 class="major">사이드 요리</h2>
+        <img class="checkmark" src="/assets/images/check.png">
+        <img class="foodImg" src="/assets/images/rice.png">
+        <table class="food-info">
+            <tr>
+                <td><span class="food-name">잡곡밥</span></td>
+            </tr>
+            <tr>
+                <td>칼로리</td>
+                <td><span class="calories">123kal</span></td>
+            </tr>
+            <tr>
+                <td>탄수화물</td>
+                <td><span class="carbs">132g</span></td>
+            </tr>
+            <tr>
+                <td>단백질</td>
+                <td><span class="protein">123g</span></td>
+            </tr>
+            <tr>
+                <td>지방</td>
+                <td><span class="fat">123g</span></td>
+            </tr>
+            <tr>
+                <td>재료</td>
+                <td><span class="ingredient">샐러드 10g, 닭가슴살 100g, 소금, 10g , 후추,10g, 올리브유 10g</span></td>
+            </tr>
+            <tr>
+                <td>예상 만족도</td>
+                <td><span class="satisfaction">
+      <img class="star" src="/assets/images/star-full.png">
+      <img class="star" src="/assets/images/star-full.png">
+      <img class="star" src="/assets/images/star-full.png">
+      <img class="star" src="/assets/images/star-half.png">
+      <img class="star" src="/assets/images/star-empty.png">
+    </span></td>
+            </tr>
+            <tr>
+                <td>수량</td>
+                <td>
+    <span class="quantity">
+        <button class="decrease"><img class="pmIcon" src="/assets/images/minus.png"></button>
+        <input class="quantity-input" min="0" type="number" value="1">
+        <button class="increase"><img class="pmIcon" src="/assets/images/plus.png"></button>
+    </span>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="section" id="section3">
+        <h2 class="major">디저트</h2>
+        <img class="checkmark" src="/assets/images/check.png">
+        <img class="foodImg" src="/assets/images/snack.png">
+        <table class="food-info">
+            <tr>
+                <td><span class="food-name">우유 젤리</span></td>
+            </tr>
+            <tr>
+                <td>칼로리</td>
+                <td><span class="calories">123kal</span></td>
+            </tr>
+            <tr>
+                <td>탄수화물</td>
+                <td><span class="carbs">132g</span></td>
+            </tr>
+            <tr>
+                <td>단백질</td>
+                <td><span class="protein">123g</span></td>
+            </tr>
+            <tr>
+                <td>지방</td>
+                <td><span class="fat">123g</span></td>
+            </tr>
+            <tr>
+                <td>재료</td>
+                <td><span class="ingredient">샐러드 10g, 닭가슴살 100g, 소금, 10g , 후추,10g, 올리브유 10g</span></td>
+            </tr>
+            <tr>
+                <td>예상 만족도</td>
+                <td><span class="satisfaction">
+      <img class="star" src="/assets/images/star-full.png">
+      <img class="star" src="/assets/images/star-full.png">
+      <img class="star" src="/assets/images/star-full.png">
+      <img class="star" src="/assets/images/star-full.png">
+      <img class="star" src="/assets/images/star-full.png">
+    </span></td>
+
+            </tr>
+            <tr>
+                <td>수량</td>
+                <td>
+    <span class="quantity">
+        <button class="decrease"><img class="pmIcon" src="/assets/images/minus.png"></button>
+        <input class="quantity-input" min="0" type="number" value="1">
+        <button class="increase"><img class="pmIcon" src="/assets/images/plus.png"></button>
+    </span>
+                </td>
+            </tr>
+        </table>
+    </div>
 </article>
 
+<a class="button" href="/foodTodayHistory_view" id="foodRecord">기록</a>
+
 <th:block th:insert="~{includes/footer}"></th:block>
+<script src="/assets/js/foodRecommend.js/"></script>

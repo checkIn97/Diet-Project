@@ -18,4 +18,6 @@ public interface BoardCommentsService {
 	public void deletAllComment(int bseq);
 
 	public void updateCommentCount(int bseq);
+
+	public List<Comments> getCommentUserList(int useq);
 }
