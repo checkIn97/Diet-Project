@@ -24,8 +24,11 @@
         <tbody>
         <tr th:each="board, iterStat : ${boardBestList}" th:if="${iterStat.index < 3}">
             <td>
-                <div class="popularPosts">[인기] <a th:href="@{'/board_detail/' + ${board.bseq}}"
-                                                  th:text="${board.title + ' ' + '[' + board.commentCount + ']'}"></a></div>
+                <div class="popularPosts">[인기] <a th:href="@{'/board_detail/' + ${board.bseq}}">
+                                                            <span th:text="${board.title}"></span>
+                                                            <img src="/assets/images/reply.png" style="width: 18px; height: 18px; vertical-align: middle; filter: invert(100%);"/>
+                                                            <span th:text="'[' + ${board.commentCount} + ']'"></span>
+                </a></div>
                 <input type="hidden" name="bseq" th:value="${board.bseq}"/></td>
             <td> <a th:href="@{'/board_userList/' + ${board.user.useq}}" th:text="${board.user.userid}"></a>
              <input type="hidden" name="useq" th:value="${board.user.useq}" /></td>
@@ -36,8 +39,10 @@
         <tr th:each="board : ${boardList}">
             <td>
                 <div class="board_list">
-                    <a th:href="@{'/board_detail/' + ${board.bseq}}"
-                       th:text="${board.title + ' ' + '[' + board.commentCount + ']'}"></a><!-- 댓글 수 출력 -->
+                    <a th:href="@{'/board_detail/' + ${board.bseq}}">
+                        <span th:text="${board.title}"></span>
+                        <img src="/assets/images/reply.png" style="width: 18px; height: 18px; vertical-align: middle; filter: invert(100%);"/>
+                        <span th:text="'[' + ${board.commentCount} + ']'"></span></a>
                    </div>
                 <input type="hidden" id="bseq"
                        name="bseq" th:value="${board.bseq}"/></td>
