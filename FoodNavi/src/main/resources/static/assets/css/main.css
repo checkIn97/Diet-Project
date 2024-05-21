@@ -2070,7 +2070,7 @@ input[type="number"]{
     display: block;
     width: 150px; /* 원하는 너비로 설정 */
     object-fit: cover; /* 이미지의 비율을 유지하면서 적절하게 맞춤 */
-    margin: auto; /* 가운데 정렬 */
+    margin: auto auto 20px;
 }
 
 .star {
@@ -2134,30 +2134,44 @@ input[type="number"]{
 
 /*화살표*/
 
-#section1 .arrow {
+.arrow .arrowL {
+    display: none;
     position: absolute;
-    scale: 0.1;
-    top: -300px;
-    transform: translate(-50%, -50%);
+    left: 0; /* 왼쪽에 배치 */
+    top: 50%; /* 상위 요소의 중앙에 배치 */
+    transform: translateY(-50%); /* 자신의 높이의 절반만큼 위로 이동하여 정확히 중앙에 배치 */
+    width: 30px;
+    height: auto;
+    opacity: 0.5; /* 투명도 적용 */
+    padding-top: 50px;
+    padding-bottom: 50px;
 }
 
-.arrowBox {
+.arrow .arrowR {
+    display: none;
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
+    right: 0; /* 오른쪽에 배치 */
+    top: 50%; /* 상위 요소의 중앙에 배치 */
+    transform: translateY(-50%); /* 자신의 높이의 절반만큼 위로 이동하여 정확히 중앙에 배치 */
+    width: 30px;
+    height: auto;
+    opacity: 0.5; /* 투명도 적용 */
+    padding-top: 50px;
+    padding-bottom: 50px;
 }
 
-#section1 .arrowBox {
-    left: 0;
+.arrow .arrowL:hover {
+    opacity: 1; /* 마우스 오버 시 투명도 1로 설정 */
 }
 
-#section2 .arrowBox {
-    left: 50%;
-    transform: translate(-50%, -50%);
+.arrow .arrowR:hover {
+    opacity: 1; /* 마우스 오버 시 투명도 1로 설정 */
 }
 
-#section3 .arrowBox {
-    right: 0;
+#section1_1 {
+    display: none;
 }
 
-
+#section1, #section1_1 {
+    transition: all 0.5s ease;
+}
