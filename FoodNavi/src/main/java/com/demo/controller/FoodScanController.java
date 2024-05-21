@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.demo.domain.Food;
@@ -78,7 +79,6 @@ public class FoodScanController {
 			@RequestParam(value="allergys", defaultValue="") String[] allergys,
 			@RequestParam(value="allergyEtc", defaultValue="") String allergyEtc,
 			@RequestParam(value="vegetarian", defaultValue="0") String vegetarian,
-
 			FoodRecommendVo foodScanVo, Model model, HttpSession session) {
 		
 		// 세션에서 사용자 정보 가져오기
@@ -89,7 +89,8 @@ public class FoodScanController {
         }
         
         UserVo userVo = new UserVo(user);
-		if (page == 0) {
+        
+        if (page == 0) {
 			page = 1;
 			foodScanVo.setSearchField(searchField);
 			foodScanVo.setSearchWord(searchWord);
@@ -134,20 +135,42 @@ public class FoodScanController {
 			foodScanVo.setSortBy(sortBy);
 			foodScanVo.setSortDirection(sortDirection);
 			foodScanVo.setPageMaxDisplay(pageMaxDisplay);
-			List<Food> foodList = foodScanService.getFoodScanList(user, foodScanVo);
-			foodScanVo.setFoodList(foodList);
+			List<Food> foodScanList = foodScanService.getFoodScanList(user, foodScanVo);
+			foodScanVo.setFoodList(foodScanList);
+			if (foodScanVo.isRecommend()) {
+				List<FoodVo> foodRecommendList = foodRecommendService.getFoodRecommendList("Recommend.py", userVo, foodScanList);
+				foodScanVo.setFoodRecommendList(foodRecommendList);
+			}
 		} else {
 			foodScanVo = (FoodRecommendVo)session.getAttribute("foodScanVo");						
 		}
 		
-		List<Food> foodList = foodScanVo.getFoodList();
+        List<Food> foodList = null;
+        List<FoodVo> foodRecommendList = null;
 		Map<String, Integer> pageInfo = new HashMap<>();
-		pageInfo.put("number", page-1);
-		pageInfo.put("size", size);
-		pageInfo.put("totalPages", (foodList.size()+size-1)/size);
-		List<Food> currentList = new ArrayList<>();
-		for (int i = size*(page-1) ; i < Math.min(size*page, foodList.size()) ; i++) {
-			currentList.add(foodList.get(i));
+		List<Food> currentList = null;
+		List<FoodVo> currentRecommendList = null;
+		
+		if (!foodScanVo.isRecommend()) {
+			foodList = foodScanVo.getFoodList();
+			pageInfo = new HashMap<>();
+			pageInfo.put("number", page-1);
+			pageInfo.put("size", size);
+			pageInfo.put("totalPages", (foodList.size()+size-1)/size);
+			currentList = new ArrayList<>();
+			for (int i = size*(page-1) ; i < Math.min(size*page, foodList.size()) ; i++) {
+				currentList.add(foodList.get(i));
+			}
+		} else {
+			foodRecommendList = foodScanVo.getFoodRecommendList();
+			pageInfo = new HashMap<>();
+			pageInfo.put("number", page-1);
+			pageInfo.put("size", size);
+			pageInfo.put("totalPages", (foodRecommendList.size()+size-1)/size);
+			currentRecommendList = new ArrayList<>();
+			for (int i = size*(page-1) ; i < Math.min(size*page, foodRecommendList.size()) ; i++) {
+				currentRecommendList.add(foodRecommendList.get(i));
+			}
 		}
 		
 		foodScanVo.setPageInfo(pageInfo);
@@ -155,6 +178,7 @@ public class FoodScanController {
 		session.setAttribute("foodScanVo", foodScanVo);
 		model.addAttribute("foodScanVo", foodScanVo);
 		model.addAttribute("foodList", currentList);		
+		model.addAttribute("foodRecommendList", currentRecommendList);
 		model.addAttribute("pageInfo", foodScanVo.getPageInfo());
 		model.addAttribute("userVo", userVo);
 		
@@ -171,13 +195,33 @@ public class FoodScanController {
         if (user == null) {
             return "redirect:user_login_form"; // 로그인 페이지로 이동.
         }
+        foodScanVo = (FoodRecommendVo)session.getAttribute("foodScanVo");
+        FoodVo foodVo = null;
+        if (foodScanVo.isRecommend()) {
+        	List<FoodVo> foodVoList = foodScanVo.getFoodRecommendList();
+        	for (FoodVo vo : foodVoList) {
+        		if (vo.getFood().getFseq() == food.getFseq()) {
+        			foodVo = vo;
+        			break;
+        		}
+        	}
+        } else {
+        	food = foodScanService.getFoodByFseq(food.getFseq()); 
+        	foodVo = new FoodVo(food);
+        	
+        }
+        model.addAttribute("foodVo", foodVo);
         
         UserVo userVo = new UserVo(user);
         model.addAttribute("userVo", userVo);
-		food = foodScanService.getFoodByFseq(food.getFseq());
-		FoodVo foodVo = new FoodVo(food);
-		model.addAttribute("foodVo", foodVo);		
-		foodScanVo = (FoodRecommendVo)session.getAttribute("foodScanVo");
+        
+        Map<String, Integer> rcdStatus = new HashMap<>();
+        rcdStatus.put("rcdStatus", rcdService.rcdStatus(user, foodVo.getFood()));        
+        rcdStatus.put("rcdCount", rcdService.getRcdCountByFood(foodVo.getFood()));
+        model.addAttribute("rcdStatus", rcdStatus);
+        System.out.println(rcdStatus.get("rcdStatus"));
+        System.out.println(rcdStatus.get("rcdCount"));
+		
 		model.addAttribute("pageInfo", foodScanVo.getPageInfo());
 		model.addAttribute("foodList", foodScanVo.getFoodList());
 		model.addAttribute("foodScanVo", foodScanVo);
@@ -190,6 +234,7 @@ public class FoodScanController {
 	// 이미 존재하면 새로 추가하지 않고 개수만 늘린다.
 	@PostMapping("/history_in_from_detail")
 	public String historyInFromDetail(HttpSession session, Food food) {
+		System.out.println(1111);
 		// 세션에서 사용자 정보 가져오기
     	Users user = (Users) session.getAttribute("loginUser");
     	// 세션에 로그인 정보가 없는 경우
@@ -269,18 +314,25 @@ public class FoodScanController {
 	
 	// 상세보기에서 음식 추천/해제
 	@GetMapping("rcd_update")
-	public String rcdUpdate(HttpSession session, Food food, RedirectAttributes re) {
+	@ResponseBody
+	public Map<String, Integer> rcdUpdate(HttpSession session, Food food) {
+		System.out.println(1111111111);
+		Map<String, Integer> rcdStatus = new HashMap<>();
 		// 세션에서 사용자 정보 가져오기
     	Users user = (Users) session.getAttribute("loginUser");
     	// 세션에 로그인 정보가 없는 경우
-        if (user == null) {
-            return "redirect:user_login_form"; // 로그인 페이지로 이동.
+        if (user != null) {
+        	food = foodScanService.getFoodByFseq(food.getFseq());
+            int result = rcdService.rcdUpdate(user, food);
+            rcdStatus.put("rcdStatus", result);
+            int rcdCount = rcdService.getRcdCountByFood(food);
+            rcdStatus.put("rcdCount", rcdCount);
+        } else {
+        	rcdStatus.put("rcdStatus", -1);
+        	rcdStatus.put("rcdCount", 0);
         }
         
-        food = foodScanService.getFoodByFseq(food.getFseq());
-        rcdService.rcdUpdate(user, food);       
-        re.addAttribute("fseq", food.getFseq());
-        return "redirect:food_detail";
+        return rcdStatus;
 	}
 	
 	// 마이페이지의 내 추천리스트에서 음식추천 해제

@@ -74,10 +74,6 @@ public class FoodRecommendServiceImpl implements FoodRecommendService {
 					String[] input = text.split(",");
 					Food food = foodScanService.getFoodByFseq(Integer.parseInt(input[0]));
 					FoodVo foodVo = new FoodVo(food, Float.parseFloat(input[1]));
-					float starScore = foodVo.getScore();
-					starScore = (int)(starScore/10)/2f;
-					foodVo.setStarScore(starScore);
-					foodVo.setScoreView((int)(foodVo.getScore()*100));
 					boolean isEqual = foodRecommendList.contains(foodVo);
 					if (!isEqual) {
 						foodRecommendList.add(foodVo);

@@ -95,9 +95,9 @@
 					<td>식사</td>
 					<td colspan="3">
 					<th:block th:each="field, iterStat : ${foodScanVo.mealTimeArray}">
-						<div class="field half  checkbox-button">
-							<input class="btn" type="checkbox" name="mealTime" th:id="${field[0]}" th:value="${field[0]}" th:if="${foodScanVo.mealTime[iterStat.index] == field[0]}" checked/>
-							<input class="btn" type="checkbox" name="mealTime" th:id="${field[0]}" th:value="${field[0]}" th:unless="${foodScanVo.mealTime[iterStat.index] == field[0]}"/>
+						<div class="field half  radio-button">
+							<input class="btn" type="radio" name="mealTime" th:id="${field[0]}" th:value="${field[0]}" onclick="meal_click(this)" th:if="${foodScanVo.mealTime[iterStat.index] == field[0]}" checked/>
+							<input class="btn" type="radio" name="mealTime" th:id="${field[0]}" th:value="${field[0]}" onclick="meal_click(this)" th:unless="${foodScanVo.mealTime[iterStat.index] == field[0]}"/>
 		        			<label th:for="${field[0]}">[[${field[1]}]]</label>
 						</div>
 					</th:block>
@@ -131,6 +131,7 @@ function food_recommend() {
 	$("#recommend").val(true);
 	$("#scanForm").attr("action", "food_scan").submit();
 }
+
 
 </script>
 </html>

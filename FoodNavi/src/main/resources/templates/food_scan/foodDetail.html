@@ -20,7 +20,7 @@
 </style>
 <body>
 <h2>Food Detail</h2>
-<form method="post" action="history_in">
+<form name="food_detail_form" id="food_detail_form" method="post">
     <table>
         <tr>
             <th>이미지</th>
@@ -50,25 +50,83 @@
             <!--<th>지방</th>-->
             <!--<td>[[${foodVo.food.foodDetail.fat}]] g</td>-->
         </tr>
-        <tr>
-            <th>추천 적합도</th>
-            <td></td>
-        </tr>
+        <th:block th:if="${foodScanVo.recommend}">
+	        <tr>
+	            <th>추천점수</th>
+	            <td>
+	            	<span class="satisfaction">
+				    	<img class="star" th:if="${foodVo.starScore == 0}" src="/assets/images/star-empty.png">
+				    	<img class="star" th:if="${foodVo.starScore == 1}" src="/assets/images/star-half.png">
+				    	<img class="star" th:if="${foodVo.starScore >= 2}" src="/assets/images/star-full.png">
+				    	<img class="star" th:if="${foodVo.starScore <= 2}" src="/assets/images/star-empty.png">
+				    	<img class="star" th:if="${foodVo.starScore == 3}" src="/assets/images/star-half.png">
+				    	<img class="star" th:if="${foodVo.starScore >= 4}" src="/assets/images/star-full.png">
+				    	<img class="star" th:if="${foodVo.starScore <= 4}" src="/assets/images/star-empty.png">
+				    	<img class="star" th:if="${foodVo.starScore == 5}" src="/assets/images/star-half.png">
+				    	<img class="star" th:if="${foodVo.starScore >= 6}" src="/assets/images/star-full.png">
+				    	<img class="star" th:if="${foodVo.starScore <= 6}" src="/assets/images/star-empty.png">
+				    	<img class="star" th:if="${foodVo.starScore == 7}" src="/assets/images/star-half.png">
+				    	<img class="star" th:if="${foodVo.starScore >= 8}" src="/assets/images/star-full.png">
+				    	<img class="star" th:if="${foodVo.starScore <= 8}" src="/assets/images/star-empty.png">
+				    	<img class="star" th:if="${foodVo.starScore == 9}" src="/assets/images/star-half.png">
+				    	<img class="star" th:if="${foodVo.starScore >= 10}" src="/assets/images/star-full.png">
+    				</span>		
+			    </td>
+	        </tr>
+        </th:block>
         <tr>
             <th>좋아요</th>
-            <td></td>
+            <td id="rcdCount" onclick="rcd_update(); return false;">
+            	<span th:if="${rcdStatus.rcdStatus == 0}">[[${rcdStatus.rcdCount}]]</span>
+            	<span th:if="${rcdStatus.rcdStatus == 1}" style="color:red">[[${rcdStatus.rcdCount}]]</span>
+           	</td>
         </tr>
     </table>
-    <input type="hidden" name="fseq" th:value="${foodVo.food.fseq}">
-    <input type="submit" value="밥상에 추가하기">
+    <input type="hidden" name="fseq" id="fseq" th:value="${foodVo.food.fseq}">
+    <input type="button" value="기록하기" onclick="history_in()">
+	<a th:href="@{food_scan(page=${pageInfo.number +1})}">
+    	<input type="button" value="목록 보기">
+	</a>    
 </form>
-<a th:href="@{food_scan(page=${pageInfo.number +1})}">
-    <button>목록 보기</button>
-</a>
-<a href="history_confirm">
-    <button>밥상 차리기</button>
-</a>
+
 </body>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="/assets/js/foodDetailChart.js"></script>
+<script>
+
+function history_in() {
+	$("#food_detail_Form").attr("action", "history_in_from_detail").submit();
+}
+
+function show_food_list() {
+	
+}
+
+
+function rcd_update() {
+    $.ajax({
+        type: 'GET',
+        url: '/rcd_update',
+        dataType: 'json',
+        data: $("#fseq"),
+        contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+        success: function (data) {
+        	var result = data.rcdStatus;        	
+            var count = data.rcdCount;
+            var commentCount = data.commentCount;
+            var html = "";            
+            if (result == 1) {
+            	html = "<span style='color:red'>" + count + "</span>";
+            } else if (result == 0) {
+            	html = "<span>" + count + "</span>";
+            }
+            if (result >= 0) {
+            	$("#rcdCount").html(html);
+            }
+        },
+        error: function () {
+        }
+    });
+}
+</script>
 </html>

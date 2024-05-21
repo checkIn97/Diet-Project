@@ -20,7 +20,7 @@ import lombok.ToString;
 public class FoodVo {
 	private Food food = new Food();
 	private float score = 0f;
-	private float starScore = 0f;
+	private int starScore = 0;
 	private int scoreView = 0;
 	private int totalCount = 0;
 	private int count30 = 0;
@@ -33,6 +33,8 @@ public class FoodVo {
 	public FoodVo(Food food, float score) {
 		this.food = food;
 		this.score = score;
+		this.starScore = (int)(score*10);
+		this.scoreView = (int)(score*100);
 	}
 
 	@Override

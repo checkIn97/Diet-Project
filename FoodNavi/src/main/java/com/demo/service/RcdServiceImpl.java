@@ -1,5 +1,8 @@
 package com.demo.service;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,15 +18,37 @@ public class RcdServiceImpl implements RcdService {
 	private RcdRepository rcdRepo;
 	
 	@Override
-	public void rcdUpdate(Users user, Food food) {
-		Rcd rcd = rcdRepo.findByUserAndFood(user, food);
-		if (rcd == null) {
-			rcd = new Rcd();
+	public int rcdStatus(Users user, Food food) {
+		int result = 0;
+		Optional<Rcd> rcdOp = rcdRepo.findByUserAndFood(user, food);
+		if (!rcdOp.isEmpty())
+			result++;		
+		
+		return result;
+	}
+	
+	
+	public int rcdUpdate(Users user, Food food) {
+		int result = 0;
+		Optional<Rcd> rcdOp = rcdRepo.findByUserAndFood(user, food);
+		if (rcdOp.isEmpty()) {
+			Rcd rcd = new Rcd();
 			rcd.setUser(user);
 			rcd.setFood(food);
 			rcdRepo.save(rcd);
+			result = 1;
 		} else {
-			rcdRepo.delete(rcd);
+			rcdRepo.delete(rcdOp.get());
 		}
+		
+		return result;
 	}
+
+	@Override
+	public int getRcdCountByFood(Food food) {
+		List<Rcd> rcdList = rcdRepo.findByFood(food);
+		return rcdList.size();
+	}
+	
+	
 }
