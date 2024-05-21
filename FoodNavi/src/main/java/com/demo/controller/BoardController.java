@@ -2,12 +2,10 @@ package com.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import com.demo.domain.Board;
 import com.demo.domain.Users;
@@ -369,5 +367,19 @@ public class BoardController {
             model.addAttribute("userVo", userVo);
             return "board/boardUserList";
         }
+    }
+
+    @PostMapping("board_like/{bseq}")
+    @ResponseBody
+    public ResponseEntity<String> likePost(@PathVariable("bseq") int bseq) {
+        boardService.likePost(bseq);
+        return ResponseEntity.ok("Liked");
+    }
+
+    @PostMapping("board_unlike/{bseq}")
+    @ResponseBody
+    public ResponseEntity<String> unlikePost(@PathVariable("bseq") int bseq){
+        boardService.unlikePost(bseq);
+        return ResponseEntity.ok("Liked");
     }
 }

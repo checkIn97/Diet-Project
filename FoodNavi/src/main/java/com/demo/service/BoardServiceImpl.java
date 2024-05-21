@@ -57,6 +57,20 @@ public class BoardServiceImpl implements BoardService {
 		return boardRepo.findAuthorList(useq);
 	}
 
+	@Override
+	public void likePost(int bseq) {
+		Board board = boardRepo.findById(bseq).orElseThrow(() -> new RuntimeException("Board not found"));
+		board.setLikes(board.getLikes() + 1);
+		boardRepo.save(board);
+	}
+
+	@Override
+	public void unlikePost(int bseq) {
+		Board board = boardRepo.findById(bseq).orElseThrow(() -> new RuntimeException("Board not found"));
+		board.setLikes(board.getLikes() - 1);
+		boardRepo.save(board);
+	}
+
 
 	@Override
 	public Page<Board> findBoardList(BoardScanVo boardScanVo, int page, int size) {

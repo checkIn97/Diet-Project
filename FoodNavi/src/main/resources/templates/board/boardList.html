@@ -18,6 +18,7 @@
             <th>제목</th>
             <th>작성자</th>
             <th>작성일시</th>
+            <th>추천수</th>
             <th>조회수</th>
         </tr>
         </thead>
@@ -33,6 +34,7 @@
             <td> <a th:href="@{'/board_userList/' + ${board.user.useq}}" th:text="${board.user.userid}"></a>
              <input type="hidden" name="useq" th:value="${board.user.useq}" /></td>
             <td th:text="${#dates.format(board.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
+            <td th:text="${board.likes}"></td>
             <td th:text="${board.cnt}"></td>
         </tr>
 
@@ -50,6 +52,7 @@
                 <input type="hidden" name="useq" th:value="${board.user.useq}" /></td>
             <td
                     th:text="${#dates.format(board.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
+            <td th:text="${board.likes}"></td>
             <td th:text="${board.cnt}"></td>
         </tr>
         </tbody>

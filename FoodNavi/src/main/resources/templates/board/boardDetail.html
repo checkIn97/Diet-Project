@@ -8,7 +8,24 @@
 <script src="https://code.jquery.com/jquery-3.6.3.min.js"
         integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU="
         crossorigin="anonymous"></script>
-
+<style>
+    .like-button-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+        margin-bottom: 10px;
+    }
+    .like-button {
+        font-size: 21px;
+        align-items: center;
+        cursor: pointer;
+        color: #ffffff;
+        mask-size: auto;
+    }
+    .like-button:hover {
+        color: #909097;
+    }
+</style>
 <title>게시글 상세보기</title>
 
 <article class="box">
@@ -37,6 +54,8 @@
 
                 				<p class="content" id="content" th:utext="${board.content}">내용</p>
 
+
+
                 <div class="btn-group">
                     <!-- 작성자만 수정 및 삭제 버튼을 볼 수 있도록 -->
                     <a th:if="${isAuthor}"
@@ -49,6 +68,12 @@
 
                     <!-- 목록으로 돌아가기 -->
                     <a th:href="@{/board_list(page=${pageInfo.number +1})}" class="button">목록으로 돌아가기</a>
+                </div>
+
+                <div class="like-button-container">
+                    <a class="fa fa-thumbs-up like-button" onclick="likePost()">
+                        <span id="likeCount" th:text="${board.likes}">0</span>
+                    </a>
                 </div>
             </div>
         </div>
@@ -75,6 +100,48 @@
         var result = confirm("게시글을 삭제하시겠습니까?");
         return result;
     }
+
+    function likePost() {
+        var bseq = $("input[name='bseq']").val();
+        var likeCount = parseInt($("#likeCount").text());
+
+        // 사용자가 이미 게시물을 추천했는지 확인합니다.
+        var hasLiked = localStorage.getItem("liked_" + bseq);
+        if (hasLiked) {
+            var confirmUnLike = confirm("이미 추천하셨습니다. 추천을 취소하시겠습니까?");
+            if (confirmUnLike) {
+                // 추천을 취소합니다.
+                $.ajax({
+                    type: "POST",
+                    url: "/board_unlike/" + bseq,
+                    success: function (response) {
+                        likeCount--;
+                        $("#likeCount").text(likeCount);
+                        localStorage.removeItem("liked_" + bseq); // 추천 기록 삭제
+                    },
+                    error: function (error) {
+                        alert("추천 취소에 실패하였습니다.");
+                    }
+                });
+            }
+        } else {
+            // 추천을 추가합니다.
+            $.ajax({
+                type: "POST",
+                url: "/board_like/" + bseq,
+                success: function (response) {
+                    likeCount++;
+                    $("#likeCount").text(likeCount);
+                    localStorage.setItem("liked_" + bseq, true); // 추천 기록 추가
+                },
+                error: function (error) {
+                    alert("추천에 실패하였습니다.");
+                }
+            });
+        }
+    }
+
+
 </script>
 
 <script type="text/javascript"

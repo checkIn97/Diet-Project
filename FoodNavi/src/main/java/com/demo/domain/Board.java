@@ -50,5 +50,6 @@ public class Board {
     @Setter
     private int commentCount;
 
-
+	@Column
+	private int likes;
 }

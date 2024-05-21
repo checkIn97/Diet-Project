@@ -26,4 +26,8 @@ public interface BoardService {
 	
 	List<Board> getAuthorBoardList(int useq);
 
+	void likePost(int bseq);
+
+	void unlikePost(int bseq);
+
 }
