@@ -1972,6 +1972,12 @@ button.searchButton {
     width: 100%;
 }
 
+#chatClose {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+
 /*foodDay*/
 .foodContainer {
     display: grid;
