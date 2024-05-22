@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.demo.domain.*;
-import com.demo.dto.IngredientVo;
 import com.demo.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -118,7 +117,7 @@ public class FoodRecomController {
 			@RequestParam(value="allergys", defaultValue="") String[] allergys,
 			@RequestParam(value="allergyEtc", defaultValue="") String allergyEtc,
 			@RequestParam(value="vegetarian", defaultValue="0") String vegetarian,
-			FoodRecommendVo foodRecommendVo, Model model, HttpSession session) {
+			Model model, HttpSession session) {
 		
 		// 세션에서 사용자 정보 가져오기
     	Users user = (Users) session.getAttribute("loginUser");
@@ -128,126 +127,124 @@ public class FoodRecomController {
         }
 		
 		UserVo userVo = new UserVo(user);
+		FoodRecommendVo foodRecommendVo1 = new FoodRecommendVo();
+		FoodRecommendVo foodRecommendVo2 = new FoodRecommendVo();
+		FoodRecommendVo foodRecommendVo3 = new FoodRecommendVo();
+		FoodRecommendVo[] foodRecommendVoArray = {foodRecommendVo1, foodRecommendVo2, foodRecommendVo3};
 		if (page == 0) {
 			page = 1;
-			foodRecommendVo.setSearchField(searchField);
-			foodRecommendVo.setSearchWord(searchWord);
-			foodRecommendVo.setBanField(banField);
-			foodRecommendVo.setBanWord(banWord);
-			foodRecommendVo.setSearchName(searchName);
-			foodRecommendVo.setSearchIngredient(searchIngredient);
-			foodRecommendVo.setBanName(banName);
-			foodRecommendVo.setBanIngredient(banIngredient);
-			
-			List<String> mealTimeList = Arrays.asList(mealTime);
-			mealTime = new String[foodRecommendVo.getMealTimeArray().length];
-			for (int i = 0 ; i < foodRecommendVo.getMealTimeArray().length ; i++) {
-				String meal = foodRecommendVo.getMealTimeArray()[i][0];
-				if (mealTimeList.size() == 0 || mealTimeList.contains(meal)) {
-					mealTime[i] = meal;
-				} else {
-					mealTime[i] = "";
-				}					
+			for (int h = 0 ; h < 3 ; h++ ) {
+				FoodRecommendVo foodRecommendVo = foodRecommendVoArray[h];
+				foodRecommendVo.setSearchField(searchField);
+				foodRecommendVo.setSearchWord(searchWord);
+				foodRecommendVo.setBanField(banField);
+				foodRecommendVo.setBanWord(banWord);
+				foodRecommendVo.setSearchName(searchName);
+				foodRecommendVo.setSearchIngredient(searchIngredient);
+				foodRecommendVo.setBanName(banName);
+				foodRecommendVo.setBanIngredient(banIngredient);
+				
+				List<String> mealTimeList = Arrays.asList(mealTime);
+				String[] mealType = new String[foodRecommendVo.getMealTimeArray().length];
+				for (int i = 0 ; i < foodRecommendVo.getMealTimeArray().length ; i++) {
+					String meal = foodRecommendVo.getMealTimeArray()[i][0];
+					if (mealTimeList.size() == 0 || mealTimeList.contains(meal)) {
+						mealType[i] = meal;
+					} else {
+						mealType[i] = "";
+					}					
+				}
+				foodRecommendVo.setMealTime(mealType);
+				String lastMealType = null;
+				if (mealTimeList.size() !=0 )
+					lastMealType = mealTimeList.get(0);
+				userVo.setLastMealType(lastMealType);
+	
+				foodRecommendVo.setFoodType("all");
+				
+				foodRecommendVo.setPurpose(purpose);
+				user.setUserGoal(purpose);
+				
+				foodRecommendVo.setDietType(dietType);
+				user.setDietType(dietType);
+	
+				List<String> allergyList = Arrays.asList(allergys);
+				allergys = new String[foodRecommendVo.getAllergyArray().length];
+				for (int i = 0 ; i < foodRecommendVo.getAllergyArray().length ; i++) {
+					String allergy = foodRecommendVo.getAllergyArray()[i][0];
+					if (allergyList.contains(allergy)) {
+						allergys[i] = "y";
+					} else {
+						allergys[i] = "a";
+					}					
+				}
+				foodRecommendVo.setAllergys(allergys);
+				user.setNo_egg(allergys[0]);
+				user.setNo_milk(allergys[1]);
+				user.setNo_bean(allergys[2]);
+				user.setNo_shellfish(allergys[3]);
+				
+				foodRecommendVo.setAllergyEtc(allergyEtc);
+				user.setNo_ingredient(allergyEtc);
+				
+				foodRecommendVo.setVegetarian(vegetarian);
+				user.setVegetarian(vegetarian);
+				
+				foodRecommendVo.setRecommend(recommend);
+				foodRecommendVo.setSortBy(sortBy);
+				foodRecommendVo.setSortDirection(sortDirection);
+				foodRecommendVo.setPageMaxDisplay(pageMaxDisplay);
 			}
-			foodRecommendVo.setMealTime(mealTime);
-			String mealType = null;
-			if (mealTimeList.size() !=0 )
-				mealType = mealTimeList.get(0);
-			userVo.setLastMealType(mealType);
-
-			foodRecommendVo.setFoodType(foodType);
-			
-			foodRecommendVo.setPurpose(purpose);
-			user.setUserGoal(purpose);
-			
-			foodRecommendVo.setDietType(dietType);
-			user.setDietType(dietType);
-
-			List<String> allergyList = Arrays.asList(allergys);
-			allergys = new String[foodRecommendVo.getAllergyArray().length];
-			for (int i = 0 ; i < foodRecommendVo.getAllergyArray().length ; i++) {
-				String allergy = foodRecommendVo.getAllergyArray()[i][0];
-				if (allergyList.contains(allergy)) {
-					allergys[i] = "y";
-				} else {
-					allergys[i] = "a";
-				}					
-			}
-			foodRecommendVo.setAllergys(allergys);
-			user.setNo_egg(allergys[0]);
-			user.setNo_milk(allergys[1]);
-			user.setNo_bean(allergys[2]);
-			user.setNo_shellfish(allergys[3]);
-			
-			foodRecommendVo.setAllergyEtc(allergyEtc);
-			user.setNo_ingredient(allergyEtc);
-			
-			foodRecommendVo.setVegetarian(vegetarian);
-			user.setVegetarian(vegetarian);
-			usersService.insertUser(user);			
-			
-			foodRecommendVo.setRecommend(recommend);
-			foodRecommendVo.setSortBy(sortBy);
-			foodRecommendVo.setSortDirection(sortDirection);
-			foodRecommendVo.setPageMaxDisplay(pageMaxDisplay);
+			FoodRecommendVo foodRecommendVo = foodRecommendVoArray[0];
 			List<Food> filteredList = foodScanService.getFoodScanList(user, foodRecommendVo);
 			foodRecommendVo.setFoodList(filteredList);
 			List<FoodVo> foodRecommendList = foodRecommendService.getFoodRecommendList("Recommend.py", userVo, filteredList);
-			foodRecommendVo.setFoodRecommendList(foodRecommendList);
-		} else {
-			foodRecommendVo = (FoodRecommendVo)session.getAttribute("foodRecommendVo");						
-		}
-		List<FoodVo> foodRecommendList = foodRecommendVo.getFoodRecommendList();
-		Map<String, Integer> pageInfo = new HashMap<>();
-		pageInfo.put("number", page);
-		pageInfo.put("size", size);
-		pageInfo.put("totalPages", (foodRecommendList.size()+size-1)/size);
-		foodRecommendVo.setPageInfo(pageInfo);
-		foodRecommendVo.setIndex(1);
-		foodRecommendVo.setTotal(foodRecommendList.size());
-		System.out.println("테스트 음식 타입:" + foodRecommendVo.getFoodType());
-		List<IngredientVo> ingredientNameAndAmountList = new ArrayList<>();
-		List<IngredientVo> ingredientNameAndAmountOrderByMainList = new ArrayList<>();
-		List<IngredientVo> ingredientNameAndAmountOrderBySubList = new ArrayList<>();
-		List<IngredientVo> ingredientNameAndAmountOrderByDessertList = new ArrayList<>();
-		List<FoodDetail> foodDetailList = new ArrayList<>();
-		int index = 0;
-		for (FoodVo foodVo : foodRecommendList) {
-			FoodDetail foodDetail = foodRecommendService.getFoodDetailByFseq(foodVo.getFood().getFseq());
-			List<FoodIngredient> foodIngredientList = foodIngredientService.getFoodIngredientListByFood(foodVo.getFood().getFseq());
-			for (FoodIngredient foodIngredient : foodIngredientList) {
-				String ingredientName = ingredientService.findById(foodIngredient.getIngredient().getIseq()).getName();
-				int ingredientAmount = foodIngredient.getAmount();
-				IngredientVo vo = new IngredientVo(index, ingredientName, ingredientAmount);
-//				if (foodDetail.getFoodType().equals("주식")) {
-//					ingredientNameAndAmountOrderByMainList.add(vo);
-//				} else if (foodDetail.getFoodType().equals("부식")) {
-//					ingredientNameAndAmountOrderBySubList.add(vo);
-//				} else if (foodDetail.getFoodType().equals("간식")) {
-//					ingredientNameAndAmountOrderByDessertList.add(vo);
-//				} else {
-					ingredientNameAndAmountList.add(vo);
-//				}
+			
+			for (int h = 0 ; h < 3 ; h++) {
+				List<FoodVo> list = new ArrayList<>();
+				for (FoodVo fv : foodRecommendList) {
+					if (fv.getFood().getFoodDetail().getFoodType().equals(foodRecommendVo.getFoodTypeCategory()[h+1][0])) {
+						list.add(fv);
+					}
+					foodRecommendVoArray[h].setFoodRecommendList(list);
+				}
 			}
-			index++;
+
+			usersService.insertUser(user);
+			
+		} else {
+			foodRecommendVoArray = (FoodRecommendVo[])session.getAttribute("foodRecommendVoArray");						
 		}
-		/*
-		for (int i=0; i<ingredientNameAndAmountList.toArray().length; i++) {
-			System.out.println("test!!!!!!!!!!! ingredientIndex:" + ingredientNameAndAmountList.get(i).getCnt());
-			System.out.println("test!!!!!!!!!!! ingredientAmount:" + ingredientNameAndAmountList.get(i).getIngredientAmount());
-			System.out.println("test!!!!!!!!!!! ingredientName:" + ingredientNameAndAmountList.get(i).getIngredientName());
-		} */
-		System.out.println("-----테스트---------");
-		System.out.println(foodRecommendVo.getFoodRecommendList().get(0).getFood().getName());
-		session.setAttribute("foodRecommendVo", foodRecommendVo);
-		model.addAttribute("foodRecommendVo", foodRecommendVo);
-		model.addAttribute("foodRecommendList", foodRecommendList);
-		session.setAttribute("foodRecommendList", foodRecommendList);
+		
+		Map<String, Integer> pageInfo = null;
+		for (int i = 0 ; i < 3 ; i++) {
+			List<FoodVo> foodRecommendList = foodRecommendVoArray[i].getFoodRecommendList();
+			pageInfo = new HashMap<>();
+			pageInfo.put("number", page);
+			pageInfo.put("size", size);
+			pageInfo.put("totalPages", (foodRecommendList.size()+size-1)/size);
+			foodRecommendVoArray[i].setPageInfo(pageInfo);
+			foodRecommendVoArray[i].setIndex(1);
+			foodRecommendVoArray[i].setTotal(foodRecommendList.size());
+		}
+		
+		session.setAttribute("foodRecommendVoArray", foodRecommendVoArray);
+		model.addAttribute("foodRecommendVo1", foodRecommendVoArray[0]);
+		model.addAttribute("foodRecommendVo2", foodRecommendVoArray[1]);
+		model.addAttribute("foodRecommendVo3", foodRecommendVoArray[2]);
+		model.addAttribute("foodRecommendList1", foodRecommendVoArray[0].getFoodRecommendList());
+		model.addAttribute("foodRecommendList2", foodRecommendVoArray[1].getFoodRecommendList());
+		model.addAttribute("foodRecommendList3", foodRecommendVoArray[2].getFoodRecommendList());
 		model.addAttribute("userVo", userVo);
-		model.addAttribute("ingredientNameAndAmountList", ingredientNameAndAmountList);
-		model.addAttribute("ingredientNameAndAmountOrderByMainList", ingredientNameAndAmountOrderByMainList);
-		model.addAttribute("ingredientNameAndAmountOrderBySubList", ingredientNameAndAmountOrderBySubList);
-		model.addAttribute("ingredientNameAndAmountOrderByDessertList", ingredientNameAndAmountOrderByDessertList);
+		
+		System.out.println();
+		System.out.println(foodRecommendVoArray[0].getFoodType());
+		System.out.println();
+		System.out.println(foodRecommendVoArray[1].getFoodType());
+		System.out.println();
+		System.out.println(foodRecommendVoArray[2].getFoodType());
+		System.out.println();
+		
 
  		return "food/foodRecommend";
  	}

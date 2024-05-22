@@ -1,10 +1,8 @@
 package com.demo.dto;
 
-import java.util.List;
 import java.util.Objects;
 
 import com.demo.domain.Food;
-import com.demo.domain.FoodIngredient;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,7 +22,10 @@ public class FoodVo {
 	private int scoreView = 0;
 	private int totalCount = 0;
 	private int count30 = 0;
-	private List<FoodIngredient> foodIngredientList = null;
+	private String kcal = "";
+	private String carb = "";
+	private String prt = "";
+	private String fat = "";
 	
 	public FoodVo(Food food) {
 		this.food = food;
@@ -35,6 +36,10 @@ public class FoodVo {
 		this.score = score;
 		this.starScore = (int)(score*10);
 		this.scoreView = (int)(score*100);
+		this.kcal = String.valueOf(Math.round((food.getFoodDetail().getKcal())));
+		this.carb = String.valueOf(Math.round((food.getFoodDetail().getCarb()*100))/100f);
+		this.prt = String.valueOf(Math.round((food.getFoodDetail().getPrt()*100))/100f);
+		this.fat = String.valueOf(Math.round((food.getFoodDetail().getFat()*100))/100f);
 	}
 
 	@Override

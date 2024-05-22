@@ -111,6 +111,13 @@ public class FoodScanController {
 					mealTime[i] = "";
 				}					
 			}
+			String lastMealTime = ""; 
+			if (mealTimeList.size() == 0) {
+				lastMealTime = "all";
+			} else {
+				lastMealTime = mealTimeList.get(0);
+			}			
+			userVo.setLastMealType(lastMealTime);
 			foodScanVo.setMealTime(mealTime);
 			
 			foodScanVo.setFoodType(foodType);

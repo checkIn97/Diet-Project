@@ -1,5 +1,7 @@
 package com.demo.domain;
 
+import java.util.List;
+
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -8,7 +10,6 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
@@ -37,4 +38,8 @@ public class Food {
 	
 	@OneToOne(mappedBy="food", fetch=FetchType.EAGER)
 	private FoodDetail foodDetail;
+	
+	@OneToMany(mappedBy="food", fetch=FetchType.EAGER)
+	private List<FoodIngredient> foodIngredientList;
+	
 }

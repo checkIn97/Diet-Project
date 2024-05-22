@@ -1,6 +1,5 @@
 package com.demo.domain;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.annotations.ColumnDefault;
@@ -63,6 +62,6 @@ public class Users {
 	private String vegetarian;
 	
 	@OneToMany(mappedBy="user", fetch=FetchType.EAGER)
-	private List<Rcd> likeList = new ArrayList<>();
+	private List<Rcd> likeList;
 	
 }

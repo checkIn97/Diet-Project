@@ -24,7 +24,7 @@ public class FoodScanRepositoryTest {
 	@Test
 	public void getLastFood() {
 		Food food = foodScanRepo.findFirstByOrderByFseqDesc();
-		System.out.println(food);
+		System.out.println(food.getName());
 	}
 	
 	
