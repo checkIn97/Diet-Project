@@ -45,8 +45,8 @@ public class UserChange {
 	@Column(updatable=false)
 	private Date createdAt;
 	
-	private int height;	
-	private int weight;	
+	private float height;
+	private float weight;
 	private int age;
 	private String sex;	
 	

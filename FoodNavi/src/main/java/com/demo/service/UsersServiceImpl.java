@@ -1,20 +1,25 @@
 package com.demo.service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import com.demo.domain.UserChange;
+import com.demo.persistence.UserChangeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.demo.domain.Users;
 import com.demo.persistence.UsersRepository;
 
-import jakarta.servlet.http.HttpSession;
-
 @Service
 public class UsersServiceImpl implements UsersService {
 	
 	@Autowired
 	private UsersRepository usersRepo;
+
+	@Autowired
+	private UserChangeRepository userChangeRepo;
 	
 	@Override
 	public void insertUser(Users vo) {
@@ -74,4 +79,15 @@ public class UsersServiceImpl implements UsersService {
 		
 		return result;
 	}
+
+	@Override
+	public List<UserChange> getWeightList(Users user) {
+		List<UserChange> allChanges = userChangeRepo.findRecentChanges(user);
+		return allChanges.stream()
+				.limit(10) // 최근 10개의 데이터만 가져오기
+				.collect(Collectors.toList());
+	}
 }
+
+
+

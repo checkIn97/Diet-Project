@@ -29,6 +29,10 @@ public class FoodVo {
 	
 	public FoodVo(Food food) {
 		this.food = food;
+		this.kcal = String.format("%d", Math.round((food.getFoodDetail().getKcal())));
+		this.carb = String.format("%.2f", Math.round((food.getFoodDetail().getCarb()*100))/100f);
+		this.prt = String.format("%.2f", Math.round((food.getFoodDetail().getPrt()*100))/100f);
+		this.fat = String.format("%.2f", Math.round((food.getFoodDetail().getFat()*100))/100f);
 	}
 	
 	public FoodVo(Food food, float score) {

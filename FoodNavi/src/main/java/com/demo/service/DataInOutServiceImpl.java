@@ -737,29 +737,16 @@ public class DataInOutServiceImpl implements DataInOutService {
 			String mealTime = "";
 			Date now = new Date();
 			if (mealType.equals("random")) {
-				int hour = now.getHours();
-				if (hour < 5) {
-					mealTime = "snack";
-					snack = mealTime;
-				} else if (hour < 8) {
-					mealTime = "morning";
+				mealTime = foodRecommendVo.getMealTimeByTime();
+				if (mealTime.equals("morning")) {
 					morning = mealTime;
-				} else if (hour < 11) {
-					mealTime = "snack";
-					snack = mealTime;
-				} else if (hour < 14) {
-					mealTime = "lunch";
+				} else if (mealTime.equals("lunch")) {
 					lunch = mealTime;
-				} else if (hour < 17) {
-					mealTime = "snack";
-					snack = mealTime;
-				} else if (hour < 20) {
-					mealTime = "dinner";
+				} else if (mealTime.equals("dinner")) {
 					dinner = mealTime;
 				} else {
-					mealTime = "snack";
 					snack = mealTime;
-				}
+				}				
 			} else if(mealType.equals("morning")) {
 				mealTime = "morning";
 				morning = mealTime;
@@ -1159,22 +1146,22 @@ public class DataInOutServiceImpl implements DataInOutService {
 					if (Math.random()*100 < 3) {
 						user.setNo_egg("y");
 					} else {
-						user.setNo_egg("n");
+						user.setNo_egg("a");
 					}
 					if (Math.random()*100 < 3) {
 						user.setNo_milk("y");
 					} else {
-						user.setNo_milk("n");
+						user.setNo_milk("a");
 					}
 					if (Math.random()*100 < 3) {
 						user.setNo_bean("y");
 					} else {
-						user.setNo_bean("n");
+						user.setNo_bean("a");
 					}
 					if (Math.random()*100 < 3) {
 						user.setNo_shellfish("y");
 					} else {
-						user.setNo_shellfish("n");
+						user.setNo_shellfish("a");
 					}
 					user.setNo_ingredient("");
 					

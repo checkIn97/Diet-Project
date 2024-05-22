@@ -79,6 +79,7 @@ public class FoodScanController {
 			@RequestParam(value="allergys", defaultValue="") String[] allergys,
 			@RequestParam(value="allergyEtc", defaultValue="") String allergyEtc,
 			@RequestParam(value="vegetarian", defaultValue="0") String vegetarian,
+			@RequestParam(value="scan", defaultValue="false") boolean scan,
 			FoodRecommendVo foodScanVo, Model model, HttpSession session) {
 		
 		// 세션에서 사용자 정보 가져오기
@@ -90,7 +91,7 @@ public class FoodScanController {
         
         UserVo userVo = new UserVo(user);
         
-        if (page == 0) {
+        if (page == 0 && scan) {
 			page = 1;
 			foodScanVo.setSearchField(searchField);
 			foodScanVo.setSearchWord(searchWord);
@@ -113,7 +114,7 @@ public class FoodScanController {
 			}
 			String lastMealTime = ""; 
 			if (mealTimeList.size() == 0) {
-				lastMealTime = "all";
+				lastMealTime = foodScanVo.getMealTimeByTime();
 			} else {
 				lastMealTime = mealTimeList.get(0);
 			}			
@@ -148,6 +149,51 @@ public class FoodScanController {
 				List<FoodVo> foodRecommendList = foodRecommendService.getFoodRecommendList("Recommend.py", userVo, foodScanList);
 				foodScanVo.setFoodRecommendList(foodRecommendList);
 			}
+		} else if (page == 0 && !scan) {
+			page = 1;
+			foodScanVo.setSearchField(searchField);
+			foodScanVo.setSearchName(searchName);
+			foodScanVo.setSearchIngredient(searchIngredient);
+			foodScanVo.setSearchWord(searchWord);
+			foodScanVo.setBanName(banName);
+			if (user.getNo_ingredient() == null || user.getNo_ingredient().equals("")) {
+				foodScanVo.setBanField(banField);
+				foodScanVo.setBanIngredient(banIngredient);
+				foodScanVo.setBanWord(banWord);
+			} else {
+				foodScanVo.setBanField(foodScanVo.getSearchType()[1][0]);
+				foodScanVo.setBanIngredient(user.getNo_ingredient());
+				foodScanVo.setBanWord(user.getNo_ingredient());
+			}			
+			
+			String currentMealTime = foodScanVo.getMealTimeByTime();
+			mealTime = new String[foodScanVo.getMealTimeArray().length];
+			for (int i = 0 ; i < foodScanVo.getMealTimeArray().length ; i++) {
+				String meal = foodScanVo.getMealTimeArray()[i][0];
+				if (meal.equals(currentMealTime)) {
+					mealTime[i] = meal;
+				} else {
+					mealTime[i] = "";
+				}
+			}
+			userVo.setLastMealType(currentMealTime);
+			foodScanVo.setMealTime(mealTime);
+			
+			foodScanVo.setFoodType(foodType);
+			foodScanVo.setPurpose(user.getUserGoal());
+			foodScanVo.setDietType(user.getDietType());
+
+			foodScanVo.setAllergys(new String[] {user.getNo_egg(), user.getNo_milk(), user.getNo_bean(), user.getNo_shellfish()});
+			foodScanVo.setVegetarian(user.getVegetarian());
+			foodScanVo.setRecommend(recommend);
+			foodScanVo.setSortBy(sortBy);
+			foodScanVo.setSortDirection(sortDirection);
+			foodScanVo.setPageMaxDisplay(pageMaxDisplay);
+			String tmp_allergyEtc = foodScanVo.getAllergyEtc();
+			foodScanVo.setAllergyEtc("");
+			List<Food> foodScanList = foodScanService.getFoodScanList(user, foodScanVo);
+			foodScanVo.setAllergyEtc(tmp_allergyEtc);
+			foodScanVo.setFoodList(foodScanList);
 		} else {
 			foodScanVo = (FoodRecommendVo)session.getAttribute("foodScanVo");						
 		}
@@ -155,7 +201,7 @@ public class FoodScanController {
         List<Food> foodList = null;
         List<FoodVo> foodRecommendList = null;
 		Map<String, Integer> pageInfo = new HashMap<>();
-		List<Food> currentList = null;
+		List<FoodVo> currentList = null;
 		List<FoodVo> currentRecommendList = null;
 		
 		if (!foodScanVo.isRecommend()) {
@@ -166,7 +212,7 @@ public class FoodScanController {
 			pageInfo.put("totalPages", (foodList.size()+size-1)/size);
 			currentList = new ArrayList<>();
 			for (int i = size*(page-1) ; i < Math.min(size*page, foodList.size()) ; i++) {
-				currentList.add(foodList.get(i));
+				currentList.add(new FoodVo(foodList.get(i)));
 			}
 		} else {
 			foodRecommendList = foodScanVo.getFoodRecommendList();
