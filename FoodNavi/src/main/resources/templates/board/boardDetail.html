@@ -105,26 +105,6 @@
         var bseq = $("input[name='bseq']").val();
         var likeCount = parseInt($("#likeCount").text());
 
-        // 사용자가 이미 게시물을 추천했는지 확인합니다.
-        var hasLiked = localStorage.getItem("liked_" + bseq);
-        if (hasLiked) {
-            var confirmUnLike = confirm("이미 추천하셨습니다. 추천을 취소하시겠습니까?");
-            if (confirmUnLike) {
-                // 추천을 취소합니다.
-                $.ajax({
-                    type: "POST",
-                    url: "/board_unlike/" + bseq,
-                    success: function (response) {
-                        likeCount--;
-                        $("#likeCount").text(likeCount);
-                        localStorage.removeItem("liked_" + bseq); // 추천 기록 삭제
-                    },
-                    error: function (error) {
-                        alert("추천 취소에 실패하였습니다.");
-                    }
-                });
-            }
-        } else {
             // 추천을 추가합니다.
             $.ajax({
                 type: "POST",
@@ -138,7 +118,7 @@
                     alert("추천에 실패하였습니다.");
                 }
             });
-        }
+
     }
 
 
