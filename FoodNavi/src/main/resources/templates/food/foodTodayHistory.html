@@ -35,6 +35,32 @@ function historyRecord() {
 
 	
 function subtract_history(button) {
+	var historyData = [];
+	$("#box table tr").each(function() {
+		var food_name = $(this).find("input[name='history_food_name']").val();
+		var serveNumber = $(this).find("input[name='history_serveNumber']").val();
+		var hseq = $(this).find("input[name='delete_hseq']").val();
+
+		historyData.push({
+			food_name: food_name,
+			serveNumber: serveNumber,
+			hseq: hseq
+		});
+	});
+
+	$.ajax({
+		type: "POST",
+		url: "/delete_history_record",
+		data: JSON.stringify(historyData),
+		contentType: "application/json",
+		success: function(response) {
+			alert("성공적으로 삭제했습니다.");
+		},
+		error: function(error) {
+			alert("삭제에 실패했습니다.");
+		}
+	});
+
 	$(button).closest('tr').remove();
 }
 </script>
@@ -51,10 +77,11 @@ function subtract_history(button) {
             		<td>
             			<h2 class="major">승인 대기 목록</h2>
 		                <input type="text" name="history_food_name" id="history_food_name" th:value="${nc_history.food.name}" readOnly>
+						<input type="hidden" id="delete_hseq" name="delete_hseq" th:value="${nc_history.hseq}">
             		</td>
             		<td>
             			<h2 class="major">수량</h2>
-		                <input type="number" name="history_serveNumber" id="history_serveNumber" th:value="${nc_history.serveNumber}">
+		                <input type="text" name="history_serveNumber" id="history_serveNumber" th:value="${nc_history.serveNumber}" readonly>
             		</td>
             		<td>
             			<h2 class="major">제외</h2>
