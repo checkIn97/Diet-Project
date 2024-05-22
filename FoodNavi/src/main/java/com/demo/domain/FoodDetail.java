@@ -42,7 +42,6 @@ public class FoodDetail {
 	
 	private String foodType;
 
-
 	@OneToOne
 	@JoinColumn(name="fseq", nullable=false)
 	private Food food;
