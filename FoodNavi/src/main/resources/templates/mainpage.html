@@ -29,7 +29,11 @@
                     <div id="kcalChart" class="chart">
                         <div class="chart-bar"></div>
                     </div>
-                    <a class="userBodyNum">[[${userVo.kcalToday}]]kcal/[[${userVo.EER}]]kcal</a>
+                    <a class="userBodyNum">
+                        <span th:if="${userVo.kcalToday < userVo.EER}">[[${userVo.kcalToday}]]kcal/[[${userVo.EER}]]kcal</span>
+                        <span th:if="${userVo.kcalToday == userVo.EER}"><strong style="color: green">[[${userVo.kcalToday}]]kcal</strong>/[[${userVo.EER}]]kcal</span>
+                        <span th:if="${userVo.kcalToday > userVo.EER}"><strong style="color: red">[[${userVo.kcalToday}]]kcal</strong>/[[${userVo.EER}]]kcal</span>
+                    </a>
                 </div>
 
                 <div class="chart-container">
@@ -38,21 +42,33 @@
                         <div id="carbohydrateChart" class="chart">
                             <div class="chart-bar"></div>
                         </div>
-                        <a class="userBodyNum">[[${userVo.carbToday}]]g/[[${userVo.properCarb}]]g</a>
+                        <a class="userBodyNum">
+                            <span th:if="${userVo.carbToday < userVo.properCarb}">[[${userVo.carbToday}]]g/[[${userVo.properCarb}]]g</span>
+                            <span th:if="${userVo.carbToday == userVo.properCarb}"><strong style="color: green">[[${userVo.carbToday}]]g</strong>/[[${userVo.properCarb}]]g</span>
+                            <span th:if="${userVo.carbToday > userVo.properCarb}"><strong style="color: red">[[${userVo.carbToday}]]g</strong>/[[${userVo.properCarb}]]g</span>
+                        </a>
                     </div>
                     <div>
                         <label for="proteinChart" class="userBodyText">단백질</label>
                         <div id="proteinChart" class="chart">
                             <div class="chart-bar"></div>
                         </div>
-                        <a class="userBodyNum">[[${userVo.prtToday}]]g/[[${userVo.properPrt}]]g</a>
+                        <a class="userBodyNum">
+                            <span th:if="${userVo.prtToday < userVo.properPrt}">[[${userVo.prtToday}]]g/[[${userVo.properPrt}]]g</span>
+                            <span th:if="${userVo.prtToday == userVo.properPrt}"><strong style="color:green">[[${userVo.prtToday}]]g</strong>/[[${userVo.properPrt}]]g</span>
+                            <span th:if="${userVo.prtToday > userVo.properPrt}"><strong style="color:red">[[${userVo.prtToday}]]g</strong>/[[${userVo.properPrt}]]g</span>
+                        </a>
                     </div>
                     <div>
                         <label for="fatChart" class="userBodyText">지방</label>
                         <div id="fatChart" class="chart">
                             <div class="chart-bar"></div>
                         </div>
-                        <a class="userBodyNum">[[${userVo.fatToday}]]g/[[${userVo.properFat}]]g</a>
+                        <a class="userBodyNum">
+                            <span th:if="${userVo.fatToday < userVo.properFat}">[[${userVo.fatToday}]]g/[[${userVo.properFat}]]g</span>
+                            <span th:if="${userVo.fatToday == userVo.properFat}"><strong style="color:green">[[${userVo.fatToday}]]g</strong>/[[${userVo.properFat}]]g</span>
+                            <span th:if="${userVo.fatToday > userVo.properFat}"><strong style="color:red">[[${userVo.fatToday}]]g</strong>/[[${userVo.properFat}]]g</span>
+                        </a>
                     </div>
                 </div>
 
