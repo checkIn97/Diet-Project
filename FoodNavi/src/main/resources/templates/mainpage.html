@@ -26,15 +26,19 @@
 
                 <div>
                     <label class="userBodyText" for="kcalChart">오늘 섭취한 칼로리</label>
-                    <span th:if="${userVo.kcalToday > userVo.EER}">
-                        <div class="chart-container">
-                            <img src="/assets/images/warning.png" class="mainWarning">
-                            <div class="chart" id="kcalChart">
-                                <div class="chart-bar"></div>
-                            </div>
-                            <img src="/assets/images/warning.png" class="mainWarning">
+
+                    <div class="chart-container">
+                            <span th:if="${userVo.kcalToday > userVo.EER}">
+                                <img class="mainWarning" src="/assets/images/warning.png">
+                            </span>
+                        <div class="chart" id="kcalChart">
+                            <div class="chart-bar"></div>
                         </div>
-                    </span>
+                            <span th:if="${userVo.kcalToday > userVo.EER}">
+                                <img class="mainWarning" src="/assets/images/warning.png">
+                            </span>
+                    </div>
+
                     <a class="userBodyNum">
                         <span>[[${userVo.kcalToday}]]kcal/[[${userVo.EER}]]kcal</span>
                     </a>
