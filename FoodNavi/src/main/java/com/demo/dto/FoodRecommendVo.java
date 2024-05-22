@@ -1,5 +1,7 @@
 package com.demo.dto;
 
+
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -53,5 +55,27 @@ public class FoodRecommendVo {
 	private String sortDirection = "";
 	private int pageMaxDisplay = 0;
 
-	
+	public String getMealTimeByTime() {
+		String[] mealTime = {"morning", "lunch", "dinner", "snack"};
+		int index = 0;
+		Date now = new Date();
+		int hour = now.getHours();
+		if (hour < 5) {
+			index = 3;
+		} else if (hour < 8) {
+			index = 0;
+		} else if (hour < 11) {
+			index = 3;
+		} else if (hour < 14) {
+			index = 1;
+		} else if (hour < 17) {
+			index = 3;
+		} else if (hour < 20) {
+			index = 2;
+		} else {
+			index = 3;
+		}	
+		
+		return mealTime[index];
+	}
 }
