@@ -316,7 +316,7 @@ public class BoardController {
 
     @GetMapping("/board_userList/{useq}")
     public String showBoardList(Model model,
-                                @PathVariable("useq") int useq,
+                                @PathVariable(value = "useq") int useq,
                                 @RequestParam(value = "page", defaultValue = "0") int page,
                                 @RequestParam(value = "size", defaultValue = "5") int size,
                                 @RequestParam(value = "sortBy", defaultValue = "bseq") String sortBy,
