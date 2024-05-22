@@ -65,7 +65,7 @@ public class ChatController {
 		String result = "";
 		for(Food foodName : foodList){
 			if(message.contains(foodName.getName())){
-				result = foodName.getName();
+				result = "'" + foodName.getName() + "'";
 				break;
 			} else {
 				result = message;
