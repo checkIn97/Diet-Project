@@ -11,7 +11,7 @@ public class ChatMessage {
 	
 	// 메세지타입 : 입장, 채팅 두가지임
 	public enum MessageType{
-		ENTER, TALK
+		ENTER, TALK, BOT
 	}
 	
 	private MessageType type;

@@ -13,5 +13,6 @@ public interface FoodScanService {
 	public Food getFoodByName(String name);
 	
 	public List<Food> getFoodScanList(Users user, FoodRecommendVo foodRecommendVo);
-	
+
+	public List<Food> getFoodSearchList();
 }

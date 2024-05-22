@@ -13,16 +13,23 @@ public class ChatRoom {
 	// 채팅방이 입장한 클라이언트의 정보를 가지고 있어야 하므로 WebSocketSession정보 리스트를 멤버 필드로 가짐.
 	private String roomId;
 	private String name;
+	private String roomName;
 
-	
 
 	public static ChatRoom create(String name) {
 		ChatRoom chatRoom = new ChatRoom();
 		chatRoom.roomId = UUID.randomUUID().toString();
 		chatRoom.name = name;
+
 		return chatRoom;
 
 	}
 
-	
+	public static ChatRoom botCreate(String name){
+		ChatRoom chatRoom = new ChatRoom();
+		chatRoom.roomId = "bot123";
+		chatRoom.name = name;
+		return chatRoom;
+	}
+
 }

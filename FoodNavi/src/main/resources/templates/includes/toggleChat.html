@@ -17,7 +17,9 @@
             <div class="input-group-append">
                 <button class="btn btn-primary" type="button" @click="createRoom">채팅방 개설</button>
             </div>
-
+            <div class="input-group-append">
+                <button class="btn btn-primary" type="button" @click="createBotRoom">챗봇연결</button>
+            </div>
             <label class="input-group-text">생성된 방</label>
             <table class="list-group">
                 <tr class="board_list" v-for="item in chatrooms" v-bind:key="item.roomId"
@@ -40,6 +42,7 @@
 <script src="/webjars/axios/0.17.1/dist/axios.min.js"></script>
 <script>
     var userVo_user_name = $('input[name=userVo_user_name]').val();
+    var roomName = "[[${roomName}]]";
 </script>
 <script>
 
@@ -80,6 +83,24 @@
                 }
             },
 
+            createBotRoom: function () {
+                var params = new URLSearchParams();
+                params.append("name", "챗봇상담");
+                localStorage.setItem('roomName', "챗봇상담");
+                axios.post('/chat/bot_room', params)
+                    .then(
+                        response => {
+                            alert(response.data.name + "이 연결되었습니다.")
+                            this.findAllRoom();
+                        }
+                    )
+                    .catch(response => {
+                        alert("챗봇 연결에 실패하였습니다.");
+                    });
+
+            },
+
+
             enterRoom: function (roomId) {
                 var sender = prompt('대화명을 입력해 주세요.\n' + '대화명을 입력하지 않을 시 로그인하신정보( ' + userVo_user_name +' ) 으로 입장합니다.');
                 if (sender != "") {
@@ -100,6 +121,7 @@
                     alert('대화명을 입력해 주세요.');
                     return this.enterRoom(roomId);
                 }
+
             }
         }
     });

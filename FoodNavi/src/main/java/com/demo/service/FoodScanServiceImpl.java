@@ -175,4 +175,9 @@ public class FoodScanServiceImpl implements FoodScanService {
 		return foodList;
 	}
 
+	@Override
+	public List<Food> getFoodSearchList() {
+		return foodScanRepo.getAllByFood();
+	}
+
 }

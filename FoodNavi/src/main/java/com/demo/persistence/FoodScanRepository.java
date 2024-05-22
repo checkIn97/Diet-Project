@@ -114,5 +114,7 @@ public interface FoodScanRepository extends JpaRepository<Food, Integer> {
 			+ "AND History.meal_Type IN (:morning, :lunch, :dinner, :snack) ", 
 			nativeQuery=true)
 	public int getFoodCountByMealTypeInHistory(String morning, String lunch, String dinner, String snack);
-	
+
+	@Query(value="SELECT f FROM Food f")
+	public List<Food> getAllByFood();
 }

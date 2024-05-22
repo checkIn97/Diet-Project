@@ -45,6 +45,15 @@ public class ChatRoomController {
         return chatRoomRepository.createChatRoom(name);
     }
 
+    //챗봇 생성
+    @PostMapping("/bot_room")
+    @ResponseBody
+    public ChatRoom createBotRoom(Model model, @RequestParam String name){
+        System.out.println("챗봇생성");
+        return chatRoomRepository.createChatBotRoom(name);
+    }
+
+
     // 채팅방 입장 화면
     @GetMapping("/room/enter/{roomId}")
     public String roomDetail(Model model, @PathVariable String roomId){

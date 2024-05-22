@@ -32,5 +32,9 @@ public class ChatRoomRepository {
         chatRoomMap.put(chatRoom.getRoomId(), chatRoom);
         return chatRoom;
     }
-
+    public ChatRoom createChatBotRoom(String name){
+        ChatRoom chatRoom = new ChatRoom().botCreate(name);
+        chatRoomMap.put(chatRoom.getRoomId(), chatRoom);
+        return chatRoom;
+    }
 }
