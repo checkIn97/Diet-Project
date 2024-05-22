@@ -13,6 +13,7 @@
 	<form name="scanForm" id="scanForm" method="post">
 		<input type="hidden" name="page" value=0>
 		<input type="hidden" name="recommend" id="recommend" value=false>
+		<input type="hidden" name="scan" id="scan" value=true>
 		<div id="toggleButton" class="box">
 		    <table>
 				<tr>
@@ -25,7 +26,7 @@
 							</th:block>
 						</select>
 					</td>
-					<td colspan="6">
+					<td colspan="2">
 						<input type="text" name="searchWord" th:value="${foodScanVo.searchWord}"/>
 					</td>
 				</tr>
@@ -39,13 +40,13 @@
 							</th:block>
 						</select>
 					</td>
-					<td colspan="6">
+					<td colspan="2">
 						<input type="text" name="banWord" th:value="${foodScanVo.banWord}"/>
 					</td>
 				</tr>
 				<tr>
-					<td style="width:8%">목표</td>
-					<td style="width:14%">
+					<td style="width:14%">목표</td>
+					<td style="width:36%">
 						<select name="purpose">
 							<th:block th:each="field : ${foodScanVo.purposeCategory}">
 								<option th:if="${field[0] == foodScanVo.purpose}" th:value="${field[0]}" selected>[[${field[1]}]]</option>
@@ -53,8 +54,8 @@
 							</th:block>
 						</select>
 					</td>
-					<td style="width:8%">식단</td>
-					<td style="width:14%">
+					<td style="width:14%">식단</td>
+					<td style="width:36%">
 						<select name="dietType">
 							<th:block th:each="field : ${foodScanVo.dietTypeCategory}">
 								<option th:if="${field[0] == foodScanVo.dietType}" th:value="${field[0]}" selected>[[${field[1]}]]</option>
@@ -62,6 +63,8 @@
 							</th:block>
 						</select>
 					</td>
+				</tr>
+				<tr>
 					<td style="width:8%">음식</td>
 					<td style="width:14%">
 						<select name="foodType">
@@ -83,7 +86,7 @@
 				</tr>
 				<tr>
 					<td>알레르기</td>
-					<td colspan="3">
+					<td>
 						<th:block th:each="field, iterStat : ${foodScanVo.allergyArray}">
 							<div class="field half  checkbox-button">
 								<input class="btn" type="checkbox" name="allergys" th:id="${field[0]}" th:value="${field[0]}" th:if="${foodScanVo.allergys[iterStat.index] == 'y'}" checked/>
@@ -93,7 +96,7 @@
 						</th:block>
 					</td>
 					<td>식사</td>
-					<td colspan="3">
+					<td>
 					<th:block th:each="field, iterStat : ${foodScanVo.mealTimeArray}">
 						<div class="field half  radio-button">
 							<input class="btn" type="radio" name="mealTime" th:id="${field[0]}" th:value="${field[0]}" onclick="meal_click(this)" th:if="${foodScanVo.mealTime[iterStat.index] == field[0]}" checked/>

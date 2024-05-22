@@ -167,22 +167,22 @@ public class FoodRecomController {
 				
 				foodRecommendVo.setDietType(dietType);
 				user.setDietType(dietType);
-	
+				
 				List<String> allergyList = Arrays.asList(allergys);
-				allergys = new String[foodRecommendVo.getAllergyArray().length];
+				String[] tmp_allergys = new String[foodRecommendVo.getAllergyArray().length];
 				for (int i = 0 ; i < foodRecommendVo.getAllergyArray().length ; i++) {
 					String allergy = foodRecommendVo.getAllergyArray()[i][0];
 					if (allergyList.contains(allergy)) {
-						allergys[i] = "y";
+						tmp_allergys[i] = "y";
 					} else {
-						allergys[i] = "a";
+						tmp_allergys[i] = "a";
 					}					
 				}
-				foodRecommendVo.setAllergys(allergys);
-				user.setNo_egg(allergys[0]);
-				user.setNo_milk(allergys[1]);
-				user.setNo_bean(allergys[2]);
-				user.setNo_shellfish(allergys[3]);
+				foodRecommendVo.setAllergys(tmp_allergys);
+				user.setNo_egg(tmp_allergys[0]);
+				user.setNo_milk(tmp_allergys[1]);
+				user.setNo_bean(tmp_allergys[2]);
+				user.setNo_shellfish(tmp_allergys[3]);
 				
 				foodRecommendVo.setAllergyEtc(allergyEtc);
 				user.setNo_ingredient(allergyEtc);
@@ -209,7 +209,10 @@ public class FoodRecomController {
 					foodRecommendVoArray[h].setFoodRecommendList(list);
 				}
 			}
-
+			System.out.println(user.getNo_egg());
+			System.out.println(user.getNo_milk());
+			System.out.println(user.getNo_bean());
+			System.out.println(user.getNo_shellfish());
 			usersService.insertUser(user);
 			
 		} else {

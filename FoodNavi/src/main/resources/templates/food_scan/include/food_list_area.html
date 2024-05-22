@@ -28,7 +28,7 @@ table {
 		     			<td th:if="${foodVo.food.img == null}">없음</td>
 		     			<td th:unless="${foodVo.food.img == null}"><img th:src="${food.img}"></td>
 		     			<td><a th:href="@{food_detail(fseq=${foodVo.food.fseq})}">[[${foodVo.food.name}]]</a></td>
-		     			<td>[[${foodVo.food.foodDetail.kcal}]]</td>
+		     			<td>[[${foodVo.kcal}]]kcal</td>
 		     			<td>
 		     				<span class="satisfaction">
 						    	<img class="star" th:if="${foodVo.starScore == 0}" src="/assets/images/star-empty.png">
@@ -52,12 +52,12 @@ table {
 		      	</th:block>
 	   		</th:block>
 	   		<th:block th:unless="${foodScanVo.recommend}">
-		   		<th:block th:each="food : ${foodList}">
+		   		<th:block th:each="foodVo : ${foodList}">
 		    		<tr>      
-		     			<td th:if="${food.img == null}">없음</td>
-		     			<td th:if="${food.img != null}"><img th:src="${food.img}"></td>
-		     			<td><a th:href="@{food_detail(fseq=${food.fseq})}">[[${food.name}]]</a></td>
-		     			<td>[[${food.foodDetail.kcal}]]kcal</td>
+		     			<td th:if="${foodVo.food.img == null}">없음</td>
+		     			<td th:if="${foodVo.food.img != null}"><img th:src="${food.img}"></td>
+		     			<td><a th:href="@{food_detail(fseq=${foodVo.food.fseq})}">[[${foodVo.food.name}]]</a></td>
+		     			<td>[[${foodVo.kcal}]]kcal</td>
 			        </tr>
 		      	</th:block>
 	      	</th:block>
