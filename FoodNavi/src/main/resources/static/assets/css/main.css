@@ -1744,11 +1744,16 @@ input[type="number"]{
 }
 
 .search {
-    width: 30%;
+    width: 22%;
+    margin-right: 10px;
 }
 
 .searchWord {
     width: 70%;
+}
+
+button.searchButton {
+    margin-left: 10px;
 }
 
 /*탄단지 차트*/
@@ -1779,15 +1784,15 @@ input[type="number"]{
 }
 
 #carbohydrateChart .chart-bar {
-    background-color: #97c9e1; /* 탄수화물 차트를 빨간색으로 설정 */
+    background-color: #97c9e1;
 }
 
 #proteinChart .chart-bar {
-    background-color: #87bba2; /* 단백질 차트를 초록색으로 설정 */
+    background-color: #87bba2;
 }
 
 #fatChart .chart-bar {
-    background-color: #c9e4ca; /* 지방 차트를 파란색으로 설정 */
+    background-color: #c9e4ca;
 }
 
 
@@ -2203,3 +2208,4 @@ input[type="number"]{
 .foodList:hover {
     scale: 1.1;
 }
+
