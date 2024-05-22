@@ -41,7 +41,7 @@
         <table class="food-info">
 			<block th:each="foodVo, iterStat : ${foodRecommendVo1.foodRecommendList}" th:if="${foodRecommendVo1.index == iterStat.count}">
 	            <tr><span class="food-name" th:text="${foodVo.food.name}"></span>
-					<a th:href="@{food_detail(fseq=${foodVo.food.fseq})}">
+					<a th:href="@{food_detail(fseq=${foodVo.food.fseq}, type=r1)}">
 						<img src="/assets/images/reading-glasses.png" class="foodDetailGo" title="상세보기" alt="상세보기">
 					</a>
 				</tr>
@@ -117,7 +117,7 @@
         <table class="food-info">
 			<block th:each="foodVo, iterStat : ${foodRecommendVo2.foodRecommendList}" th:if="${foodRecommendVo2.index == iterStat.count}">
 	            <tr><span class="food-name" th:text="${foodVo.food.name}"></span>
-					<a th:href="@{food_detail(fseq=${foodVo.food.fseq})}">
+					<a th:href="@{food_detail(fseq=${foodVo.food.fseq}, type=r2)}">
 						<img src="/assets/images/reading-glasses.png" class="foodDetailGo" title="상세보기" alt="상세보기">
 					</a>
 				</tr>
@@ -193,7 +193,7 @@
         <table class="food-info">
 			<block th:each="foodVo, iterStat : ${foodRecommendVo3.foodRecommendList}" th:if="${foodRecommendVo1.index == iterStat.count}">
 	            <tr><span class="food-name" th:text="${foodVo.food.name}"></span>
-					<a th:href="@{food_detail(fseq=${foodVo.food.fseq})}">
+					<a th:href="@{food_detail(fseq=${foodVo.food.fseq}, type=r3)}">
 						<img src="/assets/images/reading-glasses.png" class="foodDetailGo" title="상세보기" alt="상세보기">
 					</a>
 				</tr>

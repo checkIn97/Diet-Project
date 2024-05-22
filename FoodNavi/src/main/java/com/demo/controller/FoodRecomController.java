@@ -240,15 +240,6 @@ public class FoodRecomController {
 		model.addAttribute("foodRecommendList3", foodRecommendVoArray[2].getFoodRecommendList());
 		model.addAttribute("userVo", userVo);
 		
-		System.out.println();
-		System.out.println(foodRecommendVoArray[0].getFoodType());
-		System.out.println();
-		System.out.println(foodRecommendVoArray[1].getFoodType());
-		System.out.println();
-		System.out.println(foodRecommendVoArray[2].getFoodType());
-		System.out.println();
-		
-
  		return "food/foodRecommend";
  	}
 

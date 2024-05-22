@@ -241,44 +241,112 @@ public class FoodScanController {
 	
 	// 음식의 상세보기를 연다.
 	@GetMapping("/food_detail")
-	public String showFoodDetail(Food food, Model model, HttpSession session, FoodRecommendVo foodScanVo) {
+	public String showFoodDetail(Food food, Model model, HttpSession session, FoodRecommendVo foodScanVo,
+			@RequestParam(value="type", defaultValue="s") String showType) {
 		// 세션에서 사용자 정보 가져오기
     	Users user = (Users) session.getAttribute("loginUser");
     	// 세션에 로그인 정보가 없는 경우
         if (user == null) {
             return "redirect:user_login_form"; // 로그인 페이지로 이동.
         }
-        foodScanVo = (FoodRecommendVo)session.getAttribute("foodScanVo");
-        FoodVo foodVo = null;
-        if (foodScanVo.isRecommend()) {
-        	List<FoodVo> foodVoList = foodScanVo.getFoodRecommendList();
+        if (showType.equals("s")) {
+        	foodScanVo = (FoodRecommendVo)session.getAttribute("foodScanVo");
+        	foodScanVo.setResultType("s");
+            FoodVo foodVo = null;
+            if (foodScanVo.isRecommend()) {
+            	List<FoodVo> foodVoList = foodScanVo.getFoodRecommendList();
+            	for (FoodVo vo : foodVoList) {
+            		if (vo.getFood().getFseq() == food.getFseq()) {
+            			foodVo = vo;
+            			break;
+            		}
+            	}
+            } else {
+            	food = foodScanService.getFoodByFseq(food.getFseq()); 
+            	foodVo = new FoodVo(food);        	
+            }
+            model.addAttribute("foodVo", foodVo);
+            
+            UserVo userVo = new UserVo(user);
+            model.addAttribute("userVo", userVo);
+            
+            Map<String, Integer> rcdStatus = new HashMap<>();
+            rcdStatus.put("rcdStatus", rcdService.rcdStatus(user, foodVo.getFood()));        
+            rcdStatus.put("rcdCount", rcdService.getRcdCountByFood(foodVo.getFood()));
+            model.addAttribute("rcdStatus", rcdStatus);
+    		
+    		model.addAttribute("pageInfo", foodScanVo.getPageInfo());
+    		model.addAttribute("foodList", foodScanVo.getFoodList());
+    		model.addAttribute("foodSRVo", foodScanVo);
+    		session.setAttribute("foodVo", foodVo);
+        } else if (showType.equals("r1")){
+        	FoodRecommendVo[] foodRecommendVoArray = (FoodRecommendVo[])session.getAttribute("foodRecommendVoArray");
+        	FoodRecommendVo foodRecommendVo = foodRecommendVoArray[0];
+        	foodScanVo.setResultType("r");
+            FoodVo foodVo = null;
+            List<FoodVo> foodVoList = foodRecommendVo.getFoodRecommendList();
         	for (FoodVo vo : foodVoList) {
         		if (vo.getFood().getFseq() == food.getFseq()) {
         			foodVo = vo;
         			break;
         		}
         	}
-        } else {
-        	food = foodScanService.getFoodByFseq(food.getFseq()); 
-        	foodVo = new FoodVo(food);
-        	
+            model.addAttribute("foodVo", foodVo);
+            UserVo userVo = new UserVo(user);
+            model.addAttribute("userVo", userVo);
+           
+            Map<String, Integer> rcdStatus = new HashMap<>();
+            rcdStatus.put("rcdStatus", rcdService.rcdStatus(user, foodVo.getFood()));        
+            rcdStatus.put("rcdCount", rcdService.getRcdCountByFood(foodVo.getFood()));
+            model.addAttribute("rcdStatus", rcdStatus);    		
+    		model.addAttribute("foodSRVo", foodRecommendVo);
+    		session.setAttribute("foodVo", foodVo);
+        } else if (showType.equals("r2")){
+        	FoodRecommendVo[] foodRecommendVoArray = (FoodRecommendVo[])session.getAttribute("foodRecommendVoArray");
+        	FoodRecommendVo foodRecommendVo = foodRecommendVoArray[1];
+        	foodScanVo.setResultType("r");
+            FoodVo foodVo = null;
+            List<FoodVo> foodVoList = foodRecommendVo.getFoodRecommendList();
+        	for (FoodVo vo : foodVoList) {
+        		if (vo.getFood().getFseq() == food.getFseq()) {
+        			foodVo = vo;
+        			break;
+        		}
+        	}
+            model.addAttribute("foodVo", foodVo);
+            UserVo userVo = new UserVo(user);
+            model.addAttribute("userVo", userVo);
+           
+            Map<String, Integer> rcdStatus = new HashMap<>();
+            rcdStatus.put("rcdStatus", rcdService.rcdStatus(user, foodVo.getFood()));        
+            rcdStatus.put("rcdCount", rcdService.getRcdCountByFood(foodVo.getFood()));
+            model.addAttribute("rcdStatus", rcdStatus);    		
+    		model.addAttribute("foodSRVo", foodRecommendVo);
+    		session.setAttribute("foodVo", foodVo);
+        } else if (showType.equals("r3")){
+        	FoodRecommendVo[] foodRecommendVoArray = (FoodRecommendVo[])session.getAttribute("foodRecommendVoArray");
+        	FoodRecommendVo foodRecommendVo = foodRecommendVoArray[2];
+        	foodScanVo.setResultType("r");
+            FoodVo foodVo = null;
+            List<FoodVo> foodVoList = foodRecommendVo.getFoodRecommendList();
+        	for (FoodVo vo : foodVoList) {
+        		if (vo.getFood().getFseq() == food.getFseq()) {
+        			foodVo = vo;
+        			break;
+        		}
+        	}
+            model.addAttribute("foodVo", foodVo);
+            UserVo userVo = new UserVo(user);
+            model.addAttribute("userVo", userVo);
+           
+            Map<String, Integer> rcdStatus = new HashMap<>();
+            rcdStatus.put("rcdStatus", rcdService.rcdStatus(user, foodVo.getFood()));        
+            rcdStatus.put("rcdCount", rcdService.getRcdCountByFood(foodVo.getFood()));
+            model.addAttribute("rcdStatus", rcdStatus);    		
+    		model.addAttribute("foodSRVo", foodRecommendVo);
+    		session.setAttribute("foodVo", foodVo);
         }
-        model.addAttribute("foodVo", foodVo);
         
-        UserVo userVo = new UserVo(user);
-        model.addAttribute("userVo", userVo);
-        
-        Map<String, Integer> rcdStatus = new HashMap<>();
-        rcdStatus.put("rcdStatus", rcdService.rcdStatus(user, foodVo.getFood()));        
-        rcdStatus.put("rcdCount", rcdService.getRcdCountByFood(foodVo.getFood()));
-        model.addAttribute("rcdStatus", rcdStatus);
-        System.out.println(rcdStatus.get("rcdStatus"));
-        System.out.println(rcdStatus.get("rcdCount"));
-		
-		model.addAttribute("pageInfo", foodScanVo.getPageInfo());
-		model.addAttribute("foodList", foodScanVo.getFoodList());
-		model.addAttribute("foodScanVo", foodScanVo);
-		session.setAttribute("foodVo", foodVo);
 		
 		return "food_scan/foodDetail";
 	}

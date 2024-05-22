@@ -54,6 +54,7 @@ public class FoodRecommendVo {
 	private String sortBy = "";
 	private String sortDirection = "";
 	private int pageMaxDisplay = 0;
+	private String resultType = "";
 
 	public String getMealTimeByTime() {
 		String[] mealTime = {"morning", "lunch", "dinner", "snack"};
