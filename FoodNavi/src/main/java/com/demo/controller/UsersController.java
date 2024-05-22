@@ -2,17 +2,20 @@ package com.demo.controller;
 
 
 
-import java.util.HashMap;
-import java.util.Map;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
+import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
+import com.demo.domain.UserChange;
+import com.demo.persistence.UserChangeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
 import com.demo.domain.Users;
@@ -29,6 +32,9 @@ public class UsersController {
 	private UsersService usersService;
 	@Autowired
 	private UsersRepository usersRepo;
+	@Autowired
+	private UserChangeRepository userChangeRepo;
+
 
 	@GetMapping("/user_membership")
 	public String joinView() {
@@ -120,13 +126,106 @@ public class UsersController {
 	}
 
 	@PostMapping("/user_change_weight")
-	public String changeWeight(HttpSession session, Users vo, Model model) {
-		Users user = (Users)session.getAttribute("loginUser");
-		user.setWeight(vo.getWeight());
-		usersRepo.save(user);
-		model.addAttribute("msg", "체중 수정이 완료되었습니다.");
+	public String changeWeight(@RequestParam(value = "userKg", required = false) Float weight,
+							   HttpSession session, Users vo, Model model) {
+		Users user = (Users) session.getAttribute("loginUser");
+		if (user != null) {
+			if (weight == null) {
+				model.addAttribute("msg", "체중을 입력하세요.");
+				return "user/changeResult";
+			}
+
+			Calendar calendar = Calendar.getInstance();
+			Date startDate = getStartOfDay(calendar);
+			Date endDate = getEndOfDay(calendar);
+
+			UserChange existingChange = userChangeRepo.findByUserAndCreatedAtBetween(user, startDate, endDate);
+
+			if (existingChange != null) {
+				// 오늘 날짜로 저장된 값이 있는 경우 업데이트
+				existingChange.setWeight(weight);
+				userChangeRepo.save(existingChange);
+				model.addAttribute("msg", "오늘의 체중이 수정되었습니다.");
+			} else {
+				// 오늘 날짜로 저장된 값이 없는 경우 새로 저장
+				UserChange newUserChange = new UserChange();
+				user.setWeight(weight);
+				usersRepo.save(user);
+
+				newUserChange.setUser(user);
+				newUserChange.setWeight(weight);
+				newUserChange.setHeight(user.getHeight());
+				newUserChange.setAge(user.getAge());
+				newUserChange.setSex(user.getSex());
+				newUserChange.setCreatedAt(new Date());
+				userChangeRepo.save(newUserChange);
+
+				model.addAttribute("msg", "체중이 새로 저장되었습니다.");
+			}
+
+			session.setAttribute("loginUser", user);
+		} else {
+			model.addAttribute("msg", "로그인이 필요합니다.");
+			model.addAttribute("redirectTo","/user_login_form");
+			return "board/board_alert";
+		}
 		return "user/changeResult";
 	}
+
+
+	private Date getStartOfDay(Calendar calendar) {
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+		return calendar.getTime();
+	}
+
+	private Date getEndOfDay(Calendar calendar) {
+		calendar.set(Calendar.HOUR_OF_DAY, 23);
+		calendar.set(Calendar.MINUTE, 59);
+		calendar.set(Calendar.SECOND, 59);
+		calendar.set(Calendar.MILLISECOND, 999);
+		return calendar.getTime();
+	}
+	@RequestMapping("/user_mychange_view")
+	public String getMyChangePage(HttpSession session, Model model) {
+		Users user = (Users) session.getAttribute("loginUser");
+		UserVo userVo = new UserVo(user);
+
+		if (user != null) {
+			List<UserChange> changes = usersService.getWeightList(user);
+			List<Float> weightList = new ArrayList<>();
+			for (UserChange change : changes) {
+				weightList.add(change.getWeight());
+			}
+
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM월 dd일 (E)", Locale.KOREAN);
+			List<String> labels = changes.stream()
+					.map(change -> {
+						LocalDate date = change.getCreatedAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+						return date.format(formatter);
+					})
+					.collect(Collectors.toList());
+
+			Collections.reverse(weightList);
+			Collections.reverse(labels);
+
+			System.out.println(weightList);
+			System.out.println(labels);
+
+			model.addAttribute("changes", weightList);
+			model.addAttribute("labels", labels);
+			model.addAttribute("userVo", userVo);
+			model.addAttribute("user", user);
+		} else {
+			model.addAttribute("msg", "로그인이 필요합니다.");
+			model.addAttribute("redirectTo","/user_login_form");
+			return "board/board_alert";
+		}
+		return "user/myChange";
+	}
+
 
 	@GetMapping("/user_mypage_view")
 	public String myPageView(HttpSession session, Model model) {
@@ -137,15 +236,6 @@ public class UsersController {
 		return "user/myPage";
 	}
 
-	@GetMapping("/user_mychange_view")
-	public String myChangeView(HttpSession session, Model model) {
-		Users user = (Users)session.getAttribute("loginUser");
-		UserVo userVo = new UserVo(user);
-		model.addAttribute("userVo", userVo);
-		model.addAttribute("user", user);
-		System.out.println(user.getName());
-		return "user/myChange";
-	}
 
 	@GetMapping("/user_myactivity_view")
 	public String myActivityView(HttpSession session, Model model) {

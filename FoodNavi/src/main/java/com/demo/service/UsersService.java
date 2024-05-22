@@ -1,6 +1,9 @@
 package com.demo.service;
 
+import com.demo.domain.UserChange;
 import com.demo.domain.Users;
+
+import java.util.List;
 
 public interface UsersService {
 	public void insertUser(Users vo); // 회원가입
@@ -12,4 +15,7 @@ public interface UsersService {
 	public Users getUserByMaxUseq();
 	
 	public int compareID(String id);
+
+	public List<UserChange> getWeightList(Users user);
+
 }
