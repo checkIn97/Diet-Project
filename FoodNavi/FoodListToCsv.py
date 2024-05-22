@@ -16,3 +16,9 @@ if os.path.exists(file_name):
 else:
     data = new_data
 data.to_csv(file_name, sep=',', encoding='utf-8')
+
+while True:
+    if os.path.exists(file_name):
+        break
+
+print('success')

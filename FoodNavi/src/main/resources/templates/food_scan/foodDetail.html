@@ -54,7 +54,7 @@
             <tr>
                 <th>추천점수</th>
                 <td>
-	            	<span class="satisfaction">
+	            	<span class="satisfaction" th:title="${foodVo.scoreView+'%'}" th:alt="${foodVo.scoreView+'%'}">
 				    	<img class="star" src="/assets/images/star-empty.png" th:if="${foodVo.starScore == 0}">
 				    	<img class="star" src="/assets/images/star-half.png" th:if="${foodVo.starScore == 1}">
 				    	<img class="star" src="/assets/images/star-full.png" th:if="${foodVo.starScore >= 2}">

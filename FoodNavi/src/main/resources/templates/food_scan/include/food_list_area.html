@@ -30,7 +30,7 @@ table {
 		     			<td><a th:href="@{food_detail(fseq=${foodVo.food.fseq})}">[[${foodVo.food.name}]]</a></td>
 		     			<td>[[${foodVo.kcal}]]kcal</td>
 		     			<td>
-		     				<span class="satisfaction">
+		     				<span class="satisfaction" th:title="${foodVo.scoreView+'%'}" th:alt="${foodVo.scoreView+'%'}">
 						    	<img class="star" th:if="${foodVo.starScore == 0}" src="/assets/images/star-empty.png">
 						    	<img class="star" th:if="${foodVo.starScore == 1}" src="/assets/images/star-half.png">
 						    	<img class="star" th:if="${foodVo.starScore >= 2}" src="/assets/images/star-full.png">
