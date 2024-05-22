@@ -36,6 +36,11 @@ for (var i = 0; i < sections.length; i++) {
             return;
         }
 
+        var foodDetailGo = this.querySelector('.foodDetailGo');
+        if (foodDetailGo && foodDetailGo.contains(event.target)) {
+            return;
+        }
+
         var checkmark = this.querySelector('.checkmark');
         if (this.dataset.clicked === 'true') {
             this.style.backgroundColor = ''; // 배경색을 원래대로 복원
@@ -100,3 +105,4 @@ arrowL1_1.addEventListener('click', function() {
     section1_1.style.display = 'none';
     section1.style.display = 'block';
 });
+

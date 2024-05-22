@@ -4,13 +4,7 @@
 
 <style>
 table {
-	border: 1px solid black;
-	width: 1600px;
-	border-collapse:collapse;
-}
-
-th, td {
-	border: 1px solid black;
+	width: 1000px;
 }
 </style>
 
@@ -30,7 +24,7 @@ th, td {
    		<th:block th:unless="${foodScanVo.pageInfo.totalPages == 0}">
 	   		<th:block th:if="${foodScanVo.recommend}">
 	   			<th:block th:each="foodVo : ${foodRecommendList}">
-		    		<tr>      
+		    		<tr class="foodList">
 		     			<td th:if="${foodVo.food.img == null}">없음</td>
 		     			<td th:unless="${foodVo.food.img == null}"><img th:src="${food.img}"></td>
 		     			<td><a th:href="@{food_detail(fseq=${foodVo.food.fseq})}">[[${foodVo.food.name}]]</a></td>
