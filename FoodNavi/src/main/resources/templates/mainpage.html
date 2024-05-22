@@ -3,11 +3,11 @@
 <head>
     <title>FoodNavi</title>
     <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
-    <link rel="stylesheet" href="/assets/css/main.css"/>
-    <link rel="stylesheet" href="/assets/css/bgMain.css"/>
+    <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"/>
+    <link href="/assets/css/main.css" rel="stylesheet"/>
+    <link href="/assets/css/bgMain.css" rel="stylesheet"/>
     <noscript>
-        <link rel="stylesheet" href="/assets/css/noscript.css"/>
+        <link href="/assets/css/noscript.css" rel="stylesheet"/>
     </noscript>
 </head>
 <body class="is-preload">
@@ -18,28 +18,38 @@
     <!-- Header -->
     <header id="header">
         <div class="logo">
-            <span class="icon"><img src="/assets/images/food.png" alt="food Icon" class="foodLogo"></span>
+            <span class="icon"><img alt="food Icon" class="foodLogo" src="/assets/images/food.png"></span>
         </div>
         <div class="content">
             <div class="inner">
                 <h1>[[${userVo.user.name}]] 님을 위한 오늘의 식단</h1>
 
                 <div>
-                    <label for="kcalChart" class="userBodyText">오늘 섭취한 칼로리</label>
-                    <div id="kcalChart" class="chart">
-                        <div class="chart-bar"></div>
-                    </div>
+                    <label class="userBodyText" for="kcalChart">오늘 섭취한 칼로리</label>
+                    <span th:if="${3000 > 2000}">
+                        <div class="chart-container">
+                            <img src="/assets/images/warning.png" class="mainWarning">
+                            <div class="chart" id="kcalChart">
+                                <div class="chart-bar"></div>
+                            </div>
+                            <img src="/assets/images/warning.png" class="mainWarning">
+                        </div>
+                    </span>
                     <a class="userBodyNum">
                         <span th:if="${userVo.kcalToday < userVo.EER}">[[${userVo.kcalToday}]]kcal/[[${userVo.EER}]]kcal</span>
-                        <span th:if="${userVo.kcalToday == userVo.EER}"><strong style="color: green">[[${userVo.kcalToday}]]kcal</strong>/[[${userVo.EER}]]kcal</span>
-                        <span th:if="${userVo.kcalToday > userVo.EER}"><strong style="color: red">[[${userVo.kcalToday}]]kcal</strong>/[[${userVo.EER}]]kcal</span>
+                        <span th:if="${userVo.kcalToday == userVo.EER}"><img src="/assets/images/!.png"
+                                                                             class="mainLike">[[${userVo.kcalToday}]]kcal/[[${userVo.EER}]]kcal<img
+                                src="/assets/images/!.png" class="mainLike"></span>
+                        <span th:if="${userVo.kcalToday > userVo.EER}"><img src="/assets/images/warning.png"
+                                                                            class="mainWarning">[[${userVo.kcalToday}]]kcal/[[${userVo.EER}]]kcal<img
+                                src="/assets/images/warning.png" class="mainWarning"></span>
                     </a>
                 </div>
 
                 <div class="chart-container">
                     <div>
-                        <label for="carbohydrateChart" class="userBodyText">탄수화물</label>
-                        <div id="carbohydrateChart" class="chart">
+                        <label class="userBodyText" for="carbohydrateChart">탄수화물</label>
+                        <div class="chart" id="carbohydrateChart">
                             <div class="chart-bar"></div>
                         </div>
                         <a class="userBodyNum">
@@ -49,8 +59,8 @@
                         </a>
                     </div>
                     <div>
-                        <label for="proteinChart" class="userBodyText">단백질</label>
-                        <div id="proteinChart" class="chart">
+                        <label class="userBodyText" for="proteinChart">단백질</label>
+                        <div class="chart" id="proteinChart">
                             <div class="chart-bar"></div>
                         </div>
                         <a class="userBodyNum">
@@ -60,8 +70,8 @@
                         </a>
                     </div>
                     <div>
-                        <label for="fatChart" class="userBodyText">지방</label>
-                        <div id="fatChart" class="chart">
+                        <label class="userBodyText" for="fatChart">지방</label>
+                        <div class="chart" id="fatChart">
                             <div class="chart-bar"></div>
                         </div>
                         <a class="userBodyNum">
@@ -73,7 +83,7 @@
                 </div>
 
                 <div class="foodReco">
-                    <button class="primary" name="dietRecommendation" id="foodRecoButton" value="recommend">
+                    <button class="primary" id="foodRecoButton" name="dietRecommendation" value="recommend">
                         <a href="/foodRecommendation">식단추천</a></button>
                 </div>
             </div>
@@ -92,7 +102,7 @@
         <!--관리자 아이디로 로그인 하면 보이게 할 것-->
         <!--        <button class="primary" name="admin" id="admin" value="admin"><a href="#admin">관리자</a></button>-->
         <!--로그아웃 버튼-->
-        <button class="button" name="logout" id="logout" value="logout"><a href="logout">로그아웃</a></button>
+        <button class="button" id="logout" name="logout" value="logout"><a href="logout">로그아웃</a></button>
 
     </header>
 
@@ -132,7 +142,6 @@ print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
 <div id="bg"></div>
 
 
-
 <!-- Scripts -->
 <script src="/assets/js/jquery.min.js"></script>
 <script src="/assets/js/browser.min.js"></script>
@@ -141,7 +150,6 @@ print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
 <script src="/assets/js/main.js"></script>
 <script src="/assets/js/chart.js"></script>
 <script src="/assets/js/chatToggle.js"></script>
-
 
 
 </body>
