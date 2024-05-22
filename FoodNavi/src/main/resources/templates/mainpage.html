@@ -26,7 +26,7 @@
 
                 <div>
                     <label class="userBodyText" for="kcalChart">오늘 섭취한 칼로리</label>
-                    <span th:if="${3000 > 2000}">
+                    <span th:if="${userVo.kcalToday > userVo.EER}">
                         <div class="chart-container">
                             <img src="/assets/images/warning.png" class="mainWarning">
                             <div class="chart" id="kcalChart">
@@ -36,13 +36,7 @@
                         </div>
                     </span>
                     <a class="userBodyNum">
-                        <span th:if="${userVo.kcalToday < userVo.EER}">[[${userVo.kcalToday}]]kcal/[[${userVo.EER}]]kcal</span>
-                        <span th:if="${userVo.kcalToday == userVo.EER}"><img src="/assets/images/!.png"
-                                                                             class="mainLike">[[${userVo.kcalToday}]]kcal/[[${userVo.EER}]]kcal<img
-                                src="/assets/images/!.png" class="mainLike"></span>
-                        <span th:if="${userVo.kcalToday > userVo.EER}"><img src="/assets/images/warning.png"
-                                                                            class="mainWarning">[[${userVo.kcalToday}]]kcal/[[${userVo.EER}]]kcal<img
-                                src="/assets/images/warning.png" class="mainWarning"></span>
+                        <span>[[${userVo.kcalToday}]]kcal/[[${userVo.EER}]]kcal</span>
                     </a>
                 </div>
 
