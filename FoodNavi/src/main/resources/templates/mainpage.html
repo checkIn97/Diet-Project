@@ -53,9 +53,7 @@
                             <div class="chart-bar"></div>
                         </div>
                         <a class="userBodyNum">
-                            <span th:if="${userVo.carbToday < userVo.properCarb}">[[${userVo.carbToday}]]g/[[${userVo.properCarb}]]g</span>
-                            <span th:if="${userVo.carbToday == userVo.properCarb}"><strong style="color: green">[[${userVo.carbToday}]]g</strong>/[[${userVo.properCarb}]]g</span>
-                            <span th:if="${userVo.carbToday > userVo.properCarb}"><strong style="color: red">[[${userVo.carbToday}]]g</strong>/[[${userVo.properCarb}]]g</span>
+                            <span>[[${userVo.carbToday}]]g/[[${userVo.properCarb}]]g</span>
                         </a>
                     </div>
                     <div>
@@ -64,9 +62,7 @@
                             <div class="chart-bar"></div>
                         </div>
                         <a class="userBodyNum">
-                            <span th:if="${userVo.prtToday < userVo.properPrt}">[[${userVo.prtToday}]]g/[[${userVo.properPrt}]]g</span>
-                            <span th:if="${userVo.prtToday == userVo.properPrt}"><strong style="color:green">[[${userVo.prtToday}]]g</strong>/[[${userVo.properPrt}]]g</span>
-                            <span th:if="${userVo.prtToday > userVo.properPrt}"><strong style="color:red">[[${userVo.prtToday}]]g</strong>/[[${userVo.properPrt}]]g</span>
+                            <span>[[${userVo.prtToday}]]g/[[${userVo.properPrt}]]g</span>
                         </a>
                     </div>
                     <div>
@@ -75,9 +71,7 @@
                             <div class="chart-bar"></div>
                         </div>
                         <a class="userBodyNum">
-                            <span th:if="${userVo.fatToday < userVo.properFat}">[[${userVo.fatToday}]]g/[[${userVo.properFat}]]g</span>
-                            <span th:if="${userVo.fatToday == userVo.properFat}"><strong style="color:green">[[${userVo.fatToday}]]g</strong>/[[${userVo.properFat}]]g</span>
-                            <span th:if="${userVo.fatToday > userVo.properFat}"><strong style="color:red">[[${userVo.fatToday}]]g</strong>/[[${userVo.properFat}]]g</span>
+                            <span>[[${userVo.fatToday}]]g/[[${userVo.properFat}]]g</span>
                         </a>
                     </div>
                 </div>
