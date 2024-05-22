@@ -50,7 +50,7 @@
             <!--<th>지방</th>-->
             <!--<td>[[${foodVo.food.foodDetail.fat}]] g</td>-->
         </tr>
-        <th:block th:if="${foodScanVo.recommend}">
+        <th:block th:if="${foodSRVo.recommend}">
             <tr>
                 <th>추천점수</th>
                 <td>
@@ -85,7 +85,10 @@
     </table>
     <input id="fseq" name="fseq" th:value="${foodVo.food.fseq}" type="hidden">
     <input onclick="history_in()" type="button" value="기록하기">
-    <a th:href="@{food_scan(page=${pageInfo.number +1})}">
+    <a th:if="${foodSRVo.resultType == 's'}" th:href="@{food_scan(page=${pageInfo.number +1})}">
+        <input type="button" value="목록 보기">
+    </a>
+    <a th:unless="${foodSRVo.resultType == 's'}" th:href="@{food_recommend(page=${1})}">
         <input type="button" value="목록 보기">
     </a>
 </form>
