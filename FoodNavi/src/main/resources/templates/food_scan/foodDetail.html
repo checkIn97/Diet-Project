@@ -7,6 +7,17 @@
     <script crossorigin="anonymous"
             integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
 </head>
+<style>
+    table {
+        border: 1px solid black;
+        width: 1600px;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        border: 1px solid black;
+    }
+</style>
 <body>
 <h2>Food Detail</h2>
 <form id="food_detail_form" method="post" name="food_detail_form">
@@ -21,7 +32,7 @@
         </tr>
         <tr>
             <th>칼로리</th>
-            <td>[[${foodVo.food.foodDetail.kcal}]] kcal</td>
+            <td th:text="${T(java.lang.Math).round(foodVo.food.foodDetail.kcal) + 'kcal'}"></td>
         </tr>
         <tr>
             <th th:rowspan="3">영양성분</th>
@@ -82,11 +93,11 @@
 </body>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="/assets/js/foodDetailChart.js"></script>
-<script>
+<script th:inline="javascript">
 
-    function history_in() {
-        $("#food_detail_Form").attr("action", "history_in_from_detail").submit();
-    }
+function history_in() {
+	$("#food_detail_form").attr("action", "history_in_from_detail").submit();
+}
 
     function show_food_list() {
 

@@ -1,23 +1,23 @@
 package com.demo.controller;
 
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import com.demo.dto.FoodVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import com.demo.domain.Food;
 import com.demo.domain.History;
@@ -140,8 +140,14 @@ public class HistoryController {
 		}
 		
 		FoodRecommendVo vo = (FoodRecommendVo)session.getAttribute("foodRecommendVo");
-		List<String> mealList = Arrays.asList(vo.getMealTime());
-		String mealType = mealList.get(0);
+		FoodRecommendVo frvo = new FoodRecommendVo();
+		List<String> mealList;
+		String mealType = frvo.getMealTimeByTime();
+		if (vo != null) {
+			mealList = Arrays.asList(vo.getMealTime());
+			mealType = mealList.get(0);
+		}
+
 		// 받은 데이터를 처리하는 로직을 작성
 		for (HistoryData historyData : historyDataList) {
 			Food food = foodScanService.getFoodByName(historyData.getFood_name());
@@ -235,7 +241,71 @@ public class HistoryController {
 			}
 		
     }
-	
+
+	@PostMapping("/history_in_from_detail")
+	public String historyInFromDetail(@RequestParam("fseq") String fseq,
+									  HttpSession session, Model model) {
+		// 세션에서 사용자 정보 가져오기
+		Users user = (Users) session.getAttribute("loginUser");
+
+		// 세션에 로그인 정보가 없는 경우
+		if (user == null) {
+			return "redirect:user_login_form";
+		}
+
+		// 유저의 히스토리가 있는지 확인
+		List<History> hsList = historyService.getHistoryListByUser(user);
+		FoodRecommendVo frvo = new FoodRecommendVo();
+		String mealType = frvo.getMealTimeByTime();
+		int intFseq = Integer.parseInt(fseq);
+		Food food = foodScanService.getFoodByFseq(intFseq);
+
+		if (!hsList.isEmpty()) { // 히스토리 리스트가 존재하는 경우
+			for (History history : hsList) {
+				if (history.getServedDate() != null) {
+					Instant instant = history.getServedDate().toInstant();
+					LocalDate historyLocalDate = instant.atZone(ZoneId.systemDefault()).toLocalDate();
+					LocalDate today = LocalDate.now();
+
+					if (history.getFood().equals(food) && historyLocalDate.equals(today) && history.getMealType().equals(mealType)) { // 현재 기록하려는 음식이 히스토리 상 존재하는지 확인하여 있다면 전송 실패
+						model.addAttribute("msg", "이미 기록에 해당 음식이 존재합니다.");
+						model.addAttribute("fseq", intFseq);
+						return "food_scan/foodAlertPage";
+					} else {
+						History hs = History.builder().user(user).food(food).serveNumber(1)
+								.servedDate(null).mealType(mealType).no_egg(user.getNo_egg()).no_milk(user.getNo_milk())
+								.no_bean(user.getNo_bean()).no_shellfish(user.getNo_shellfish()).no_ingredient(user.getNo_ingredient())
+								.purpose(user.getUserGoal()).dietType(user.getDietType()).vegetarian(user.getVegetarian()).build();
+						historyService.historyUpdate(hs);
+						break;
+					}
+				} else {
+					if (history.getFood().equals(food) && history.getMealType().equals(mealType)) { // 현재 기록하려는 음식이 히스토리 상 존재하는지 확인하여 있다면 전송 실패
+						model.addAttribute("msg", "이미 기록에 해당 음식이 존재합니다.");
+						model.addAttribute("fseq", intFseq);
+						return "food_scan/foodAlertPage";
+					} else {
+						History hs = History.builder().user(user).food(food).serveNumber(1)
+								.servedDate(null).mealType(mealType).no_egg(user.getNo_egg()).no_milk(user.getNo_milk())
+								.no_bean(user.getNo_bean()).no_shellfish(user.getNo_shellfish()).no_ingredient(user.getNo_ingredient())
+								.purpose(user.getUserGoal()).dietType(user.getDietType()).vegetarian(user.getVegetarian()).build();
+						historyService.historyUpdate(hs);
+						break;
+					}
+				}
+			}
+		} else { // 히스토리 리스트가 존재하지 않는 경우
+			History history = History.builder().user(user).food(food).serveNumber(1)
+					.servedDate(null).mealType(mealType).no_egg(user.getNo_egg()).no_milk(user.getNo_milk())
+					.no_bean(user.getNo_bean()).no_shellfish(user.getNo_shellfish()).no_ingredient(user.getNo_ingredient())
+					.purpose(user.getUserGoal()).dietType(user.getDietType()).vegetarian(user.getVegetarian()).build();
+			historyService.historyUpdate(history);
+		}
+
+		model.addAttribute("success", "기록이 승인 대기목록으로 전송되었습니다.");
+		return "food_scan/foodAlertPage";
+	}
+
 /*
  * ----------------------------------------------------------------------------------
  */

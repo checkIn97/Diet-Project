@@ -36,10 +36,10 @@ public class FoodVo {
 		this.score = score;
 		this.starScore = (int)(score*10);
 		this.scoreView = (int)(score*100);
-		this.kcal = String.valueOf(Math.round((food.getFoodDetail().getKcal())));
-		this.carb = String.valueOf(Math.round((food.getFoodDetail().getCarb()*100))/100f);
-		this.prt = String.valueOf(Math.round((food.getFoodDetail().getPrt()*100))/100f);
-		this.fat = String.valueOf(Math.round((food.getFoodDetail().getFat()*100))/100f);
+		this.kcal = (String.valueOf(Math.round((food.getFoodDetail().getKcal())))).substring(0, (String.valueOf(Math.round((food.getFoodDetail().getKcal())))).indexOf("."));
+		this.carb = String.format("%.2f", Math.round((food.getFoodDetail().getCarb()*100))/100f);
+		this.prt = String.format("%.2f", Math.round((food.getFoodDetail().getPrt()*100))/100f);
+		this.fat = String.format("%.2f", Math.round((food.getFoodDetail().getFat()*100))/100f);
 	}
 
 	@Override

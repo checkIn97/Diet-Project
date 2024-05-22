@@ -35,11 +35,13 @@ public class Food {
 	
 	private String name;	
 	private String img;
-	
+
+	@ToString.Exclude
 	@OneToOne(mappedBy="food", fetch=FetchType.EAGER)
 	private FoodDetail foodDetail;
-	
-	@OneToMany(mappedBy="food", fetch=FetchType.EAGER)
+
+	@ToString.Exclude
+	@OneToMany(mappedBy="food", fetch=FetchType.LAZY)
 	private List<FoodIngredient> foodIngredientList;
 	
 }

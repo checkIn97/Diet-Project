@@ -236,9 +236,10 @@ public class FoodScanController {
 		
 		return "food_scan/foodDetail";
 	}
-	
+
 	// 상세보기에서 상차림으로 데이터를 보낸다.
 	// 이미 존재하면 새로 추가하지 않고 개수만 늘린다.
+	/*
 	@PostMapping("/history_in_from_detail")
 	public String historyInFromDetail(HttpSession session, Food food) {
 		System.out.println(1111);
@@ -261,7 +262,7 @@ public class FoodScanController {
 		
 		return "redirect:food_scan?page="+(foodScanVo.getPageInfo().get("number")+1);
 	}
-	
+	*/
 	// 상차림에서 데이터를 갱신한다.
 	@PostMapping("/history_update")
 	public String historyUpdate(HttpSession session, History history) {
