@@ -1978,6 +1978,10 @@ button.searchButton {
     right: 5px;
 }
 
+.chatBotConnection {
+    margin-top: 10px;
+}
+
 /*foodDay*/
 .foodContainer {
     display: grid;
