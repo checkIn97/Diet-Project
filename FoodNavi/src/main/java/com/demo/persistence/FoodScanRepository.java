@@ -19,6 +19,7 @@ public interface FoodScanRepository extends JpaRepository<Food, Integer> {
 	@Query(value="SELECT r1.* FROM "
 			+ "(SELECT DISTINCT Food.* FROM Food, Food_Detail, Food_Ingredient, Ingredient "
 			+ "WHERE Food.fseq = Food_Detail.fseq "
+			+ "AND Food.useyn = 'y' "
 			+ "AND Food.fseq = Food_Ingredient.fseq "
 			+ "AND Food_Ingredient.iseq = Ingredient.iseq "
 			+ "AND Food.name LIKE %:searchName% "
@@ -64,6 +65,7 @@ public interface FoodScanRepository extends JpaRepository<Food, Integer> {
 	@Query(value="SELECT r1.* FROM "
 			+ "(SELECT DISTINCT Food.* FROM Food, Food_Detail, Food_Ingredient, Ingredient "
 			+ "WHERE Food.fseq = Food_Detail.fseq "
+			+ "AND Food.useyn = 'y' "
 			+ "AND Food.fseq = Food_Ingredient.fseq "
 			+ "AND Food_Ingredient.iseq = Ingredient.iseq "
 			+ "AND Food.name LIKE %:searchName% "
@@ -115,6 +117,6 @@ public interface FoodScanRepository extends JpaRepository<Food, Integer> {
 			nativeQuery=true)
 	public int getFoodCountByMealTypeInHistory(String morning, String lunch, String dinner, String snack);
 
-	@Query(value="SELECT f FROM Food f")
+	@Query(value="SELECT f FROM Food f WHERE f.useyn = 'y'")
 	public List<Food> getAllByFood();
 }
