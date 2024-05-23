@@ -63,6 +63,10 @@ function subtract_history(button) {
 
 	$(button).closest('tr').remove();
 }
+
+function goBack() {
+	history.go(-1);
+}
 </script>
 <h1><a href="/mainpage"><img src="/assets/images/foodNaviFont.png" alt="foodNaviFont" class="foodNaviFont"></a></h1>
 <!-- myChange -->
@@ -115,7 +119,7 @@ function subtract_history(button) {
             <li><a href="/foodHistory_view" class="button">모든 기록 확인</a></li>
         </ul>
 
-        <a href="/foodRecommendation" class="button">이전</a>
+		<input type="button" value="이전" class="button" onclick="goBack()"/>
         
 
     </form>

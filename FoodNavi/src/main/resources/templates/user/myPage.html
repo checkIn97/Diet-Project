@@ -8,6 +8,14 @@
         window.location.href="user_delete";
         /*]]>*/
     }
+
+    function goMyHistory() {
+        window.location.href="foodHistory_view";
+    }
+
+    function goConfirmHistory() {
+        window.location.href="foodTodayHistory_view";
+    }
 </script>
 <h1>
     <a href="/mainpage"><img alt="foodNaviFont" class="foodNaviFont" src="/assets/images/foodNaviFont.png"></a>
@@ -51,6 +59,8 @@
             <div class="field half">
                 <input type="submit" value="정보 수정" class="primary"/> <input
                     type="button" value="회원탈퇴" class="button" onclick="delete_user()" />
+                <input type="button" value="나의 기록" id="my_history" onclick="goMyHistory()" />
+                <input type="button" value="기록 승인" id="confirm_history" onclick="goConfirmHistory()" />
             </div>
         </div>
     </form>
