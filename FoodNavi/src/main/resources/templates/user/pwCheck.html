@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>비밀번호 확인</title>
     <th:block th:insert="~{/includes/headerLogin}"></th:block>
-    <script type="text/javascript" th:inline="javascript">
+    <script th:inline="javascript" type="text/javascript">
         function pwok() {
             /*<![CDATA[*/
             var sessionpw = /*[[${sessionpw}]]*/'';
@@ -21,16 +21,28 @@
 </head>
 <body>
 <div id="wrap">
-    <h1><a href="/mainpage"><img src="/assets/images/foodNaviFont.png" alt="foodNaviFont" class="foodNaviFont"></a></h1>
+    <h1><a href="/mainpage"><img alt="foodNaviFont" class="foodNaviFont" src="/assets/images/foodNaviFont.png"></a></h1>
 
     <h2>비밀번호 확인</h2>
-    <form method=get name=formm id="theform" style="margin-right:0 "
-          action="#">
-        User Pwd <input type=password name="userpw" id="userpw">
-        <input type=button value="확인" onclick="pwok()"><br>
+    <form action="#" id="theform" method=get name=formm style="margin-right:0 ">
+        User Pwd
+        <div class="search-container">
+        <input id="userpw" name="userpw" type=password>
+        <input onclick="pwok()" id="confirmButton" type=button value="확인">
+        </div>
     </form>
-    <a href="/mainpage" class="button">이전</a>
+    <a class="button" href="/mainpage">이전</a>
 </div>
 </body>
 <th:block th:insert="~{includes/footer}"></th:block>
+
+<script>
+    $(document).on('keydown', function (event) {
+        if (event.key == "Enter") {
+            event.preventDefault();
+            pwok();
+        }
+    });
+</script>
+
 </html>

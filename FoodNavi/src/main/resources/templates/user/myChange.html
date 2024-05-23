@@ -1,23 +1,19 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <th:block th:insert="~{/includes/headerMain}"></th:block>
 <meta charset="UTF-8">
 
-<h1><a href="/mainpage"><img src="/assets/images/foodNaviFont.png" alt="foodNaviFont" class="foodNaviFont"></a></h1>
+<h1><a href="/mainpage"><img alt="foodNaviFont" class="foodNaviFont" src="/assets/images/foodNaviFont.png"></a></h1>
 <!-- myChange -->
 <article id="box">
     <h2 class="major">나의 변화</h2>
     <canvas id="myChart"></canvas>
-    <form method="post" action="/user_change_weight">
-        <div class="fields">
-            <div class="field">
-                <label for="userKg">오늘 내 체중은?</label>
-                <input type="text" name="userKg" id="userKg"/>
+    <form action="/user_change_weight" method="post">
+            <label for="userKg">오늘 내 체중은?</label>
+            <div class="user-container">
+                <input id="userKg" name="userKg" type="text"/>
+                <input class="primary" type="submit" id="userKgRecord" value="기록하기"/>
             </div>
-        </div>
-        <ul class="actions">
-            <li><input type="submit" value="기록하기" class="primary"/></li>
-        </ul>
     </form>
 
 </article>
@@ -31,7 +27,7 @@
     var labels = /*[[${labels}]]*/ [];
 
     /* 데이터 배열을 숫자 배열로 변환합니다. */
-    var data = changes.map(function(item) {
+    var data = changes.map(function (item) {
         return parseFloat(item);
     });
 
@@ -57,8 +53,14 @@
             }
         }
     });
-</script>
 
+    $(document).on('keydown', function (event) {
+        if (event.key == "Enter") {
+            event.preventDefault();
+            $('#userKgRecord').click();
+        }
+    });
+</script>
 
 
 <div class="fixed-bottom">
