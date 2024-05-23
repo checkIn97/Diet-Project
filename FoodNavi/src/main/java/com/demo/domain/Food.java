@@ -2,16 +2,11 @@ package com.demo.domain;
 
 import java.util.List;
 
+import jakarta.persistence.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,6 +30,7 @@ public class Food {
 	
 	private String name;	
 	private String img;
+	private String useyn;
 
 	@ToString.Exclude
 	@OneToOne(mappedBy="food", fetch=FetchType.EAGER)

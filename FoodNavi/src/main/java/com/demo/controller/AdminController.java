@@ -402,7 +402,7 @@ public class AdminController {
 
 	// 음식 삭제
 	@GetMapping("admin_food_delete")
-	public String adminFoodDelete(@RequestParam(value = "fseq") int fseq, Food fvo, HttpSession session,
+	public String adminFoodDelete(@RequestParam(value = "fseq") int fseq, HttpSession session,
 								  HttpServletRequest request) {
 
 		// 세션에서 사용자 정보 가져오기
@@ -414,12 +414,11 @@ public class AdminController {
 			request.setAttribute("message", "로그인이 필요합니다.");
 			return "admin/login"; // 로그인 페이지로 이동.
 		}
-		List<FoodIngredient> fiList = foodIngredientService.getFoodIngredientListByFood(fseq);
-		for (FoodIngredient fi : fiList) {
-			foodIngredientService.deleteFoodIngredient(fi);
-		}
+
 		foodDetailService.deleteFoodDetail(fseq);
-		foodService.deleteFood(fseq);
+		Food food = foodService.getFoodByFseq(fseq);
+		food.setUseyn("n");
+		foodService.insertFood(food);
 
 		return "redirect:admin_food_list";
 	}
