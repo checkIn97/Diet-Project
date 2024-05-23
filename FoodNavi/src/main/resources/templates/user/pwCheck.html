@@ -28,11 +28,20 @@
         User Pwd
         <div class="search-container">
         <input id="userpw" name="userpw" type=password>
-        <input onclick="pwok()" type=button value="확인">
+        <input onclick="pwok()" id="confirmButton" type=button value="확인">
         </div>
     </form>
     <a class="button" href="/mainpage">이전</a>
 </div>
 </body>
 <th:block th:insert="~{includes/footer}"></th:block>
+
+<script>
+    $(document).on('keydown', function (event) {
+        if (event.key == "Enter") {
+            $('#confirmButton').click();
+        }
+    });
+</script>
+
 </html>
