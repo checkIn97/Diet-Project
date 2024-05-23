@@ -612,10 +612,8 @@ public class AdminController {
 		System.out.println("calData.size(): " + calDataList.size());
 		System.out.println("calData1.name: " + calDataList.get(0).getName());
 		System.out.println("calData1.amount: " + calDataList.get(0).getAmount());
-		System.out.println("calData2.name: " + calDataList.get(1).getName());
-		System.out.println("calData2.amount: " + calDataList.get(1).getAmount());
 		System.out.println("<-----------------------테스트--------------------------->");
-		calDataList.remove(0);
+		//calDataList.remove(0);
 		if(!calDataList.isEmpty()) {
 			for (CalData calData : calDataList) {
 				String igredientName = calData.name;
