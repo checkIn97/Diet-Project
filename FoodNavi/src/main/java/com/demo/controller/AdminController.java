@@ -278,7 +278,7 @@ public class AdminController {
 		if (admin == null) {
 			// 로그인 알림을 포함한 경고 메시지를 설정합니다.
 			request.setAttribute("message", "로그인이 필요합니다.");
-			return "index"; // 로그인 페이지로 이동.
+			return "admin/login"; // 로그인 페이지로 이동.
 		}
 
 		Food food = new Food();
