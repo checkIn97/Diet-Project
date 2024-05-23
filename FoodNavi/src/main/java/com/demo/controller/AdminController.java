@@ -414,7 +414,10 @@ public class AdminController {
 			request.setAttribute("message", "로그인이 필요합니다.");
 			return "admin/login"; // 로그인 페이지로 이동.
 		}
-
+		List<FoodIngredient> fiList = foodIngredientService.getFoodIngredientListByFood(fseq);
+		for (FoodIngredient fi : fiList) {
+			foodIngredientService.deleteFoodIngredient(fi);
+		}
 		foodDetailService.deleteFoodDetail(fseq);
 		foodService.deleteFood(fseq);
 

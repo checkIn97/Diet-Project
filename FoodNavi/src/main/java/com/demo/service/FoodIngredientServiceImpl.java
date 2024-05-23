@@ -26,4 +26,9 @@ public class FoodIngredientServiceImpl implements FoodIngredientService {
 		return foodIngredientRepo.getFoodIngredientListByFood(fseq);
 	}
 
+	@Override
+	public void deleteFoodIngredient(FoodIngredient foodIngredient) {
+		foodIngredientRepo.delete(foodIngredient);
+	}
+
 }
