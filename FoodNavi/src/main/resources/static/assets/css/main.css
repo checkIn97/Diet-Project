@@ -1982,6 +1982,17 @@ button.searchButton {
     margin-top: 10px;
 }
 
+/*myChange*/
+
+#userKg {
+    width: 300px;
+}
+
+.user-container {
+    display: flex;
+    align-items: center;
+}
+
 /*foodDay*/
 .foodContainer {
     display: grid;
