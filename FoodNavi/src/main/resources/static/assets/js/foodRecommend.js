@@ -87,22 +87,155 @@ for (var i = 0; i < quantities.length; i++) {
 
 // 각 섹션에 대한 참조를 가져옵니다.
 var section1 = document.getElementById('section1');
-var section1_1 = document.getElementById('section1_1');
+var section2 = document.getElementById('section2');
+var section3 = document.getElementById('section3');
 
 // 각 화살표에 대한 참조를 가져옵니다.
 var arrowL1 = document.getElementById('arrowL1');
 var arrowR1 = document.getElementById('arrowR1');
-var arrowL1_1 = document.getElementById('arrowL1_1');
-var arrowR1_1 = document.getElementById('arrowR1_1');
+var arrowL2 = document.getElementById('arrowL2');
+var arrowR2 = document.getElementById('arrowR2');
+var arrowL3 = document.getElementById('arrowL3');
+var arrowR3 = document.getElementById('arrowR3');
+
 
 // 화살표에 클릭 이벤트 리스너를 추가합니다.
-arrowR1.addEventListener('click', function() {
-    section1.style.display = 'none';
-    section1_1.style.display = 'block';
+arrowL1.addEventListener('click', function() {
+	$("#arrow_action").val(1);
+	reloadSection();
 });
 
-arrowL1_1.addEventListener('click', function() {
-    section1_1.style.display = 'none';
-    section1.style.display = 'block';
+arrowR1.addEventListener('click', function() {
+	$("#arrow_action").val(2);
+	reloadSection();
 });
+
+arrowL2.addEventListener('click', function() {
+	$("#arrow_action").val(3);
+	reloadSection();
+});
+
+arrowR2.addEventListener('click', function() {
+	$("#arrow_action").val(4);
+	reloadSection();
+});
+
+arrowL3.addEventListener('click', function() {
+	$("#arrow_action").val(5);
+	reloadSection();
+});
+
+arrowR3.addEventListener('click', function() {
+	$("#arrow_action").val(6);
+	reloadSection();
+});
+
+function reloadSection() {
+	$.ajax({
+		type: 'POST',
+    	url: '/recommend_section_reload',
+    	dataType: 'json',
+    	data: $("#arrow_action"),
+    	contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+    	success: function (data) {
+	        var result = data.result;
+	        if (result == 'success') {
+				var food_name = data.food_name;
+		        var fseq = data.fseq;
+	        	var section_num = data.section_num;
+	        	var kcal = data.kcal;
+	        	var carb = data.carb;
+	        	var prt = data.prt;
+	        	var fat = data.fat;
+	        	var fi_name = data.fi_name;
+	        	var fi_amount = data.fi_amount;
+	        	var starScore = data.starScore;
+	        	var html = "";
+	        	html += "<table class=\"food-info\">";
+				html += "<tr><span class=\"food-name\">"+food_name+"</span>";
+				html += "<a href=\"food_detail?fseq="+fseq+"&type=r"+section_num+"\">";
+				html += "<img src=\"/assets/images/reading-glasses.png\" class=\"foodDetailGo\" title=\"상세보기\" alt=\"상세보기\">";
+				html == "</a></tr>";
+				html += "<tr><td style=\"width:40%\">칼로리</td>";
+				html += "<td><span class=\"calories\">"+kcal+"</span>kcal</td></tr>";
+				html += "<tr><td>탄수화물</td>";
+				html += "<td><span class=\"carbs\">"+carb+"</span>g</td></tr>";
+				html += "<tr><td>단백질</td>";
+				html += "<td><span class=\"protein\">"+prt+"</span>g</td></tr>";
+				html += "<tr><td>지방</td>";
+				html += "<td><span class=\"fat\">"+fat+"</span>g</td></tr>";
+				html += "<tr><td>재료</td><td>";
+				
+				if (fi_name.length > 0) {
+					for (let i = 0 ; i < fi_name.length ; i++) {
+						html += "<span>"+fi_name[i]+" "+fi_amount[i]+"g</span><br>";
+					}
+				}
+				
+				html += "</td></tr>";
+				html += "<tr><td>추천점수</td>";
+				html += "<td><span class=\"satisfaction\">";
+				if (starScore == 0) {
+					html += "<img class=\"star\" src=\"/assets/images/star-empty.png\">";	
+				} else if (starScore == 1) {
+					html += "<img class=\"star\" src=\"/assets/images/star-half.png\">";
+				} else if (starScore >= 2) {
+					html += "<img class=\"star\" src=\"/assets/images/star-full.png\">";
+				} 
+				
+				if (starScore == 2) {
+					html += "<img class=\"star\" src=\"/assets/images/star-empty.png\">";	
+				} else if (starScore == 3) {
+					html += "<img class=\"star\" src=\"/assets/images/star-half.png\">";
+				} else if (starScore >= 4) {
+					html += "<img class=\"star\" src=\"/assets/images/star-full.png\">";
+				}
+				
+				if (starScore == 4) {
+					html += "<img class=\"star\" src=\"/assets/images/star-empty.png\">";	
+				} else if (starScore == 5) {
+					html += "<img class=\"star\" src=\"/assets/images/star-half.png\">";
+				} else if (starScore >= 6) {
+					html += "<img class=\"star\" src=\"/assets/images/star-full.png\">";
+				}
+				
+				if (starScore == 6) {
+					html += "<img class=\"star\" src=\"/assets/images/star-empty.png\">";	
+				} else if (starScore == 7) {
+					html += "<img class=\"star\" src=\"/assets/images/star-half.png\">";
+				} else if (starScore >= 8) {
+					html += "<img class=\"star\" src=\"/assets/images/star-full.png\">";
+				}
+				
+				if (starScore == 8) {
+					html += "<img class=\"star\" src=\"/assets/images/star-empty.png\">";	
+				} else if (starScore == 9) {
+					html += "<img class=\"star\" src=\"/assets/images/star-half.png\">";
+				} else if (starScore >= 10) {
+					html += "<img class=\"star\" src=\"/assets/images/star-full.png\">";
+				}
+				
+				html += "</span></td></tr>";
+				html += "<tr><td>수량</td>";
+				html += "<td><span class=\"quantity\">";
+				html += "<button class=\"decrease\"><img class=\"pmIcon\" src=\"/assets/images/minus.png\"></button>";
+				html += "<input class=\"quantity-input\" min=\"0\" type=\"number\" value=\"1\">";
+				html += "<button class=\"increase\"><img class=\"pmIcon\" src=\"/assets/images/plus.png\"></button>";
+				html += "</span></td></tr></table>";
+				if (section_num == 1) {
+					$("#food_info1").html(html);	
+				} else if (section_num == 2) {
+					$("#food_info2").html(html);
+				} else {
+					$("#food_info3").html(html);
+				}
+				
+			}
+    	},
+    	error: function () {
+			alert("error");
+    	}
+	});
+}
+
 

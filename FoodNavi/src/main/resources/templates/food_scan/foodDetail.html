@@ -96,37 +96,35 @@ function history_in() {
 	$("#food_detail_form").attr("action", "history_in_from_detail").submit();
 }
 
-    function show_food_list() {
-
-    }
 
 
-    function rcd_update() {
-        $.ajax({
-            type: 'GET',
-            url: '/rcd_update',
-            dataType: 'json',
-            data: $("#fseq"),
-            contentType: 'application/x-www-form-urlencoded; charset=utf-8',
-            success: function (data) {
-                var result = data.rcdStatus;
-                var count = data.rcdCount;
-                var commentCount = data.commentCount;
-                var html = "";
-                if (result == 1) {
-                    html = "<img src=\"/assets/images/like.png\" class=\"foodLike\" title=\"좋아요\" alt=\"좋아요\">" +
-                        "<span>" + count + "</span>";
-                } else if (result == 0) {
-                    html = "<img src=\"/assets/images/like.png\" class=\"foodLike\" title=\"좋아요\" alt=\"좋아요\">" +
-                        "<span>" + count + "</span>";
-                }
-                if (result >= 0) {
-                    $("#rcdCount").html(html);
-                }
-            },
-            error: function () {
+
+function rcd_update() {
+    $.ajax({
+        type: 'GET',
+        url: '/rcd_update',
+        dataType: 'json',
+        data: $("#fseq"),
+        contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+        success: function (data) {
+            var result = data.rcdStatus;
+            var count = data.rcdCount;
+            var commentCount = data.commentCount;
+            var html = "";
+            if (result == 1) {
+                html = "<img src=\"/assets/images/like.png\" class=\"foodLike\" title=\"좋아요\" alt=\"좋아요\">" +
+                    "<span>" + count + "</span>";
+            } else if (result == 0) {
+                html = "<img src=\"/assets/images/like.png\" class=\"foodLike\" title=\"좋아요\" alt=\"좋아요\">" +
+                    "<span>" + count + "</span>";
             }
-        });
-    }
+            if (result >= 0) {
+                $("#rcdCount").html(html);
+            }
+        },
+        error: function () {
+        }
+    });
+}
 </script>
 </html>

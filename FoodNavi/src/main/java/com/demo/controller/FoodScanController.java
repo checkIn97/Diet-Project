@@ -438,7 +438,7 @@ public class FoodScanController {
 	@GetMapping("rcd_update")
 	@ResponseBody
 	public Map<String, Integer> rcdUpdate(HttpSession session, Food food) {
-		System.out.println(1111111111);
+
 		Map<String, Integer> rcdStatus = new HashMap<>();
 		// 세션에서 사용자 정보 가져오기
     	Users user = (Users) session.getAttribute("loginUser");
