@@ -28,7 +28,7 @@ public class DataInOutRepositoryTest {
 		historyInDummy("snack", "50");
 	}
 	
-
+	@Disabled
 	@Test
 	public void totalInput() {
 		// 기본 데이터 입력

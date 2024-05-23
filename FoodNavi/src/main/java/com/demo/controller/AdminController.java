@@ -415,7 +415,6 @@ public class AdminController {
 			return "admin/login"; // 로그인 페이지로 이동.
 		}
 
-		foodDetailService.deleteFoodDetail(fseq);
 		Food food = foodService.getFoodByFseq(fseq);
 		food.setUseyn("n");
 		foodService.insertFood(food);

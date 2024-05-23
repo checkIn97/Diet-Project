@@ -28,6 +28,7 @@
                     <th>지방(g)</th>
                     <th>채식 여부</th>
                     <th>식사 종류</th>
+                    <th>데이터 사용 여부(관리자용)</th>
                 </tr>
                 <tr>
                     <!--칼로리 값-->
@@ -38,12 +39,13 @@
                     <td>[[${food.foodDetail.prt}]]</td>
                     <!--지방 값-->
                     <td>[[${food.foodDetail.fat}]]</td>
-
-
+                    <!--채식 여부-->
+                    <td>-</td>
                     <!--식탄 종류-->
                     <td th:if="${food.foodDetail.foodType == '주식'}">주식</td>
                     <td th:if="${food.foodDetail.foodType == '부식'}">부식</td>
                     <td th:if="${food.foodDetail.foodType == '간식'}">간식</td>
+                    <td>[[${food.useyn}]]</td>
                 </tr>
             </table>
             <div class="food-detail-row">

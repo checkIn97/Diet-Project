@@ -28,7 +28,7 @@
                     <tr class="board_list">
                         <td><a th:href="@{admin_food_Detail(fseq=${food.fseq})}" th:if="${food.img == null}">없음</a>
                             <a th:href="@{admin_food_Detail(fseq=${food.fseq})}" th:if="${food.img != null}"><img th:src="${food.img}"></a></td>
-                        <td><a th:href="@{admin_food_Detail(fseq=${food.fseq})}" th:text="${food.name}"></a></td>
+                        <td><a th:href="@{admin_food_Detail(fseq=${food.fseq})}" th:text="${food.name}" th:style="${food.useyn == 'n'} ? 'text-decoration: line-through;' : 'text-decoration: none;'"></a></td>
                         <td>[[${food.foodDetail.kcal}]]</td>
                     </tr>
                 </th:block>
