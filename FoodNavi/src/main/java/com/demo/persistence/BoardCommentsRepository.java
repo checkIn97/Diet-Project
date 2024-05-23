@@ -36,4 +36,6 @@ public interface BoardCommentsRepository extends JpaRepository<Comments, Integer
 			"ORDER BY c.cseq DESC")
 	List<Comments> findCommentsByUseq(int useq);
 
+	@Transactional
+	void deleteByParentComment_Cseq(int cseq);
 }

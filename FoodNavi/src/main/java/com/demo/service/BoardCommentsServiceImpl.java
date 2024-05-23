@@ -41,6 +41,7 @@ public class BoardCommentsServiceImpl implements BoardCommentsService {
 	public void deletComment(int cseq) {
 		Comments comment = BoardCommentsRepo.findById(cseq).orElse(null);
 		if (comment != null) {
+			BoardCommentsRepo.deleteByParentComment_Cseq(cseq);
 			BoardCommentsRepo.deleteById(cseq);
 			updateCommentCount(comment.getBoard().getBseq());
 		}
