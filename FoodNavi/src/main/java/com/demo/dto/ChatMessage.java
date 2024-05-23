@@ -1,10 +1,12 @@
 package com.demo.dto;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class ChatMessage {
 	
 	// 채팅 메세지를 구현하는 클래스
@@ -18,5 +20,6 @@ public class ChatMessage {
 	private String roomId;
 	private String sender;
 	private String message;
+	private String link;
 	
 }

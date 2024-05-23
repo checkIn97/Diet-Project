@@ -1,5 +1,5 @@
-
-<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<!DOCTYPE HTML>
+<html lang="ko">
 <head>
     <title>Websocket ChatRoom</title>
     <!-- Required meta tags -->
@@ -11,11 +11,12 @@
     </noscript>
 </head>
 <body>
+
 <div class="container" id="app" v-cloak>
     <div>
         <h2>{{room.name}}</h2>
     </div>
-    <button type="button" class="button" id="chatClose">나가기</button>
+    <button type="button" class="button" id="chatClose" onclick="">나가기</button>
     <div class="input-group">
         <div class="input-group-prepend">
             <label class="input-group-text">내용</label>
@@ -29,7 +30,9 @@
     </div>
     <ul class="list-group">
         <li class="list-group-item" v-for="message in messages">
-            {{message.sender}} - {{message.message}}
+            {{message.sender}} - {{message.message}}<br>
+            <a style="color:blueviolet" v-if="message.link" :href="message.link" target="_blank"> ==> 주문페이지로 이동</a>
+            <iframe v-if="message.link" :src="message.link" width="100%" height="400"></iframe>
         </li>
     </ul>
     <div></div>
@@ -42,7 +45,6 @@
 <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.js"></script>
 <script src="/assets/js/jquery.min.js"></script>
-
 
 <script>
     //alert(document.title);
@@ -86,7 +88,7 @@
 
             },
             recvMessage: function(recv) {
-                this.messages.unshift({"type":recv.type,"sender":recv.type=='ENTER'?'[알림]':recv.sender,"message":recv.message})
+                this.messages.unshift({"type":recv.type,"sender":recv.type=='ENTER'?'[알림]':recv.sender,"message":recv.message, "link":recv.link})
 
             }
         }
