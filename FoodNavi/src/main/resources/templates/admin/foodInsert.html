@@ -22,19 +22,19 @@
             </tr>
             <tr>
                 <th>칼로리(kcal)</th>
-                <td><input type="number" name="kcal"/></td>
+                <td><span type="number" name="kcal" id="kcal"/></td>
             </tr>
             <tr>
                 <th>탄수화물(g)</th>
-                <td><input type="number" name="carb"/></td>
+                <td><span type="number" name="carb" id="carb"/></td>
             </tr>
             <tr>
                 <th>단백질(g)</th>
-                <td><input type="number" name="prt"/></td>
+                <td><span type="number" name="prt" id="prt"/></td>
             </tr>
             <tr>
                 <th>지방(g)</th>
-                <td><input type="number" name="fat"/></td>
+                <td><span type="number" name="fat" id="fat"/></td>
             </tr>
         </table>
 
@@ -65,6 +65,7 @@
                     event.preventDefault();
                     $('#mytable > tbody:last').append('<tr><td><input type="text" name="ingredient"></td>' +
                         '<td><input type="number" name="quantity" min="0">g</td>' +
+                        '<td><input type="button" name="cal" value="게산" onclick="ingredientCal(this)"></td>' +
                         '<td><input type="button" class="button" id="btn-delete-row" value="삭제"></td></tr>');
                     initAutocomplete();
                     $('input[name="ingredient"]').focus();
@@ -78,6 +79,7 @@
                 event.preventDefault();
                 $('#mytable > tbody:last').append('<tr><td><input type="text" name="ingredient"></td>' +
                     '<td><input type="number" name="quantity" min="0">g</td>' +
+                    '<td><input type="button" name="cal" value="게산" onclick="ingredientCal(this)"></td>' +
                     '<td><input type="button" class="button" id="btn-delete-row" value="삭제"></td></tr>');
                 initAutocomplete();
             });
@@ -88,7 +90,41 @@
                 $(this).closest('tr').remove();
             });
         </script>
+        <!-- 영양성분 합산 테스트용 코드 -->
+        <script th:inline="javascript">
+            function ingredientCal() {
+                var calData = [];
+                $("#mytable tr").each(function() {
+                    var name = $(this).find("input[name='ingredient']").val();
+                    var amount = $(this).find("input[name='quantity']").val();
 
+                    calData.push({
+                        name: name,
+                        amount: amount
+                    });
+                });
+
+
+                $.ajax({
+                    method: 'POST',
+                    url: '/admin_igrd_cal',
+                    data: JSON.stringify(calData),
+                    contentType: 'application/json',
+                    success: function (response) {
+                        alert('전송성공');
+                        console.log(response);
+                        $("#kcal").text(response.kcal);
+                        $("#carb").text(response.carb);
+                        $("#prt").text(response.prt);
+                        $("#fat").text(response.fat);
+                    },
+                    error: function (error) {
+                        alert('전송실패');
+                    }
+                });
+            }
+        </script>
+        <!-- 영양성분 합산 테스트용 코드 -->
         <div class="field">
             <label for="foodType">식단 종류</label>
             <select name="foodType" id="foodType">

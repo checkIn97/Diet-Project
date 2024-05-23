@@ -10,6 +10,8 @@ import java.util.*;
 import com.demo.domain.*;
 import com.demo.persistence.ExerciseOptionRepository;
 import com.demo.service.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
@@ -18,11 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -599,6 +597,49 @@ public class AdminController {
 		return response;
 	}
 
+	// 음식 추가 시 영양성분 계산해주는 메소드
+	@PostMapping("/admin_igrd_cal")
+	@ResponseBody
+	public Map<String, Object> calculateIngredient(@RequestBody List<CalData> calDataList) {
+		float kcal = 0f;
+		float carb = 0f;
+		float prt = 0f;
+		float fat = 0f;
+		System.out.println("<-----------------------테스트--------------------------->");
+		System.out.println("calData.size(): " + calDataList.size());
+		System.out.println("calData1.name: " + calDataList.get(0).getName());
+		System.out.println("calData1.amount: " + calDataList.get(0).getAmount());
+		System.out.println("calData2.name: " + calDataList.get(1).getName());
+		System.out.println("calData2.amount: " + calDataList.get(1).getAmount());
+		System.out.println("<-----------------------테스트--------------------------->");
+		calDataList.remove(0);
+		if(!calDataList.isEmpty()) {
+			for (CalData calData : calDataList) {
+				String igredientName = calData.name;
+				int quantity = calData.amount;
+				Ingredient igrd = ingredientService.findByName(igredientName).get();
+				kcal += igrd.getKcal() * (quantity / 100f);
+				carb += igrd.getCarb() * (quantity / 100f);
+				prt += igrd.getPrt() * (quantity / 100f);
+				fat += igrd.getFat() * (quantity / 100f);
+			}
+		}
+		Map<String, Object> response = new HashMap<>();
+		response.put("kcal", kcal);
+		response.put("carb", carb);
+		response.put("prt", prt);
+		response.put("fat", fat);
+		return response;
+	}
 
+	/**
+	 *  음식 추가 시 ajax로 보낸 값 받는 클래스--------------------------------------------------------------
+	 */
+	@Getter
+	@Setter
+	class CalData {
+		private String name;
+		private int amount;
+	}
 
 }
