@@ -12,7 +12,7 @@
             <label for="userKg">오늘 내 체중은?</label>
             <div class="user-container">
                 <input id="userKg" name="userKg" type="text"/>
-                <input class="primary" type="submit" value="기록하기"/>
+                <input class="primary" type="submit" id="userKgRecord" value="기록하기"/>
             </div>
     </form>
 
@@ -51,6 +51,13 @@
                     beginAtZero: false
                 }
             }
+        }
+    });
+
+    $(document).on('keydown', function (event) {
+        if (event.key == "Enter") {
+            event.preventDefault();
+            $('#userKgRecord').click();
         }
     });
 </script>
