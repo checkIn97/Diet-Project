@@ -58,4 +58,9 @@ public class AdminUsersServiceImpl implements AdminUsersService {
 		return usersRepo.findAll();
 	}
 
+	@Override
+	public void updateUser(Users user) {
+		usersRepo.save(user);		
+	}
+
 }

@@ -5,14 +5,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
-import com.demo.domain.*;
-import com.demo.dto.UserVo;
-import com.demo.persistence.ExerciseOptionRepository;
-import com.demo.service.*;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
@@ -21,17 +20,46 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.demo.domain.Admin;
+import com.demo.domain.Board;
+import com.demo.domain.Comments;
+import com.demo.domain.ExerciseOption;
+import com.demo.domain.Food;
+import com.demo.domain.FoodDetail;
+import com.demo.domain.FoodIngredient;
+import com.demo.domain.Ingredient;
+import com.demo.domain.Users;
 import com.demo.dto.BoardScanVo;
 import com.demo.dto.FoodRecommendVo;
+import com.demo.dto.FoodVo;
 import com.demo.dto.UserScanVo;
+import com.demo.persistence.ExerciseOptionRepository;
+import com.demo.service.AdminFoodDetailService;
+import com.demo.service.AdminFoodService;
+import com.demo.service.AdminService;
+import com.demo.service.AdminUsersService;
+import com.demo.service.BoardCommentsService;
+import com.demo.service.BoardService;
+import com.demo.service.DataInOutService;
+import com.demo.service.ExerciseOptionService;
+import com.demo.service.FoodIngredientService;
+import com.demo.service.IngredientService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import lombok.Getter;
+import lombok.Setter;
 
 @SessionAttributes("adminUser")
 @Controller
@@ -57,6 +85,8 @@ public class AdminController {
 	private ExerciseOptionRepository exerciseOptionRepository;
 	@Autowired
 	private ExerciseOptionService exerciseOptionService;
+	@Autowired
+	private DataInOutService dataInOutService;
 
 	// @Value("${com.demo.upload.path}")
 	// private String uploadPath;
@@ -177,6 +207,30 @@ public class AdminController {
 		model.addAttribute("pageInfo", userScanVo.getPageInfo());
 		return "admin/userDetail";
 	}
+	
+	@ResponseBody
+	@PostMapping("admin_user_able")
+	public Map<String, Integer> admin_user_able(HttpSession session, @RequestParam("useq") int useq) {
+		Map<String, Integer> result = new HashMap<>();
+		int status = -1;
+		// 세션에서 사용자 정보 가져오기
+		Admin admin = (Admin) session.getAttribute("adminUser");
+		// 세션에 로그인 정보가 없는 경우
+		if (admin != null) {
+			Users user = usersService.getUserByUseq(useq);
+			if (user.getUseyn().equals("y")) {
+				user.setUseyn("n");
+				status = 0;
+			} else {
+				user.setUseyn("y");
+				status = 1;
+			}
+			usersService.updateUser(user);
+		}
+		result.put("status", status);
+		
+		return result;
+	}
 
 	// 식품 리스트
 	// 1. mapping 과 return값 수정
@@ -221,7 +275,13 @@ public class AdminController {
 		foodScanVo.setFoodList(foodData.getContent());
 		session.setAttribute("foodScanVo", foodScanVo);
 		model.addAttribute("foodScanVo", foodScanVo);
-		model.addAttribute("foodList", foodScanVo.getFoodList());
+		List<FoodVo> foodRecommendList = new ArrayList<>();
+		for (Food food : foodList) {
+			FoodVo foodVo = new FoodVo(food);
+			foodRecommendList.add(foodVo);
+		}
+		foodScanVo.setFoodRecommendList(foodRecommendList);
+		model.addAttribute("foodList", foodScanVo.getFoodRecommendList());
 		model.addAttribute("pageInfo", foodData);
 		return "admin/foodList";
 
@@ -244,9 +304,30 @@ public class AdminController {
 		}
 
 		Food food = foodService.getFoodByFseq(fseq);
-		List<Ingredient> ingredients = ingredientService.getIngredientListInFood(fseq);
-		model.addAttribute("ingredientsList", ingredients);
-		model.addAttribute("food", food);
+		List<FoodIngredient> foodIngredients = foodIngredientService.getFoodIngredientListByFood(fseq);
+		model.addAttribute("foodIngredientsList", foodIngredients);
+		int minVeganValue = 5;
+		for (FoodIngredient fi : foodIngredients) {
+			if (fi.getIngredient().getVeganValue() < minVeganValue)
+				minVeganValue = fi.getIngredient().getVeganValue();
+		}
+		String vegan = "";
+		if (minVeganValue == 0) {
+			vegan = "해당 없음";
+		} else if (minVeganValue == 1) {
+			vegan = "폴로-페스코 가능";
+		} else if (minVeganValue == 2) {
+			vegan = "페스코 가능";
+		} else if (minVeganValue == 3) {
+			vegan = "락토-오보 가능";
+		} else if (minVeganValue == 4) {
+			vegan = "락토 가능";
+		} else {
+			vegan = "비건 가능";
+		}
+		FoodVo foodVo = new FoodVo(food);
+		model.addAttribute("vegan", vegan);
+		model.addAttribute("foodVo", foodVo);
 		FoodRecommendVo foodScanVo = (FoodRecommendVo) session.getAttribute("foodScanVo");
 		model.addAttribute("foodScanVo", foodScanVo);
 		model.addAttribute("foodList", foodScanVo.getFoodList());
@@ -271,7 +352,8 @@ public class AdminController {
 									   @RequestParam(value = "prt") float prt, @RequestParam(value = "fat") float fat,
 									   @RequestParam(value = "ingredient") String[] ingredient,
 									   @RequestParam(value = "quantity") int [] quantity,
-									   @RequestParam(value = "foodType") String foodType) {
+									   @RequestParam(value = "foodType") String foodType,
+									   @RequestParam(value = "n") int n) {
 
 		// 세션에서 사용자 정보 가져오기
 		Admin admin = (Admin) session.getAttribute("adminUser");
@@ -296,6 +378,8 @@ public class AdminController {
 //				e.printStackTrace();
 //			}
 		}
+		System.out.println(carb);
+		food.setUseyn("y");
 		foodService.insertFood(food);
 		food = foodService.getFoodByMaxFseq();
 		FoodDetail foodDetail = new FoodDetail();
@@ -305,9 +389,10 @@ public class AdminController {
 		foodDetail.setPrt(prt);
 		foodDetail.setFat(fat);
 		foodDetail.setFoodType(foodType);
-
+		foodDetail.setN(n);
 
 		foodDetailService.insertFoodDetail(foodDetail);
+
 
 
 
@@ -322,7 +407,12 @@ public class AdminController {
 
 
 		re.addAttribute("fseq", food.getFseq());
-		foodInsertPythonRun(foodDetail, food);
+		List<Food> foodList = new ArrayList<>();
+		food = foodService.getFoodByMaxFseq();
+		foodDetail = foodDetailService.getFoodDetailByMaxFdseq();
+		food.setFoodDetail(foodDetail);
+		foodList.add(food);
+		dataInOutService.foodListToCsv(foodList);
 		return "redirect:admin_food_list";
 	}
 
@@ -341,7 +431,9 @@ public class AdminController {
 		}
 
 		Food food = foodService.getFoodByFseq(fvo.getFseq());
-		model.addAttribute("food", food);
+		FoodVo foodVo = new FoodVo(food);
+		model.addAttribute("fileInfo", food.getImg());
+		model.addAttribute("foodVo", foodVo);
 		return "/admin/foodEdit";
 	}
 

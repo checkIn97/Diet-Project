@@ -16,7 +16,7 @@
                 <img src="/assets/images/food.png" alt="Food Image"/>
             </div>
             <div class="food-detail-item-large">
-                <span class="food-detail-title">[[${food.name}]]</span>
+                <span class="food-detail-title">[[${foodVo.food.name}]]</span>
             </div>
         </div>
         <div class="food-detail-container">
@@ -32,40 +32,41 @@
                 </tr>
                 <tr>
                     <!--칼로리 값-->
-                    <td>[[${food.foodDetail.kcal}]]</td>
+                    <td>[[${foodVo.kcal}]]</td>
                     <!--탄수화물 값-->
-                    <td>[[${food.foodDetail.carb}]]</td>
+                    <td>[[${foodVo.carb}]]</td>
                     <!--단백질 값-->
-                    <td>[[${food.foodDetail.prt}]]</td>
+                    <td>[[${foodVo.prt}]]</td>
                     <!--지방 값-->
-                    <td>[[${food.foodDetail.fat}]]</td>
+                    <td>[[${foodVo.fat}]]</td>
                     <!--채식 여부-->
-                    <td>-</td>
+                    <td>[[${vegan}]]</td>
                     <!--식탄 종류-->
-                    <td th:if="${food.foodDetail.foodType == '주식'}">주식</td>
-                    <td th:if="${food.foodDetail.foodType == '부식'}">부식</td>
-                    <td th:if="${food.foodDetail.foodType == '간식'}">간식</td>
-                    <td>[[${food.useyn}]]</td>
+                    <td th:if="${foodVo.food.foodDetail.foodType == '주식'}">주식</td>
+                    <td th:if="${foodVo.food.foodDetail.foodType == '부식'}">부식</td>
+                    <td th:if="${foodVo.food.foodDetail.foodType == '간식'}">간식</td>
+                    <td>[[${foodVo.food.useyn}]]</td>
                 </tr>
             </table>
             <div class="food-detail-row">
                 <div class="food-detail-item">
-                    <span class="food-detail-title">재료</span>
-                    <th:block th:each="ingredient : ${ingredientsList}">
-                        [[${ingredient.name}]]&nbsp;
+                    <span class="food-detail-title">재료 ([[${foodVo.food.foodDetail.n}]]인분 기준)</span><br>
+                    <th:block th:each="foodIngredient, iterStat : ${foodIngredientsList}">
+                        <span th:unless="${iterStat.last}">[[${foodIngredient.ingredient.name}]] [[${foodIngredient.amount}]]g, </span>
+                        <span th:if="${iterStat.last}">[[${foodIngredient.ingredient.name}]] [[${foodIngredient.amount}]]g</span>
                     </th:block>
                 </div>
 
             </div>
         </div>
 
-        <input type="hidden" name="fseq" th:value="${food.fseq}">
+        <input type="hidden" name="fseq" th:value="${foodVo.food.fseq}">
         <input type="submit" value="수정하기">
     </form>
-    <a th:href="@{admin_food_delete(fseq=${food.fseq})}">
+    <a th:href="@{admin_food_delete(fseq=${foodVo.food.fseq})}">
         <button>삭제하기</button>
     </a>
-    <a th:href="@{admin_food_list(page=${pageInfo.number +1})}">
+    <a th:href="@{admin_food_list(page=${pageInfo.number})}">
         <button>목록 보기</button>
     </a>
 </article>

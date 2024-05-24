@@ -34,4 +34,10 @@ public class AdminFoodDetailServiceImpl implements AdminFoodDetailService {
 		
 	}
 
+
+	@Override
+	public FoodDetail getFoodDetailByMaxFdseq() {
+		return foodDetailRepo.findFirstByOrderByFdseqDesc();
+	}
+
 }

@@ -48,8 +48,8 @@ public class UsersController {
 			return "redirect:user_membership";
 		}
 		
-		Users user = Users.builder().userid(vo.getUserid()).userpw(vo.getUserpw()).name(vo.getName()).sex(vo.getSex())
-				.userGoal(vo.getUserGoal()).useyn("y").build();
+		Users user = Users.builder().userid(vo.getUserid()).userpw(vo.getUserpw()).name(vo.getName())
+				.sex(vo.getSex()).useyn("y").build();
 		session.setAttribute("joinUser", user);
 
 		return "user/bmi";
@@ -78,7 +78,14 @@ public class UsersController {
 		user.setAge(vo.getAge());
 		user.setHeight(vo.getHeight());
 		user.setWeight(vo.getWeight());
-		user.setUserGoal(vo.getUserGoal());
+		user.setUserGoal("all");
+		user.setDietType("all");
+		user.setNo_egg("a");
+		user.setNo_milk("a");
+		user.setNo_bean("a");
+		user.setNo_shellfish("a");
+		user.setVegetarian("0");
+		
 		usersService.insertUser(user);
 		session.setAttribute("loginUser", user);
 
