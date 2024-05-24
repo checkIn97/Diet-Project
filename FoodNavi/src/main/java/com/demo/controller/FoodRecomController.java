@@ -397,7 +397,7 @@ public class FoodRecomController {
    			section_reload_info.put("prt", foodVo.getPrt());
    			section_reload_info.put("fat", foodVo.getFat());
    			section_reload_info.put("starScore", foodVo.getStarScore());
-   			section_reload_info.put("count", foodIngredientList.size());
+   			section_reload_info.put("scoreView", foodVo.getScoreView());
    			String[] fi_name = new String[foodIngredientList.size()];
    			int[] fi_amount = new int[foodIngredientList.size()];
    			for (int i = 0 ; i < foodIngredientList.size(); i++) {

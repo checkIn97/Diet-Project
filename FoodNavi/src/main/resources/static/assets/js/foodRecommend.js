@@ -194,7 +194,7 @@ function reloadSection() {
 				html += "</td></tr>";
 				html += "<tr><td>추천점수</td>";
 				html += "<td><span class=\"satisfaction\" title="+scoreView+"%"+" alt="+scoreView+">";
-				if (starScore == 0) {
+				if (starScore <= 0) {
 					html += "<img class=\"star\" src=\"/assets/images/star-empty.png\">";	
 				} else if (starScore == 1) {
 					html += "<img class=\"star\" src=\"/assets/images/star-half.png\">";
@@ -203,7 +203,7 @@ function reloadSection() {
 				}
 				html += "&nbsp";
 				
-				if (starScore == 2) {
+				if (starScore <= 2) {
 					html += "<img class=\"star\" src=\"/assets/images/star-empty.png\">";	
 				} else if (starScore == 3) {
 					html += "<img class=\"star\" src=\"/assets/images/star-half.png\">";
@@ -212,7 +212,7 @@ function reloadSection() {
 				}
 				html += "&nbsp";
 				
-				if (starScore == 4) {
+				if (starScore <= 4) {
 					html += "<img class=\"star\" src=\"/assets/images/star-empty.png\">";	
 				} else if (starScore == 5) {
 					html += "<img class=\"star\" src=\"/assets/images/star-half.png\">";
@@ -221,7 +221,7 @@ function reloadSection() {
 				}
 				html += "&nbsp";
 				
-				if (starScore == 6) {
+				if (starScore <= 6) {
 					html += "<img class=\"star\" src=\"/assets/images/star-empty.png\">";	
 				} else if (starScore == 7) {
 					html += "<img class=\"star\" src=\"/assets/images/star-half.png\">";
@@ -230,7 +230,7 @@ function reloadSection() {
 				}
 				html += "&nbsp";
 				
-				if (starScore == 8) {
+				if (starScore <= 8) {
 					html += "<img class=\"star\" src=\"/assets/images/star-empty.png\">";	
 				} else if (starScore == 9) {
 					html += "<img class=\"star\" src=\"/assets/images/star-half.png\">";
