@@ -237,9 +237,19 @@ function reloadSection() {
 				html += "</span></td></tr>";
 				html += "<tr><td>수량</td>";
 				html += "<td><span class=\"quantity\">";
-				html += "<button class=\"decrease\" onclick=\"change_amount("+(section_num-1)*2+1+")\"><img class=\"pmIcon\" src=\"/assets/images/minus.png\"></button>";
-				html += "<input class=\"quantity-input\" id=\"amount"+section_num+"\" min=\"1\" max=\"99\" type=\"number\" value=\""+amount+"\" readonly>";
-				html += "<button class=\"increase\" onclick=\"change_amount("+(section_num-1)*2+2+")\"><img class=\"pmIcon\" src=\"/assets/images/plus.png\"></button>";
+				if (section_num == 1) {
+					html += "<button class=\"decrease\" onclick=\"change_amount(1)\"><img class=\"pmIcon\" src=\"/assets/images/minus.png\"></button>";
+					html += "<input class=\"quantity-input\" id=\"amount1\" min=\"1\" max=\"99\" type=\"number\" value=\""+amount+"\" readonly>";
+					html += "<button class=\"increase\" onclick=\"change_amount(2)\"><img class=\"pmIcon\" src=\"/assets/images/plus.png\"></button>";
+				} else if (section_num == 2) {
+					html += "<button class=\"decrease\" onclick=\"change_amount(3)\"><img class=\"pmIcon\" src=\"/assets/images/minus.png\"></button>";
+					html += "<input class=\"quantity-input\" id=\"amount2\" min=\"1\" max=\"99\" type=\"number\" value=\""+amount+"\" readonly>";
+					html += "<button class=\"increase\" onclick=\"change_amount(4)\"><img class=\"pmIcon\" src=\"/assets/images/plus.png\"></button>";
+				} else {
+					html += "<button class=\"decrease\" onclick=\"change_amount(5)\"><img class=\"pmIcon\" src=\"/assets/images/minus.png\"></button>";
+					html += "<input class=\"quantity-input\" id=\"amount3\" min=\"1\" max=\"99\" type=\"number\" value=\""+amount+"\" readonly>";
+					html += "<button class=\"increase\" onclick=\"change_amount(6)\"><img class=\"pmIcon\" src=\"/assets/images/plus.png\"></button>";
+				}
 				html += "</span></td></tr></table>";
 				if (section_num == 1) {
 					$("#food_info1").html(html);	

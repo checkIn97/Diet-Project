@@ -359,7 +359,7 @@ public class FoodRecomController {
 			@RequestParam(value="amount2") int amount2, 
 			@RequestParam(value="amount3") int amount3) {
 		
-		int section_num = (arrow_action-1)/2;
+		int section_num = (arrow_action+amount_action-1)/2;
 		int amount = 0;
 		if (section_num == 0) {
 			amount = amount1;
