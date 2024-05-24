@@ -26,7 +26,7 @@
         </tr>
         <tr>
             <th>칼로리</th>
-            <td th:text="${T(java.lang.Math).round(foodVo.food.foodDetail.kcal) + 'kcal'}"></td>
+            <td th:text="${foodVo.kcal} + 'kcal /1인분'"></td>
         </tr>
         <tr>
             <th th:rowspan="3">영양성분</th>
@@ -43,6 +43,15 @@
         <tr>
             <!--<th>지방</th>-->
             <!--<td>[[${foodVo.food.foodDetail.fat}]] g</td>-->
+        </tr>
+        <tr>
+        	<th>재료</th>
+        	<td>
+        		<[[${foodVo.food.foodDetail.n}]]인분 기준><br>
+        		<block th:each="foodIngredient : ${foodVo.food.foodIngredientList}">
+        			<span>[[${foodIngredient.ingredient.name}]] [[${foodIngredient.amount}]]g</span><br>
+        		</block>
+        	</td>
         </tr>
         <th:block th:if="${foodSRVo.recommend}">
             <tr>
@@ -113,10 +122,10 @@ function rcd_update() {
             var html = "";
             if (result == 1) {
                 html = "<img src=\"/assets/images/like.png\" class=\"foodLike\" title=\"좋아요\" alt=\"좋아요\">" +
-                    "<span>" + count + "</span>";
+                    "<span> " + count + "</span>";
             } else if (result == 0) {
                 html = "<img src=\"/assets/images/like.png\" class=\"foodLike\" title=\"좋아요\" alt=\"좋아요\">" +
-                    "<span>" + count + "</span>";
+                    "<span> " + count + "</span>";
             }
             if (result >= 0) {
                 $("#rcdCount").html(html);

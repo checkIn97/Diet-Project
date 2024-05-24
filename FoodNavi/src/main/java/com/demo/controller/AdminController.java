@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.demo.domain.*;
+import com.demo.dto.UserVo;
 import com.demo.persistence.ExerciseOptionRepository;
 import com.demo.service.*;
 import lombok.Getter;
@@ -45,9 +46,9 @@ public class AdminController {
 	@Autowired
 	private AdminFoodService foodService;
 	@Autowired
-	private AdminBoardService boardService;
+	private BoardService boardService;
 	@Autowired
-	private AdminBoardCommentsService boardCommentsService;
+	private BoardCommentsService boardCommentsService;
 	@Autowired
 	private IngredientService ingredientService;
 	@Autowired
@@ -150,6 +151,7 @@ public class AdminController {
 		model.addAttribute("userScanVo", userScanVo);
 		model.addAttribute("userList", userScanVo.getUserList());
 		model.addAttribute("pageInfo", userScanVo.getPageInfo());
+		System.out.println("TEST!!!!!! 유저 pageInfo: " + userScanVo.getPageInfo());
 
 		return "admin/userList";
 	}
@@ -179,7 +181,7 @@ public class AdminController {
 	// 식품 리스트
 	// 1. mapping 과 return값 수정
 	// 2. 검색시 사용될 name 값 key 와 다를시 수정
-	@GetMapping("admin_food_list")
+	@GetMapping("/admin_food_list")
 	public String adminFoodList(Model model, @RequestParam(value = "page", defaultValue = "0") int page,
 								@RequestParam(value = "size", defaultValue = "20") int size,
 								@RequestParam(value = "sortBy", defaultValue = "fseq") String sortBy,
@@ -214,17 +216,17 @@ public class AdminController {
 		Map<String, Integer> pageInfo = new HashMap<>();
 		pageInfo.put("number", page);
 		pageInfo.put("size", size);
-		pageInfo.put("totalPages", (foodList.size()+size-1)/size);		
+		pageInfo.put("totalPages", (foodList.size()+size-1)/size);
 		foodScanVo.setPageInfo(pageInfo);
 		foodScanVo.setFoodList(foodData.getContent());
 		session.setAttribute("foodScanVo", foodScanVo);
 		model.addAttribute("foodScanVo", foodScanVo);
 		model.addAttribute("foodList", foodScanVo.getFoodList());
-		model.addAttribute("pageInfo", foodScanVo.getPageInfo());
-
+		model.addAttribute("pageInfo", foodData);
 		return "admin/foodList";
 
 	}
+
 
 	// 식품정보 상세보기
 	@GetMapping("admin_food_Detail")
@@ -423,7 +425,7 @@ public class AdminController {
 	}
 
 	// 게시글 리스트 보기
-	@GetMapping("admin_board_list")
+	@GetMapping("/admin_board_list")
 	public String adminBoardList(Model model, @RequestParam(value = "page", defaultValue = "0") int page,
 								 @RequestParam(value = "size", defaultValue = "20") int size,
 								 @RequestParam(value = "sortBy", defaultValue = "bseq") String sortBy,
@@ -453,7 +455,7 @@ public class AdminController {
 		} else {
 			boardScanVo = (BoardScanVo) session.getAttribute("boardScanVo");
 		}
-		Page<Board> boardData = boardService.getBoardList(boardScanVo, page, size);
+		Page<Board> boardData = boardService.findBoardList(boardScanVo, page, size);
 		boardScanVo.setPageInfo(boardData);
 		boardScanVo.setBoardList(boardData.getContent());
 		session.setAttribute("boardScanVo", boardScanVo);
@@ -463,10 +465,67 @@ public class AdminController {
 
 		return "admin/boardList";
 	}
+	// 게시글 검색 보기
+	@GetMapping("/admin_board_list_search")
+	public String searchBoardList(Model model,
+								  @RequestParam(value = "page", defaultValue = "0") int page,
+								  @RequestParam(value = "size", defaultValue = "5") int size,
+								  @RequestParam(value = "sortBy", defaultValue = "bseq") String sortBy,
+								  @RequestParam(value = "sortDirection", defaultValue = "DESC") String sortDirection,
+								  @RequestParam(value = "pageMaxDisplay", defaultValue = "5") int pageMaxDisplay,
+								  @RequestParam(value = "searchField", defaultValue = "") String searchField,
+								  @RequestParam(value = "searchWord", defaultValue = "") String searchWord,
+								  BoardScanVo boardScanVo,
+								  HttpSession session, HttpServletRequest request) {
+
+		// 세션에서 사용자 정보 가져오기
+		Admin admin = (Admin) session.getAttribute("adminUser");
+
+		// 세션에 로그인 정보가 없는 경우
+		if (admin == null) {
+			// 로그인 알림을 포함한 경고 메시지를 설정합니다.
+			request.setAttribute("message", "로그인이 필요합니다.");
+			return "admin/login"; // 로그인 페이지로 이동.
+		}
+
+		if (page == 0) {
+			page = 1;
+			boardScanVo = new BoardScanVo(); // 새로운 객체로 초기화
+			boardScanVo.setSearchField(searchField);
+			boardScanVo.setSearchWord(searchWord);
+			boardScanVo.setSortBy(sortBy);
+			boardScanVo.setSortDirection(sortDirection);
+			boardScanVo.setPageMaxDisplay(pageMaxDisplay);
+
+
+		} else {
+			boardScanVo = (BoardScanVo) session.getAttribute("boardScanVo");
+
+		}
+
+		Page<Board> boardData = boardService.findBoardList(boardScanVo, page, size);
+
+		if (boardData.isEmpty()) {
+			model.addAttribute("msg", "검색 결과가 없습니다.");
+			model.addAttribute("redirectTo", "/admin_board_list");
+			return "board/board_alert";
+		} else {
+
+			boardScanVo.setPageInfo(boardData);
+			boardScanVo.setBoardList(boardData.getContent());
+			session.setAttribute("boardScanVo", boardScanVo);
+			model.addAttribute("boardScanVo", boardScanVo);
+			model.addAttribute("boardList", boardScanVo.getBoardList());
+			model.addAttribute("pageInfo", boardScanVo.getPageInfo());
+
+			return "admin/boardList";
+		}
+	}
+
 
 	// 게시글 삭제
-	@GetMapping("admin_board_delete")
-	public String adminBoardDelete(@RequestParam(value = "bseq") int bseq, HttpSession session,
+	@PostMapping("/admin_board_delete/{bseq}")
+	public String adminBoardDelete(@PathVariable(value = "bseq") int bseq, HttpSession session,
 								   HttpServletRequest request) {
 
 		// 세션에서 사용자 정보 가져오기
@@ -478,14 +537,14 @@ public class AdminController {
 			request.setAttribute("message", "로그인이 필요합니다.");
 			return "admin/login"; // 로그인 페이지로 이동.
 		}
-
+		boardCommentsService.deletAllComment(bseq);
 		boardService.deleteBoard(bseq);
-		return "redirect:admin_board_list";
+		return "redirect:/admin_board_list";
 	}
 
 	// 게시글 보기
-	@GetMapping("admin_board_detail")
-	public String adminBoardDetail(@RequestParam(value = "bseq") int bseq, HttpSession session,
+	@GetMapping("/admin_board_detail/{bseq}")
+	public String adminBoardDetail(@PathVariable(value = "bseq") int bseq, HttpSession session,
 								   HttpServletRequest request, Model model) {
 		// 세션에서 사용자 정보 가져오기
 		Admin admin = (Admin) session.getAttribute("adminUser");
@@ -497,7 +556,7 @@ public class AdminController {
 			return "admin/login"; // 로그인 페이지로 이동.
 		}
 
-		Board board = boardService.getBoardByBseq(bseq);
+		Board board = boardService.getBoard(bseq);
 		model.addAttribute("board", board);
 		BoardScanVo boardScanVo = (BoardScanVo) session.getAttribute("boardScanVo");
 		model.addAttribute("boardScanVo", boardScanVo);
@@ -507,17 +566,30 @@ public class AdminController {
 		return "admin/boardDetail";
 	}
 
+
+	@GetMapping("/admin_board_detail/commentsList")
 	@ResponseBody
-	@GetMapping("admin_board_detail/comments/list")
 	public Map<String, Object> commentList(@RequestParam(value = "bseq") int bseq) {
-		Map<String, Object> commentInfo = new HashMap<>();
+		Map<String, Object> result = new HashMap<>();
 
-		List<Comments> commentList = boardCommentsService.getCommentList(bseq);
+		// 댓글 목록 가져오기
+		List<Comments> parentComments = boardCommentsService.getCommentList(bseq);
+		Map<Integer, List<Comments>> commentsMap = new HashMap<>();
 
-		commentInfo.put("commentList", commentList);
-		commentInfo.put("commentCount", commentList.size());
-		System.out.println(111);
-		return commentInfo;
+		// 부모 댓글마다 대댓글 목록 가져오기
+		for (Comments parentComment : parentComments) {
+			List<Comments> replies = boardCommentsService.getReplyCommentList(parentComment.getCseq());
+			commentsMap.put(parentComment.getCseq(), replies);
+		}
+		// 대댓글을 포함한 댓글 수 계산
+		int totalCommentCount = parentComments.size(); // 부모 댓글 수를 초기화
+		for (List<Comments> replies : commentsMap.values()) {
+			totalCommentCount += replies.size(); // 각 부모 댓글에 대한 대댓글 수를 더함
+		}
+		result.put("parentComments", parentComments);
+		result.put("repliesMap", commentsMap);
+
+		return result;
 	}
 
 	@ResponseBody
