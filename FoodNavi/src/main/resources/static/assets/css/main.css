@@ -1970,6 +1970,7 @@ button.searchButton {
     position: fixed;
     bottom: 0;
     width: 100%;
+    background: black;
 }
 
 #chatClose {
@@ -2225,16 +2226,16 @@ button.searchButton {
     width: 20px;
 }
 
+.foodList {
+    scale: 1.1;
+}
+
 #rcdCount {
     opacity: 0.5;
 }
 
-#rcdCount:hover {
+#rcdCount.active {
     opacity: 1;
-}
-
-.foodList:hover {
-    scale: 1.1;
 }
 
 /*mainImg*/
