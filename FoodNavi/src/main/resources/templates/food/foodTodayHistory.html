@@ -5,18 +5,18 @@
 <script th:inline="javascript">
 function historyRecord() {
     var historyData = [];
-    
+
     // 각 행의 데이터를 객체로 만들어 배열에 추가
     $("#box table tr").each(function() {
         var food_name = $(this).find("input[name='history_food_name']").val();
         var serveNumber = $(this).find("input[name='history_serveNumber']").val();
-        
+
         historyData.push({
             food_name: food_name,
             serveNumber: serveNumber
         });
     });
-    
+
     // historyData 배열을 JSON 문자열로 변환하여 서버로 전송
     $.ajax({
         type: "POST",
@@ -33,14 +33,14 @@ function historyRecord() {
     });
 }
 
-	
+
 function subtract_history(button) {
 	var historyData = [];
+	var row = $(button).closest('tr');
 	$("#box table tr").each(function() {
 		var food_name = $(this).find("input[name='history_food_name']").val();
 		var serveNumber = $(this).find("input[name='history_serveNumber']").val();
-		var hseq = $(this).find("input[name='delete_hseq']").val();
-
+		var hseq = row.find("input[name='nc_history_hseq']").val();
 		historyData.push({
 			food_name: food_name,
 			serveNumber: serveNumber,
@@ -55,13 +55,12 @@ function subtract_history(button) {
 		contentType: "application/json",
 		success: function(response) {
 			alert("성공적으로 삭제했습니다.");
+			row.remove();
 		},
 		error: function(error) {
 			alert("삭제에 실패했습니다.");
 		}
 	});
-
-	$(button).closest('tr').remove();
 }
 
 function goBack() {
@@ -81,7 +80,7 @@ function goBack() {
             		<td>
             			<h2 class="major">승인 대기 목록</h2>
 		                <input type="text" name="history_food_name" id="history_food_name" th:value="${nc_history.food.name}" readOnly>
-						<input type="hidden" id="delete_hseq" name="delete_hseq" th:value="${nc_history.hseq}">
+						<input type="hidden" name="nc_history_hseq" th:value="${nc_history.hseq}">
             		</td>
             		<td>
             			<h2 class="major">수량</h2>
@@ -91,7 +90,7 @@ function goBack() {
             			<h2 class="major">제외</h2>
             			<input type="button" id="delete_button" th:value="제외" onclick="subtract_history(this)">
             		</td>
-            		<!-- 
+            		<!--
             		<td>
 	            		<h2 class="major">칼로리</h2>
 	                	<p id="food_kcal" th:text="${nc_history.food.foodDetail.kcal}"></p>
@@ -120,7 +119,7 @@ function goBack() {
         </ul>
 
 		<input type="button" value="이전" class="button" onclick="goBack()"/>
-        
+
 
     </form>
 </article>
