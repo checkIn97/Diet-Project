@@ -16,7 +16,7 @@
     <div>
         <h2>{{room.name}}</h2>
     </div>
-    <button type="button" class="button" id="chatClose" onclick="">나가기</button>
+    <button type="button" class="button" id="chatClose" onclick="chatClose()">나가기</button>
     <div class="input-group">
         <div class="input-group-prepend">
             <label class="input-group-text">내용</label>
@@ -31,8 +31,13 @@
     <ul class="list-group">
         <li class="list-group-item" v-for="message in messages">
             {{message.sender}} - {{message.message}}<br>
-            <a style="color:blueviolet" v-if="message.link" :href="message.link" target="_blank"> ==> 주문페이지로 이동</a>
-            <iframe v-if="message.link" :src="message.link" width="100%" height="400"></iframe>
+            <p v-if="message.link"> => 주문페이지로
+            <a style="color:blueviolet" v-if="message.link" :href="message.link" target="_blank"> 이동</a>
+            </p>
+            <iframe v-if="message.link" :src="message.link" width="500px" height="400" sandbox></iframe>
+            <p v-if="message.cate">
+                <a style="color:blueviolet" v-if="message.cate" :href="message.cate" target="_top"> ==> 이동 </a>
+            </p>
         </li>
     </ul>
     <div></div>
@@ -45,6 +50,11 @@
 <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.js"></script>
 <script src="/assets/js/jquery.min.js"></script>
+<script>
+    function chatClose() {
+        window.close();
+    }
+</script>
 
 <script>
     //alert(document.title);
@@ -88,7 +98,7 @@
 
             },
             recvMessage: function(recv) {
-                this.messages.unshift({"type":recv.type,"sender":recv.type=='ENTER'?'[알림]':recv.sender,"message":recv.message, "link":recv.link})
+                this.messages.unshift({"type":recv.type,"sender":recv.type=='ENTER'?'[알림]':recv.sender,"message":recv.message, "link":recv.link, "cate":recv.cate})
 
             }
         }

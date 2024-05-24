@@ -1,6 +1,7 @@
 package com.demo.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.demo.domain.Food;
@@ -44,35 +45,64 @@ public class ChatController {
 		} else if (ChatMessage.MessageType.BOT.equals(message.getType())){
 			String result = searchFood(message.getMessage());
 			if (!result.equals(message.getMessage())){
-				String link = "https://m.coupang.com/nm/search?q="+ result;
-				message.setMessage(result
-						+"의 주문페이지를 보여드릴게요.\n");
-				message.setSender("[챗봇 상담사]");
-				message.setLink(link);
+				if (result.equals("커뮤니티")){
+					String cate = "/board_list";
+					message.setMessage("커뮤니티 으로 이동하시겠습니까?");
+					message.setCate(cate);
+				} else if (result.equals("나의변화")) {
+					String cate = "/user_mychange_view";
+					message.setMessage("나의변화 으로 이동하시겠습니까?");
+					message.setCate(cate);
+				} else if (result.equals("나의활동")) {
+					String cate = "/user_myactivity_view";
+					message.setMessage("나의활동 으로 이동하시겠습니까?");
+					message.setCate(cate);
+				} else if (result.equals("마이페이지")) {
+					String cate = "/pw_check";
+					message.setMessage("마이페이지 으로 이동하시겠습니까?");
+					message.setCate(cate);
+				} else if (result.equals("식단추천")){
+					String cate = "/foodRecommendation";
+					message.setMessage("식단추천 으로 이동하시겠습니까?");
+					message.setCate(cate);
+				} else {
+					String link = "https://m.coupang.com/nm/search?q=" + result;
+					message.setMessage(result + "의 주문페이지를 보여드릴게요.\n");
+					message.setLink(link);
+				}
 			} else {
 				message.setMessage("'" + result + "'"
-						+"의 요청을 처리하지 못했습니다.\n (찾으시는 음식이 데이터에 존재하지 않습니다.)");
-				message.setSender("[챗봇 상담사]");
+						+"의 요청을 처리하지 못했습니다.\n (데이터에 존재하지 않거나 처리할 수 없는 요청입니다.)");
 			}
+			message.setSender("[챗봇 상담사]");
 		}
-
-
 		messagingTemplate.convertAndSend("/sub/chat/room/" + message.getRoomId(),message);
-
 	}
 
 	public String searchFood(String message){
 		List<Food> foodList = foodScanService.getFoodSearchList();
+		List<String> categoryList = new ArrayList<>();
+		categoryList.add("커뮤니티");
+		categoryList.add("나의변화");
+		categoryList.add("나의활동");
+		categoryList.add("마이페이지");
+		categoryList.add("식단추천");
 		String result = "";
 		for(Food foodName : foodList){
-			if(message.contains(foodName.getName())){
+			if(message.replaceAll(" ", "").contains(foodName.getName().replaceAll(" ", ""))){
 				result = "'" + foodName.getName() + "'";
 				break;
 			} else {
-				result = message;
+				for (String category : categoryList) {
+					if(message.replaceAll(" ", "").contains(category)){
+						result = category;
+						break;
+					} else {
+						result = message;
+					}
+				}
 			}
 		}
-
 		return result;
 	}
 
