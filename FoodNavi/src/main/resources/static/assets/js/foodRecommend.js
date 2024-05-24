@@ -24,7 +24,6 @@ sections.forEach(function(section) {
 /*화면 채크 마크 표시*/
 function click_section(n) {
 	let s = null;
-	let s3 = document.querySelector("#section3");
 	if (n == 1) {
 		s = document.querySelector("#section1");
 	} else if (n == 2) {
@@ -55,11 +54,11 @@ function click_section(n) {
         }
         s.dataset.clicked = 'false';
         if (n == 1) {
-			$("#fseq1").val(0);
+			$("#checked1").val('false');
 		} else if (n == 2) {
-			$("#fseq2").val(0);
+			$("#checked2").val('false');
 		} else if (n == 3) {
-			$("#fseq3").val(0);
+			$("#checked3").val('false');
 		}
     } else {
         s.style.backgroundColor = 'rgba(255, 255, 255, 0.5)'; // 흰색으로 덮어씌움
@@ -67,15 +66,12 @@ function click_section(n) {
             checkmark.style.display = 'block'; // 이미지를 표시
         }
         s.dataset.clicked = 'true';
-        let fseq1Original = $("#fseq1Original").val();
-        let fseq2Original = $("#fseq2Original").val();
-        let fseq3Original = $("#fseq3Original").val();
         if (n == 1) {
-			$("#fseq1").val(fseq1Original);
+			$("#checked1").val('true');
 		} else if (n == 2) {
-			$("#fseq2").val(fseq2Original);
+			$("#checked2").val('true');
 		} else if (n == 3) {
-			$("#fseq3").val(fseq3Original);
+			$("#checked3").val('true');
 		}
     }
 }

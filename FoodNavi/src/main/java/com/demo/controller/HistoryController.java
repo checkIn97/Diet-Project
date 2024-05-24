@@ -39,337 +39,533 @@ import lombok.Setter;
 
 @Controller
 public class HistoryController {
-	@Autowired
-	private HistoryService historyService;
-	@Autowired
-	private FoodScanService foodScanService;
-	@Autowired
-	private DataInOutService dataInOutService;
+    @Autowired
+    private HistoryService historyService;
+    @Autowired
+    private FoodScanService foodScanService;
+    @Autowired
+    private DataInOutService dataInOutService;
 
-	// 추천 목록에서 음식을 히스토리 테이블에 기록한다(확정전)
-	@Transactional
-	@PostMapping("/food_recommend_record")
-	@ResponseBody
-	public ResponseEntity<String> recordFood(HttpSession session, HttpServletRequest request) {
-		// 세션에서 사용자 정보 가져오기
-		Users user = (Users) session.getAttribute("loginUser");
+    // 추천 목록에서 음식을 히스토리 테이블에 기록한다(확정전)
+    @Transactional
+    @PostMapping ("/food_recommend_record")
+    @ResponseBody
+    public ResponseEntity<String> recordFood(@RequestBody FoodRecord foodRecord, HttpSession session, HttpServletRequest request) {
+        // 세션에서 사용자 정보 가져오기
+        Users user = (Users) session.getAttribute("loginUser");
 
-		// 세션에 로그인 정보가 없는 경우
-		if (user == null) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("요청이 실패했습니다.");
+        // 세션에 로그인 정보가 없는 경우
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("요청이 실패했습니다.");
+        }
+
+        int fseq1 = foodRecord.getFseq1();
+		System.out.println("TEST!!!!!!!!!!!: " + fseq1);
+		int fseq2 = foodRecord.getFseq2();
+        int fseq3 = foodRecord.getFseq3();
+		boolean checked1 = foodRecord.getChecked1().equals("true");
+		boolean checked2 = foodRecord.getChecked2().equals("true");
+		boolean checked3 = foodRecord.getChecked3().equals("true");
+		Food food1 = foodScanService.getFoodByFseq(fseq1); // 메인
+		Food food2 = foodScanService.getFoodByFseq(fseq2); // 서브
+		Food food3 = foodScanService.getFoodByFseq(fseq3); // 간식
+		List<History> hsList = historyService.getHistoryListByUser(user);
+		FoodRecommendVo vo = ((FoodRecommendVo[]) session.getAttribute("foodRecommendVoArray"))[0];
+		List<String> mealList = Arrays.asList(vo.getMealTime());
+		String mealType = "";
+		for (String meal : mealList) {
+			System.out.println("mealtype:" + meal);
+			if (!meal.equals("")) {
+				mealType = meal;
+				break;
+			}
 		}
-		
-		System.out.println("테스트");
-		int fseq1 = Integer.parseInt(request.getParameter("fseq1"));
-		int fseq2 = Integer.parseInt(request.getParameter("fseq2"));
-		int fseq3 = Integer.parseInt(request.getParameter("fseq3"));
-		int score1 = Integer.parseInt(request.getParameter("score1"));
-		int score2 = Integer.parseInt(request.getParameter("score2"));
-		int score3 = Integer.parseInt(request.getParameter("score3"));
-		int amount1 = Integer.parseInt(request.getParameter("amount1"));
-		int amount2 = Integer.parseInt(request.getParameter("amount2"));
-		int amount3 = Integer.parseInt(request.getParameter("amount3"));
-		
-		FoodRecord[] foodRecordArray = new FoodRecord[3];
-		FoodRecord fd1 = new FoodRecord();
-		FoodRecord fd2 = new FoodRecord();
-		FoodRecord fd3 = new FoodRecord();
-		fd1.setFseq(fseq1);
-		fd2.setFseq(fseq2);
-		fd3.setFseq(fseq3);
-		fd1.setScore(score1);
-		fd2.setScore(score2);
-		fd3.setScore(score3);
-		fd1.setAmount(amount1);
-		fd2.setAmount(amount2);
-		fd3.setAmount(amount3);
-		
-		List<History> historyList = new ArrayList<>();
-		for (FoodRecord fd : foodRecordArray) {
-			if (fd.getFseq() != 0) {
-				if (fd.getAmount() == 0) {
-					return ResponseEntity.status(HttpStatus.NOT_FOUND).body("요청이 실패했습니다.");
-				}
-				Food food = foodScanService.getFoodByFseq(fd.getFseq());
-				
-				/*
-				 * 이미 히스토리가 존재하는지 확인하기 위해 유저정보로 히스토리 리스트를 가져오기(히스토리의 수정은 기록확인 페이지에서만 가능)
-				 */
-				List<History> hsList = historyService.getHistoryListByUser(user);
-				FoodRecommendVo vo = (FoodRecommendVo)session.getAttribute("foodRecommendVo");
-				List<String> mealList = Arrays.asList(vo.getMealTime());
-				String mealType = "";
-				for(String meal : mealList) {
-					System.out.println("mealtype:" + meal);
-					if (!meal.equals("")) {
-						mealType = meal;
-						break;
+        List<History> historyList = new ArrayList<>();
+		LocalDate today = LocalDate.now();
+
+		if (checked1 && checked2 && checked3) { // 전부 체크 되었을 때
+			if (foodRecord.getAmount1() == 0 || foodRecord.getAmount2() == 0 || foodRecord.getAmount3() == 0) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("요청이 실패했습니다.");
+			}
+			List<History> fseq1List = new ArrayList<>();
+			List<History> fseq2List = new ArrayList<>();
+			List<History> fseq3List = new ArrayList<>();
+			/*
+			 * 이미 히스토리가 존재하는지 확인하기 위해 유저정보로 히스토리 리스트를 가져오기(히스토리의 수정은 기록확인 페이지에서만 가능)
+			 */
+			if (!hsList.isEmpty()) { // 히스토리 리스트가 존재하는 경우
+				for (int i=0; i<hsList.size(); i++) {
+					Instant instant = null;
+					LocalDate historyLocalDate = null;
+					if(hsList.get(i).getServedDate() != null) {
+						instant = hsList.get(i).getServedDate().toInstant();
+						historyLocalDate = instant.atZone(ZoneId.systemDefault()).toLocalDate();
 					}
-				}
-				
-				if (!hsList.isEmpty()) { // 히스토리 리스트가 존재하는 경우
-					for (History history : hsList) {
-						Instant instant = history.getServedDate().toInstant();
-						LocalDate historyLocalDate = instant.atZone(ZoneId.systemDefault()).toLocalDate();
-						LocalDate today = LocalDate.now();
-						
-						if (history.getFood().equals(food) && historyLocalDate.equals(today) && history.getMealType().equals(mealType)) { // 현재 기록하려는 음식이 히스토리 상 존재하는지 확인하여 있다면 전송 실패
-							return ResponseEntity.status(HttpStatus.NOT_FOUND).body("요청이 실패했습니다.");
-						} else { 
-							History hs = History.builder().user(user).food(food).serveNumber(fd.getAmount())
-									.servedDate(null).mealType(mealType).no_egg(user.getNo_egg()).no_milk(user.getNo_milk())
-									.no_bean(user.getNo_bean()).no_shellfish(user.getNo_shellfish()).no_ingredient(user.getNo_ingredient())
-									.purpose(user.getUserGoal()).dietType(user.getDietType()).vegetarian(user.getVegetarian()).build();
-							System.out.println("-----------테스트1-------------");
-							historyService.historyUpdate(hs);
-							historyList.add(history);
-							break;
+
+					int historyFseq = hsList.get(i).getFood().getFseq();
+
+					if(historyFseq == fseq1) {
+						if (historyLocalDate == null || historyLocalDate.equals(today)) {
+							fseq1List.add(hsList.get(i));
+						}
+					} else if (historyFseq == fseq2) {
+						if (historyLocalDate == null || historyLocalDate.equals(today)) {
+							fseq2List.add(hsList.get(i));
+						}
+					} else if (historyFseq == fseq3) {
+						if (historyLocalDate == null || historyLocalDate.equals(today)) {
+							fseq3List.add(hsList.get(i));
 						}
 					}
-				} else { // 히스토리 리스트가 존재하지 않는 경우
-					History history = History.builder().user(user).food(food).serveNumber(fd.getAmount())
-							.servedDate(null).mealType(mealType).no_egg(user.getNo_egg()).no_milk(user.getNo_milk())
-							.no_bean(user.getNo_bean()).no_shellfish(user.getNo_shellfish()).no_ingredient(user.getNo_ingredient())
-							.purpose(user.getUserGoal()).dietType(user.getDietType()).vegetarian(user.getVegetarian()).build();
-					System.out.println("-----------테스트2-------------");
-					historyService.historyUpdate(history);
-					historyList.add(history);
-				}				
-			}
-		}
-		
-		
-		dataInOutService.historyListToCsv(historyList);
-		
-		// 응답 반환
-		return ResponseEntity.ok("데이터가 성공적으로 저장되었습니다.");
-	}
-
-	// 오늘 기록하려고 하는 음식 보여주기
-	@GetMapping("/foodTodayHistory_view")
-	public String foodTodayHistoryView(HttpSession session, Model model) {
-		// 세션에서 사용자 정보 가져오기
-		Users user = (Users) session.getAttribute("loginUser");
-
-		// 세션에 로그인 정보가 없는 경우
-		if (user == null) {
-			return "/user_login_form"; // 로그인 페이지로 이동.
-		}
-
-		UserVo userVo = new UserVo(user);
-
-		LocalDateTime now = LocalDateTime.now();
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-		String today = now.format(formatter);
-
-		List<History> notConfirmedHistoryList = historyService.getHistoryListNotConfirmedYet(user);
-
-		model.addAttribute("today", today);
-		model.addAttribute("userVo", userVo);
-		model.addAttribute("notConfirmedHistoryList", notConfirmedHistoryList);
-
-		return "food/foodTodayHistory";
-	}
-	
-	
-	// 확정된 히스토리 저장
-	@PostMapping("/history_confirmed_record")
-	@ResponseBody
-	public String recordHistory(@RequestBody List<HistoryData> historyDataList, HttpSession session) {
-		// 세션에서 사용자 정보 가져오기
-		Users user = (Users) session.getAttribute("loginUser");
-
-		// 세션에 로그인 정보가 없는 경우
-		if (user == null) {
-			return "/user_login_form"; // 로그인 페이지로 이동.
-		}
-		
-		FoodRecommendVo vo = (FoodRecommendVo)session.getAttribute("foodRecommendVo");
-		FoodRecommendVo frvo = new FoodRecommendVo();
-		List<String> mealList;
-		String mealType = frvo.getMealTimeByTime();
-		if (vo != null) {
-			mealList = Arrays.asList(vo.getMealTime());
-			mealType = mealList.get(0);
-		}
-
-		// 받은 데이터를 처리하는 로직을 작성
-		for (HistoryData historyData : historyDataList) {
-			Food food = foodScanService.getFoodByName(historyData.getFood_name());
-			
-			History hs = historyService.getHistoryByUserAndFood(user, food);
-			hs.setServeNumber(historyData.getServeNumber());
-			hs.setServedDate(new Date());
-			hs.setNo_egg(user.getNo_egg());
-			hs.setNo_milk(user.getNo_milk());
-			hs.setNo_bean(user.getNo_bean());
-			hs.setNo_shellfish(user.getNo_shellfish());
-			hs.setNo_ingredient(user.getNo_ingredient());
-			hs.setDietType(user.getDietType());
-			hs.setVegetarian(user.getVegetarian());
-			hs.setPurpose(user.getUserGoal());
-			hs.setMealType(mealType);
-			
-            historyService.historyUpdate(hs);
-			
-		}
-		
-		return "success";
-	}
-	
-	@PostMapping("/history_record_update")
-	@ResponseBody
-	public String updateHistory(@RequestBody List<HistoryData> historyDataList, HttpSession session) {
-		// 세션에서 사용자 정보 가져오기
-		Users user = (Users) session.getAttribute("loginUser");
-
-		// 세션에 로그인 정보가 없는 경우
-		if (user == null) {
-			return "/user_login_form"; // 로그인 페이지로 이동.
-		}
-		
-		// 받은 데이터를 처리하는 로직을 작성
-		for (HistoryData historyData : historyDataList) {
-			Food food = foodScanService.getFoodByName(historyData.getFood_name());
-			
-			History hs = historyService.getConfirmedHistoryByUserAndFood(user, food);
-			hs.setServeNumber(historyData.getServeNumber());
-			
-            historyService.historyUpdate(hs);
-			
-		}
-		
-		return "success";
-	}
-	
-	@GetMapping("/foodHistory_view")
-	public String foodHistoryView(HttpSession session, Model model) {
-		// 세션에서 사용자 정보 가져오기
-		Users user = (Users) session.getAttribute("loginUser");
-
-		// 세션에 로그인 정보가 없는 경우
-		if (user == null) {
-			return "/user_login_form"; // 로그인 페이지로 이동.
-		}
-		
-		List<History> userHistoryList = historyService.getHistoryListConfirmed(user);
-		UserVo userVo = new UserVo(user);
-		model.addAttribute("userHistoryList", userHistoryList);
-		model.addAttribute("userVo", userVo);
-		
-		return "food/foodHistory";
-	}
-	
-	
-	@PostMapping("/delete_history_record")
-    @ResponseBody
-    public ResponseEntity<String> deleteHistoryRecord(@RequestBody List<HistoryData> dataList, HttpSession session) {
-		// 세션에서 사용자 정보 가져오기
-		Users user = (Users) session.getAttribute("loginUser");
-
-		// 세션에 로그인 정보가 없는 경우
-		if (user == null) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("요청이 실패했습니다.");
-		}
-			try {
-				// 히스토리 데이터 삭제 처리
-				int hseq = 0;
-				for (HistoryData data : dataList) {
-					hseq = Integer.parseInt(data.getHseq());
 				}
-				History history = historyService.getHistoryByHseq(hseq);
-				historyService.historyOut(history);
-				return ResponseEntity.ok("성공적으로 삭제되었습니다.");
-			} catch (Exception e) {
-				e.printStackTrace();
-				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("삭제에 실패했습니다.");
+				if (fseq1List.size() == 0) { // 선택한 음식이 승인 목록에 다 없을 때
+					historyRecord(user, food1, foodRecord.getAmount1(), mealType, historyService);
+				} else if (fseq2List.size() == 0) {
+					historyRecord(user, food2, foodRecord.getAmount2(), mealType, historyService);
+				} else if (fseq3List.size() == 0) {
+					historyRecord(user, food3, foodRecord.getAmount3(), mealType, historyService);
+				}
+			} else { // 히스토리 리스트가 존재하지 않는 경우
+				historyRecord(user, food1, foodRecord.getAmount1(), mealType, historyService);
+				historyRecord(user, food2, foodRecord.getAmount2(), mealType, historyService);
+				historyRecord(user, food3, foodRecord.getAmount3(), mealType, historyService);
 			}
-		
+
+		} else if (!checked1 || !checked2 || !checked3) {
+			List<History> fseq1List = new ArrayList<>();
+			List<History> fseq2List = new ArrayList<>();
+			List<History> fseq3List = new ArrayList<>();
+			if (checked1 && checked2) {
+				if (foodRecord.getAmount1() == 0 || foodRecord.getAmount2() == 0) {
+					return ResponseEntity.status(HttpStatus.NOT_FOUND).body("요청이 실패했습니다.");
+				}
+				if (!hsList.isEmpty()) { // 히스토리 리스트가 존재하는 경우
+					for (int i=0; i<hsList.size(); i++) {
+						Instant instant = null;
+						LocalDate historyLocalDate = null;
+						if(hsList.get(i).getServedDate() != null) {
+							instant = hsList.get(i).getServedDate().toInstant();
+							historyLocalDate = instant.atZone(ZoneId.systemDefault()).toLocalDate();
+						}
+						int historyFseq = hsList.get(i).getFood().getFseq();
+						if (historyFseq == fseq1) {
+							if (historyLocalDate == null ||historyLocalDate.equals(today)) {
+								fseq1List.add(hsList.get(i));
+							}
+						} else if (historyFseq == fseq2) {
+							if (historyLocalDate == null ||historyLocalDate.equals(today)) {
+								fseq2List.add(hsList.get(i));
+							}
+						}
+					}
+					if (fseq1List.size() == 0) {
+						historyRecord(user, food1, foodRecord.getAmount1(), mealType, historyService);
+					} else if (fseq2List.size() == 0) {
+						historyRecord(user, food2, foodRecord.getAmount2(), mealType, historyService);
+					}
+				} else { // 히스토리 리스트가 존재하지 않는 경우
+					historyRecord(user, food1, foodRecord.getAmount1(), mealType, historyService);
+					historyRecord(user, food2, foodRecord.getAmount2(), mealType, historyService);
+				}
+			}
+
+			if (checked2 && checked3) {
+				if (foodRecord.getAmount2() == 0 || foodRecord.getAmount3() == 0) {
+					return ResponseEntity.status(HttpStatus.NOT_FOUND).body("요청이 실패했습니다.");
+				}
+				if (!hsList.isEmpty()) { // 히스토리 리스트가 존재하는 경우
+					for (int i=0; i<hsList.size(); i++) {
+						Instant instant = null;
+						LocalDate historyLocalDate = null;
+						if(hsList.get(i).getServedDate() != null) {
+							instant = hsList.get(i).getServedDate().toInstant();
+							historyLocalDate = instant.atZone(ZoneId.systemDefault()).toLocalDate();
+						}
+						int historyFseq = hsList.get(i).getFood().getFseq();
+						if (historyFseq == fseq2) {
+							if (historyLocalDate == null ||historyLocalDate.equals(today)) {
+								fseq2List.add(hsList.get(i));
+							}
+						} else if (historyFseq == fseq3) {
+							if (historyLocalDate == null ||historyLocalDate.equals(today)) {
+								fseq3List.add(hsList.get(i));
+							}
+						}
+					}
+					if (fseq2List.size() == 0) {
+						historyRecord(user, food2, foodRecord.getAmount2(), mealType, historyService);
+					} else if (fseq3List.size() == 0) {
+						historyRecord(user, food3, foodRecord.getAmount3(), mealType, historyService);
+					}
+				} else { // 히스토리 리스트가 존재하지 않는 경우
+					historyRecord(user, food2, foodRecord.getAmount2(), mealType, historyService);
+					historyRecord(user, food3, foodRecord.getAmount3(), mealType, historyService);
+				}
+			}
+
+			if (checked1 && checked3) {
+				if (foodRecord.getAmount1() == 0 || foodRecord.getAmount3() == 0) {
+					return ResponseEntity.status(HttpStatus.NOT_FOUND).body("요청이 실패했습니다.");
+				}
+				if (!hsList.isEmpty()) { // 히스토리 리스트가 존재하는 경우
+					for (int i=0; i<hsList.size(); i++) {
+						Instant instant = null;
+						LocalDate historyLocalDate = null;
+						if(hsList.get(i).getServedDate() != null) {
+							instant = hsList.get(i).getServedDate().toInstant();
+							historyLocalDate = instant.atZone(ZoneId.systemDefault()).toLocalDate();
+						}
+						int historyFseq = hsList.get(i).getFood().getFseq();
+						if (historyFseq == fseq1) {
+							if (historyLocalDate == null ||historyLocalDate.equals(today)) {
+								fseq1List.add(hsList.get(i));
+							}
+						} else if (historyFseq == fseq3) {
+							if (historyLocalDate == null ||historyLocalDate.equals(today)) {
+								fseq3List.add(hsList.get(i));
+							}
+						}
+					}
+					if (fseq1List.size() == 0) {
+						historyRecord(user, food1, foodRecord.getAmount1(), mealType, historyService);
+					} else if (fseq3List.size() == 0) {
+						historyRecord(user, food3, foodRecord.getAmount3(), mealType, historyService);
+					}
+				} else { // 히스토리 리스트가 존재하지 않는 경우
+					historyRecord(user, food2, foodRecord.getAmount2(), mealType, historyService);
+					historyRecord(user, food3, foodRecord.getAmount3(), mealType, historyService);
+				}
+			}
+
+			if (!checked1 && !checked2 && checked3) {
+				if (foodRecord.getAmount3() == 0) {
+					return ResponseEntity.status(HttpStatus.NOT_FOUND).body("요청이 실패했습니다.");
+				}
+				if (!hsList.isEmpty()) { // 히스토리 리스트가 존재하는 경우
+					for (int i=0; i<hsList.size(); i++) {
+						Instant instant = null;
+						LocalDate historyLocalDate = null;
+						if(hsList.get(i).getServedDate() != null) {
+							instant = hsList.get(i).getServedDate().toInstant();
+							historyLocalDate = instant.atZone(ZoneId.systemDefault()).toLocalDate();
+						}
+						int historyFseq = hsList.get(i).getFood().getFseq();
+						if (historyFseq == fseq3) {
+							if (historyLocalDate == null ||historyLocalDate.equals(today)) {
+								fseq3List.add(hsList.get(i));
+							}
+						}
+					}
+					if (fseq3List.size() == 0) {
+						historyRecord(user, food3, foodRecord.getAmount3(), mealType, historyService);
+					}
+				} else { // 히스토리 리스트가 존재하지 않는 경우
+					historyRecord(user, food3, foodRecord.getAmount3(), mealType, historyService);
+				}
+			}
+
+			if (!checked1 && checked2 && !checked3) {
+				if (foodRecord.getAmount2() == 0) {
+					return ResponseEntity.status(HttpStatus.NOT_FOUND).body("요청이 실패했습니다.");
+				}
+				if (!hsList.isEmpty()) { // 히스토리 리스트가 존재하는 경우
+					for (int i=0; i<hsList.size(); i++) {
+						Instant instant = null;
+						LocalDate historyLocalDate = null;
+						if(hsList.get(i).getServedDate() != null) {
+							instant = hsList.get(i).getServedDate().toInstant();
+							historyLocalDate = instant.atZone(ZoneId.systemDefault()).toLocalDate();
+						}
+						int historyFseq = hsList.get(i).getFood().getFseq();
+						if (historyFseq == fseq2) {
+							if (historyLocalDate == null ||historyLocalDate.equals(today)) {
+								fseq2List.add(hsList.get(i));
+							}
+						}
+					}
+					if (fseq2List.size() == 0) {
+						historyRecord(user, food2, foodRecord.getAmount2(), mealType, historyService);
+					}
+				} else { // 히스토리 리스트가 존재하지 않는 경우
+					historyRecord(user, food2, foodRecord.getAmount2(), mealType, historyService);
+				}
+			}
+
+			if (checked1 && !checked2 && !checked3) {
+				if (foodRecord.getAmount1() == 0) {
+					return ResponseEntity.status(HttpStatus.NOT_FOUND).body("요청이 실패했습니다.");
+				}
+				if (!hsList.isEmpty()) { // 히스토리 리스트가 존재하는 경우
+					for (int i=0; i<hsList.size(); i++) {
+						Instant instant = null;
+						LocalDate historyLocalDate = null;
+						if(hsList.get(i).getServedDate() != null) {
+							instant = hsList.get(i).getServedDate().toInstant();
+							historyLocalDate = instant.atZone(ZoneId.systemDefault()).toLocalDate();
+						}
+						int historyFseq = hsList.get(i).getFood().getFseq();
+						if (historyFseq == fseq1) {
+							if (historyLocalDate == null ||historyLocalDate.equals(today)) {
+								fseq1List.add(hsList.get(i));
+							}
+						}
+					}
+					if (fseq1List.size() == 0) {
+						historyRecord(user, food1, foodRecord.getAmount1(), mealType, historyService);
+					}
+				} else { // 히스토리 리스트가 존재하지 않는 경우
+					historyRecord(user, food1, foodRecord.getAmount1(), mealType, historyService);
+				}
+			}
+		}
+        return ResponseEntity.ok("데이터가 성공적으로 저장되었습니다.");
     }
 
-	@PostMapping("/history_in_from_detail")
-	public String historyInFromDetail(@RequestParam("fseq") String fseq,
-									  HttpSession session, Model model) {
-		// 세션에서 사용자 정보 가져오기
-		Users user = (Users) session.getAttribute("loginUser");
+    // 오늘 기록하려고 하는 음식 보여주기
+    @GetMapping ("/foodTodayHistory_view")
+    public String foodTodayHistoryView(HttpSession session, Model model) {
+        // 세션에서 사용자 정보 가져오기
+        Users user = (Users) session.getAttribute("loginUser");
 
-		// 세션에 로그인 정보가 없는 경우
-		if (user == null) {
-			return "redirect:user_login_form";
-		}
+        // 세션에 로그인 정보가 없는 경우
+        if (user == null) {
+            return "/user_login_form"; // 로그인 페이지로 이동.
+        }
 
-		// 유저의 히스토리가 있는지 확인
-		List<History> hsList = historyService.getHistoryListByUser(user);
-		FoodRecommendVo frvo = new FoodRecommendVo();
-		String mealType = frvo.getMealTimeByTime();
-		int intFseq = Integer.parseInt(fseq);
-		Food food = foodScanService.getFoodByFseq(intFseq);
+        UserVo userVo = new UserVo(user);
 
-		if (!hsList.isEmpty()) { // 히스토리 리스트가 존재하는 경우
-			for (History history : hsList) {
-				if (history.getServedDate() != null) {
-					Instant instant = history.getServedDate().toInstant();
-					LocalDate historyLocalDate = instant.atZone(ZoneId.systemDefault()).toLocalDate();
-					LocalDate today = LocalDate.now();
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String today = now.format(formatter);
 
-					if (history.getFood().equals(food) && historyLocalDate.equals(today) && history.getMealType().equals(mealType)) { // 현재 기록하려는 음식이 히스토리 상 존재하는지 확인하여 있다면 전송 실패
-						model.addAttribute("msg", "이미 기록에 해당 음식이 존재합니다.");
-						model.addAttribute("fseq", intFseq);
-						return "food_scan/foodAlertPage";
-					} else {
-						History hs = History.builder().user(user).food(food).serveNumber(1)
-								.servedDate(null).mealType(mealType).no_egg(user.getNo_egg()).no_milk(user.getNo_milk())
-								.no_bean(user.getNo_bean()).no_shellfish(user.getNo_shellfish()).no_ingredient(user.getNo_ingredient())
-								.purpose(user.getUserGoal()).dietType(user.getDietType()).vegetarian(user.getVegetarian()).build();
-						historyService.historyUpdate(hs);
-						break;
-					}
-				} else {
-					if (history.getFood().equals(food) && history.getMealType().equals(mealType)) { // 현재 기록하려는 음식이 히스토리 상 존재하는지 확인하여 있다면 전송 실패
-						model.addAttribute("msg", "이미 기록에 해당 음식이 존재합니다.");
-						model.addAttribute("fseq", intFseq);
-						return "food_scan/foodAlertPage";
-					} else {
-						History hs = History.builder().user(user).food(food).serveNumber(1)
-								.servedDate(null).mealType(mealType).no_egg(user.getNo_egg()).no_milk(user.getNo_milk())
-								.no_bean(user.getNo_bean()).no_shellfish(user.getNo_shellfish()).no_ingredient(user.getNo_ingredient())
-								.purpose(user.getUserGoal()).dietType(user.getDietType()).vegetarian(user.getVegetarian()).build();
-						historyService.historyUpdate(hs);
-						break;
-					}
-				}
-			}
-		} else { // 히스토리 리스트가 존재하지 않는 경우
-			History history = History.builder().user(user).food(food).serveNumber(1)
-					.servedDate(null).mealType(mealType).no_egg(user.getNo_egg()).no_milk(user.getNo_milk())
-					.no_bean(user.getNo_bean()).no_shellfish(user.getNo_shellfish()).no_ingredient(user.getNo_ingredient())
-					.purpose(user.getUserGoal()).dietType(user.getDietType()).vegetarian(user.getVegetarian()).build();
-			historyService.historyUpdate(history);
-		}
+        List<History> notConfirmedHistoryList = historyService.getHistoryListNotConfirmedYet(user);
 
-		model.addAttribute("success", "기록이 승인 대기목록으로 전송되었습니다.");
-		return "food_scan/foodAlertPage";
-	}
+        model.addAttribute("today", today);
+        model.addAttribute("userVo", userVo);
+        model.addAttribute("notConfirmedHistoryList", notConfirmedHistoryList);
 
-/*
- * ----------------------------------------------------------------------------------
- */
-	@Getter
-	@Setter
-	class HistoryData {
-		private String food_name;
-		private int serveNumber;
-		private String hseq;
-	}
+        return "food/foodTodayHistory";
+    }
 
-	/*
-	 * ajax로 받는 RequestBody용 내부 클래스
-	 */
-	@Getter
-	@Setter
-	class FoodRecord {
-		private int fseq;
-		private int score;
-		private int amount;
+
+    // 확정된 히스토리 저장
+    @PostMapping ("/history_confirmed_record")
+    @ResponseBody
+    public String recordHistory(@RequestBody List<HistoryData> historyDataList, HttpSession session) {
+        // 세션에서 사용자 정보 가져오기
+        Users user = (Users) session.getAttribute("loginUser");
+
+        // 세션에 로그인 정보가 없는 경우
+        if (user == null) {
+            return "/user_login_form"; // 로그인 페이지로 이동.
+        }
+
+        FoodRecommendVo vo = (FoodRecommendVo) session.getAttribute("foodRecommendVo");
+        FoodRecommendVo frvo = new FoodRecommendVo();
+        List<String> mealList;
+        String mealType = frvo.getMealTimeByTime();
+        if (vo != null) {
+            mealList = Arrays.asList(vo.getMealTime());
+            mealType = mealList.get(0);
+        }
+
+        // 받은 데이터를 처리하는 로직을 작성
+        for (HistoryData historyData : historyDataList) {
+            Food food = foodScanService.getFoodByName(historyData.getFood_name());
+
+            History hs = historyService.getHistoryByUserAndFood(user, food);
+            hs.setServeNumber(historyData.getServeNumber());
+            hs.setServedDate(new Date());
+            hs.setNo_egg(user.getNo_egg());
+            hs.setNo_milk(user.getNo_milk());
+            hs.setNo_bean(user.getNo_bean());
+            hs.setNo_shellfish(user.getNo_shellfish());
+            hs.setNo_ingredient(user.getNo_ingredient());
+            hs.setDietType(user.getDietType());
+            hs.setVegetarian(user.getVegetarian());
+            hs.setPurpose(user.getUserGoal());
+            hs.setMealType(mealType);
+
+            historyService.historyUpdate(hs);
+
+        }
+
+        return "success";
+    }
+
+    @PostMapping ("/history_record_update")
+    @ResponseBody
+    public String updateHistory(@RequestBody List<HistoryData> historyDataList, HttpSession session) {
+        // 세션에서 사용자 정보 가져오기
+        Users user = (Users) session.getAttribute("loginUser");
+
+        // 세션에 로그인 정보가 없는 경우
+        if (user == null) {
+            return "/user_login_form"; // 로그인 페이지로 이동.
+        }
+
+        // 받은 데이터를 처리하는 로직을 작성
+        for (HistoryData historyData : historyDataList) {
+            Food food = foodScanService.getFoodByName(historyData.getFood_name());
+
+            History hs = historyService.getConfirmedHistoryByUserAndFood(user, food);
+            hs.setServeNumber(historyData.getServeNumber());
+
+            historyService.historyUpdate(hs);
+
+        }
+
+        return "success";
+    }
+
+    @GetMapping ("/foodHistory_view")
+    public String foodHistoryView(HttpSession session, Model model) {
+        // 세션에서 사용자 정보 가져오기
+        Users user = (Users) session.getAttribute("loginUser");
+
+        // 세션에 로그인 정보가 없는 경우
+        if (user == null) {
+            return "/user_login_form"; // 로그인 페이지로 이동.
+        }
+
+        List<History> userHistoryList = historyService.getHistoryListConfirmed(user);
+        UserVo userVo = new UserVo(user);
+        model.addAttribute("userHistoryList", userHistoryList);
+        model.addAttribute("userVo", userVo);
+
+        return "food/foodHistory";
+    }
+
+
+    @PostMapping ("/delete_history_record")
+    @ResponseBody
+    public ResponseEntity<String> deleteHistoryRecord(@RequestBody List<HistoryData> dataList, HttpSession session) {
+        // 세션에서 사용자 정보 가져오기
+        Users user = (Users) session.getAttribute("loginUser");
+
+        // 세션에 로그인 정보가 없는 경우
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("요청이 실패했습니다.");
+        }
+        try {
+            // 히스토리 데이터 삭제 처리
+            int hseq = 0;
+            for (HistoryData data : dataList) {
+                hseq = Integer.parseInt(data.getHseq());
+            }
+            History history = historyService.getHistoryByHseq(hseq);
+            historyService.historyOut(history);
+            return ResponseEntity.ok("성공적으로 삭제되었습니다.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("삭제에 실패했습니다.");
+        }
+
+    }
+
+    @PostMapping ("/history_in_from_detail")
+    public String historyInFromDetail(@RequestParam ("fseq") String fseq,
+                                      HttpSession session, Model model) {
+        // 세션에서 사용자 정보 가져오기
+        Users user = (Users) session.getAttribute("loginUser");
+
+        // 세션에 로그인 정보가 없는 경우
+        if (user == null) {
+            return "redirect:user_login_form";
+        }
+
+        // 유저의 히스토리가 있는지 확인
+        List<History> hsList = historyService.getHistoryListByUser(user);
+        FoodRecommendVo frvo = new FoodRecommendVo();
+        String mealType = frvo.getMealTimeByTime();
+        int intFseq = Integer.parseInt(fseq);
+        Food food = foodScanService.getFoodByFseq(intFseq);
+
+        if (!hsList.isEmpty()) { // 히스토리 리스트가 존재하는 경우
+            for (History history : hsList) {
+                if (history.getServedDate() != null) {
+                    Instant instant = history.getServedDate().toInstant();
+                    LocalDate historyLocalDate = instant.atZone(ZoneId.systemDefault()).toLocalDate();
+                    LocalDate today = LocalDate.now();
+
+                    if (history.getFood().equals(food) && historyLocalDate.equals(today) && history.getMealType().equals(mealType)) { // 현재 기록하려는 음식이 히스토리 상 존재하는지 확인하여 있다면 전송 실패
+                        model.addAttribute("msg", "이미 기록에 해당 음식이 존재합니다.");
+                        model.addAttribute("fseq", intFseq);
+                        return "food_scan/foodAlertPage";
+                    } else {
+                        History hs = History.builder().user(user).food(food).serveNumber(1)
+                                .servedDate(null).mealType(mealType).no_egg(user.getNo_egg()).no_milk(user.getNo_milk())
+                                .no_bean(user.getNo_bean()).no_shellfish(user.getNo_shellfish()).no_ingredient(user.getNo_ingredient())
+                                .purpose(user.getUserGoal()).dietType(user.getDietType()).vegetarian(user.getVegetarian()).build();
+                        historyService.historyUpdate(hs);
+                        break;
+                    }
+                } else {
+                    if (history.getFood().equals(food) && history.getMealType().equals(mealType)) { // 현재 기록하려는 음식이 히스토리 상 존재하는지 확인하여 있다면 전송 실패
+                        model.addAttribute("msg", "이미 기록에 해당 음식이 존재합니다.");
+                        model.addAttribute("fseq", intFseq);
+                        return "food_scan/foodAlertPage";
+                    } else {
+                        History hs = History.builder().user(user).food(food).serveNumber(1)
+                                .servedDate(null).mealType(mealType).no_egg(user.getNo_egg()).no_milk(user.getNo_milk())
+                                .no_bean(user.getNo_bean()).no_shellfish(user.getNo_shellfish()).no_ingredient(user.getNo_ingredient())
+                                .purpose(user.getUserGoal()).dietType(user.getDietType()).vegetarian(user.getVegetarian()).build();
+                        historyService.historyUpdate(hs);
+                        break;
+                    }
+                }
+            }
+        } else { // 히스토리 리스트가 존재하지 않는 경우
+            History history = History.builder().user(user).food(food).serveNumber(1)
+                    .servedDate(null).mealType(mealType).no_egg(user.getNo_egg()).no_milk(user.getNo_milk())
+                    .no_bean(user.getNo_bean()).no_shellfish(user.getNo_shellfish()).no_ingredient(user.getNo_ingredient())
+                    .purpose(user.getUserGoal()).dietType(user.getDietType()).vegetarian(user.getVegetarian()).build();
+            historyService.historyUpdate(history);
+        }
+
+        model.addAttribute("success", "기록이 승인 대기목록으로 전송되었습니다.");
+        return "food_scan/foodAlertPage";
+    }
+
+    /*
+     * ----------------------------------------------------------------------------------
+     */
+    @Getter
+    @Setter
+    class HistoryData {
+        private String food_name;
+        private int serveNumber;
+        private String hseq;
+    }
+
+    /*
+     * ajax로 받는 RequestBody용 내부 클래스
+     */
+    @Getter
+    @Setter
+    class FoodRecord {
+        private int fseq1;
+        private int fseq2;
+        private int fseq3;
+
+        private int score1;
+        private int score2;
+        private int score3;
+
+        private int amount1;
+        private int amount2;
+        private int amount3;
+
+		private String checked1;
+		private String checked2;
+		private String checked3;
+    }
+
+	public static void historyRecord(Users user, Food food, int amount, String mealType, HistoryService historyService) {
+		History hs = History.builder().user(user).food(food).serveNumber(amount)
+				.servedDate(null).mealType(mealType).no_egg(user.getNo_egg()).no_milk(user.getNo_milk())
+				.no_bean(user.getNo_bean()).no_shellfish(user.getNo_shellfish()).no_ingredient(user.getNo_ingredient())
+				.purpose(user.getUserGoal()).dietType(user.getDietType()).vegetarian(user.getVegetarian()).build();
+		historyService.historyUpdate(hs);
 	}
 }
