@@ -125,13 +125,13 @@
                         "<img src=\"/assets/images/like.png\" class=\"foodLike\" title=\"좋아요\" alt=\"좋아요\">" +
                         "<span> " + count + "</span>"
                     rcdCont.style.opacity = 1;
-                    rcdCont.classList.add('active');
+                    localStorage.setItem('opacity', 1);
                 } else if (result == 0) {
                     html =
                         "<img src=\"/assets/images/like.png\" class=\"foodLike\" title=\"좋아요\" alt=\"좋아요\">" +
                         "<span> " + count + "</span>"
                     rcdCont.style.opacity = 0.5;
-                    rcdCont.classList.remove('active');
+                    localStorage.setItem('opacity', 0.5);
                 }
                 if (result >= 0) {
                     $("#rcdCount").html(html);
@@ -141,6 +141,14 @@
             }
         });
     }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var rcdCont = document.getElementById('rcdCount');
+        var opacity = localStorage.getItem('opacity');
+        if (opacity !== null) {
+            rcdCont.style.opacity = opacity;
+        }
+    });
 
 
     document.getElementById('ingredientHeader').addEventListener('click', function () {
