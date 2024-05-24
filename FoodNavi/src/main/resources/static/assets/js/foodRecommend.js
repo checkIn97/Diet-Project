@@ -170,7 +170,7 @@ function reloadSection() {
 	        	var starScore = data.starScore;
 	        	var scoreView = data.scoreView;
 	        	var html = "";
-	        	html += "<table class=\"food-info\">";;
+	        	html += "<table class=\"food-info\">";
 				html += "<tr><span class=\"food-name\">"+food_name+"</span>";
 				html += "<a href=\"food_detail?fseq="+fseq+"&type=r"+section_num+"\">";
 				html += "&nbsp";
@@ -238,10 +238,13 @@ function reloadSection() {
 				html += "<button class=\"increase\" onclick=\"change_amount("+(section_num-1)*2+2+")\"><img class=\"pmIcon\" src=\"/assets/images/plus.png\"></button>";
 				html += "</span></td></tr></table>";
 				if (section_num == 1) {
+					html += "<input type=\"hidden\" id=\"fseq1\" name=\"fseq1\" value=\""+fseq+"\">";
 					$("#food_info1").html(html);	
 				} else if (section_num == 2) {
+					html += "<input type=\"hidden\" id=\"fseq2\" name=\"fseq2\" value=\""+fseq+"\">";
 					$("#food_info2").html(html);
 				} else {
+					html += "<input type=\"hidden\" id=\"fseq3\" name=\"fseq3\" value=\""+fseq+"\">";
 					$("#food_info3").html(html);
 				}
 				
@@ -251,6 +254,7 @@ function reloadSection() {
 			alert("error");
     	}
 	});
+	return true;
 }
 
 
