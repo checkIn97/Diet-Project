@@ -4,19 +4,31 @@
 <meta charset="UTF-8">
 <script th:inline="javascript">
     function foodRecord() {
-        var food_name = $("#food_name").text();
-        var food_score = $("#food_score").text();
-        var amount = $("#amount").val();
+        var fseq1 = $("#fseq1").val();
+        var fseq2 = $("#fseq2").val();
+        var fseq3 = $("#fseq3").val();
+        var score1 = $("#score1").val();
+        var score2 = $("#score2").val();
+        var score3 = $("#score3").val();
+        var amount1 = $("#amount1").val();
+        var amount2 = $("#amount2").val();
+        var amount3 = $("#amount3").val();
 
         $.ajax({
             type: "POST",
             url: "/food_recommend_record",
-            data: JSON.stringify({
-                food_name: food_name,
-                food_score: food_score,
-                amount: amount
-            }),
-            contentType: "application/json",
+            data: {
+                fseq1: fseq1,
+                fseq2: fseq2,
+                fseq3: fseq3,
+                score1: score1,
+                score2: score2,
+                score3: score3,
+                amount1: amount1,
+                amount2: amount2,
+                amount3: amount3
+            },
+            contentType: 'application/x-www-form-urlencoded; charset=utf-8',
             success: function (response) {
                 alert("성공적으로 기록되었습니다.");
             },
@@ -30,7 +42,16 @@
 
 <article class="foodRecommend">
 	<input type="hidden" id="arrow_action" name="arrow_action" value=0>
-    <div class="section" id="section1">
+	<input type="hidden" id="fseq1Original" name="fseq1Original" th:value="${foodRecommendVo1.foodRecommendList[foodRecommendVo1.index-1].food.fseq}">
+	<input type="hidden" id="fseq2Original" name="fseq2Original" th:value="${foodRecommendVo2.foodRecommendList[foodRecommendVo1.index-1].food.fseq}">
+	<input type="hidden" id="fseq3Original" name="fseq3Original" th:value="${foodRecommendVo3.foodRecommendList[foodRecommendVo1.index-1].food.fseq}">
+	<input type="hidden" id="fseq1" name="fseq1" value=0>
+	<input type="hidden" id="fseq2" name="fseq2" value=0>
+	<input type="hidden" id="fseq3" name="fseq3" value=0>
+	<input type="hidden" id="score1" name="score1" th:value="${foodRecommendVo1.foodRecommendList[foodRecommendVo1.index-1].scoreView}">
+	<input type="hidden" id="score2" name="score2" th:value="${foodRecommendVo2.foodRecommendList[foodRecommendVo1.index-1].scoreView}">
+	<input type="hidden" id="score3" name="score3" th:value="${foodRecommendVo3.foodRecommendList[foodRecommendVo1.index-1].scoreView}">
+    <div class="section" id="section1" onclick="click_section(1)">
         <div class="arrow">
             <img class="arrowL" id="arrowL1" src="/assets/images/arrowL.png">
             <img class="arrowR" id="arrowR1" src="/assets/images/arrowR.png">
@@ -74,7 +95,7 @@
 		            <tr>
 		                <td>추천점수</td>
 		                <td>
-							<span class="satisfaction">
+							<span class="satisfaction" th:title="${foodVo.scoreView}+'%'" th:alt="${foodVo.scoreView}+'%'">
 						      	<img class="star" th:if="${foodVo.starScore == 0}" src="/assets/images/star-empty.png">
 						    	<img class="star" th:if="${foodVo.starScore == 1}" src="/assets/images/star-half.png">
 						    	<img class="star" th:if="${foodVo.starScore >= 2}" src="/assets/images/star-full.png">
@@ -97,9 +118,9 @@
 		                <td>수량</td>
 		                <td>
 						    <span class="quantity">
-						        <button class="decrease"><img class="pmIcon" src="/assets/images/minus.png"></button>
-						        <input class="quantity-input" min="0" type="number" value="1">
-						        <button class="increase"><img class="pmIcon" src="/assets/images/plus.png"></button>
+						        <button class="decrease" onclick="change_amount(1, 0)"><img class="pmIcon" src="/assets/images/minus.png"></button>
+						        <input class="quantity-input" id="amount1" min="1" max="99" type="number" value="1" readonly>
+						        <button class="increase" onclick="change_amount(1, 1)"><img class="pmIcon" src="/assets/images/plus.png"></button>
 						    </span>
 		                </td>
 		            </tr>
@@ -108,7 +129,7 @@
         </div>
     </div>
 
-    <div class="section" id="section2">
+    <div class="section" id="section2" onclick="click_section(2)">
         <div class="arrow">
             <img class="arrowL" id="arrowL2" src="/assets/images/arrowL.png">
             <img class="arrowR" id="arrowR2" src="/assets/images/arrowR.png">
@@ -152,7 +173,7 @@
 		            <tr>
 		                <td>추천점수</td>
 		                <td>
-							<span class="satisfaction">
+							<span class="satisfaction" th:title="${foodVo.scoreView}+'%'" th:alt="${foodVo.scoreView}+'%'">
 						      	<img class="star" th:if="${foodVo.starScore == 0}" src="/assets/images/star-empty.png">
 						    	<img class="star" th:if="${foodVo.starScore == 1}" src="/assets/images/star-half.png">
 						    	<img class="star" th:if="${foodVo.starScore >= 2}" src="/assets/images/star-full.png">
@@ -175,9 +196,9 @@
 		                <td>수량</td>
 		                <td>
 						    <span class="quantity">
-						        <button class="decrease"><img class="pmIcon" src="/assets/images/minus.png"></button>
-						        <input class="quantity-input" min="0" type="number" value="1">
-						        <button class="increase"><img class="pmIcon" src="/assets/images/plus.png"></button>
+						        <button class="decrease" onclick="change_amount(2, 0)"><img class="pmIcon" src="/assets/images/minus.png"></button>
+						        <input class="quantity-input" id="amount2" min="1" max="99" type="number" value="1" readonly>
+						        <button class="increase" onclick="change_amount(2, 1)"><img class="pmIcon" src="/assets/images/plus.png"></button>
 						    </span>
 		                </td>
 		            </tr>
@@ -186,7 +207,7 @@
         </div>
     </div>
 
-    <div class="section" id="section3">
+    <div class="section" id="section3" onclick="click_section(3)">
         <div class="arrow">
             <img class="arrowL" id="arrowL3" src="/assets/images/arrowL.png">
             <img class="arrowR" id="arrowR3" src="/assets/images/arrowR.png">
@@ -230,7 +251,7 @@
 		            <tr>
 		                <td>추천점수</td>
 		                <td>
-							<span class="satisfaction">
+							<span class="satisfaction" th:title="${foodVo.scoreView}+'%'" th:alt="${foodVo.scoreView}+'%'">
 						      	<img class="star" th:if="${foodVo.starScore == 0}" src="/assets/images/star-empty.png">
 						    	<img class="star" th:if="${foodVo.starScore == 1}" src="/assets/images/star-half.png">
 						    	<img class="star" th:if="${foodVo.starScore >= 2}" src="/assets/images/star-full.png">
@@ -253,9 +274,9 @@
 		                <td>수량</td>
 		                <td>
 						    <span class="quantity">
-						        <button class="decrease"><img class="pmIcon" src="/assets/images/minus.png"></button>
-						        <input class="quantity-input" min="0" type="number" value="1">
-						        <button class="increase"><img class="pmIcon" src="/assets/images/plus.png"></button>
+						        <button class="decrease" onclick="change_amount(3, 0)"><img class="pmIcon" src="/assets/images/minus.png"></button>
+						        <input class="quantity-input" id="amount3" min="1" max="99" type="number" value="1" readonly>
+						        <button class="increase" onclick="change_amount(3, 1)"><img class="pmIcon" src="/assets/images/plus.png"></button>
 						    </span>
 		                </td>
 		            </tr>
@@ -266,7 +287,7 @@
 
 </article>
 
-<a class="button" href="/foodTodayHistory_view" id="foodRecord">기록</a>
+<a class="button" onclick="foodRecord()" id="foodRecord">기록</a>
 
 <div class="search-container">
 	<label> <input type="text" name="searchWord" class="searchWord">

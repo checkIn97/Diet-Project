@@ -22,64 +22,82 @@ sections.forEach(function(section) {
 });
 
 /*화면 채크 마크 표시*/
-var sections = document.getElementsByClassName('section');
-for (var i = 0; i < sections.length; i++) {
-    sections[i].addEventListener('click', function(event) {
-        // 'quantity' 클래스를 가진 요소를 포함하는 'section' 요소를 클릭한 경우 이벤트 핸들러를 실행하지 않음
-        var quantity = this.querySelector('.quantity');
-        if (quantity && quantity.contains(event.target)) {
-            return;
-        }
+function click_section(n) {
+	let s = null;
+	let s3 = document.querySelector("#section3");
+	if (n == 1) {
+		s = document.querySelector("#section1");
+	} else if (n == 2) {
+		s = document.querySelector("#section2");
+	} else if (n ==3) {
+		s = document.querySelector("#section3");
+	}
+	let quantity = s.querySelector('.quantity');
+    if (quantity && quantity.contains(event.target)) {
+        return;
+    }
 
-        var arrow = this.querySelector('.arrow');
-        if (arrow && arrow.contains(event.target)) {
-            return;
-        }
+    let arrow = s.querySelector('.arrow');
+    if (arrow && arrow.contains(event.target)) {
+        return;
+    }
 
-        var foodDetailGo = this.querySelector('.foodDetailGo');
-        if (foodDetailGo && foodDetailGo.contains(event.target)) {
-            return;
+    let foodDetailGo = s.querySelector('.foodDetailGo');
+    if (foodDetailGo && foodDetailGo.contains(event.target)) {
+        return;
+    }
+	
+    let checkmark = s.querySelector('.checkmark');
+    if (s.dataset.clicked === 'true') {
+        s.style.backgroundColor = ''; // 배경색을 원래대로 복원
+        if (checkmark) {
+            checkmark.style.display = 'none'; // 이미지를 숨김
         }
-
-        var checkmark = this.querySelector('.checkmark');
-        if (this.dataset.clicked === 'true') {
-            this.style.backgroundColor = ''; // 배경색을 원래대로 복원
-            if (checkmark) {
-                checkmark.style.display = 'none'; // 이미지를 숨김
-            }
-            this.dataset.clicked = 'false';
-        } else {
-            this.style.backgroundColor = 'rgba(255, 255, 255, 0.5)'; // 흰색으로 덮어씌움
-            if (checkmark) {
-                checkmark.style.display = 'block'; // 이미지를 표시
-            }
-            this.dataset.clicked = 'true';
+        s.dataset.clicked = 'false';
+        if (n == 1) {
+			$("#fseq1").val(0);
+		} else if (n == 2) {
+			$("#fseq2").val(0);
+		} else if (n == 3) {
+			$("#fseq3").val(0);
+		}
+    } else {
+        s.style.backgroundColor = 'rgba(255, 255, 255, 0.5)'; // 흰색으로 덮어씌움
+        if (checkmark) {
+            checkmark.style.display = 'block'; // 이미지를 표시
         }
-    });
+        s.dataset.clicked = 'true';
+        let fseq1Original = $("#fseq1Original").val();
+        let fseq2Original = $("#fseq2Original").val();
+        let fseq3Original = $("#fseq3Original").val();
+        if (n == 1) {
+			$("#fseq1").val(fseq1Original);
+		} else if (n == 2) {
+			$("#fseq2").val(fseq2Original);
+		} else if (n == 3) {
+			$("#fseq3").val(fseq3Original);
+		}
+    }
 }
+
 
 
 /*수량 증가/감소*/
 var quantities = document.getElementsByClassName('quantity');
-
-for (var i = 0; i < quantities.length; i++) {
-    (function() {
-        var decreaseButton = quantities[i].getElementsByClassName('decrease')[0];
-        var increaseButton = quantities[i].getElementsByClassName('increase')[0];
-        var input = quantities[i].getElementsByClassName('quantity-input')[0];
-
-        decreaseButton.addEventListener('click', function() {
-            var currentValue = Number(input.value);
-            if (currentValue > 0) {
-                input.value = currentValue - 1;
-            }
-        });
-
-        increaseButton.addEventListener('click', function() {
-            var currentValue = Number(input.value);
-            input.value = currentValue + 1;
-        });
-    })();
+function change_amount(i, direction) {
+	let decreaseButton = quantities[i-1].getElementsByClassName('decrease')[0];
+	let increaseButton = quantities[i-1].getElementsByClassName('increase')[0];
+	let input = quantities[i-1].getElementsByClassName('quantity-input')[0];
+	let currentValue = Number(input.value); 
+	if (direction == 0) {
+		if (currentValue > 1) {
+	        input.value = currentValue - 1;
+	    }
+	} else {
+		if (currentValue < 99) {
+	        input.value = currentValue + 1;
+	    }
+	}
 }
 
 
@@ -150,8 +168,9 @@ function reloadSection() {
 	        	var fi_name = data.fi_name;
 	        	var fi_amount = data.fi_amount;
 	        	var starScore = data.starScore;
+	        	var scoreView = data.scoreView;
 	        	var html = "";
-	        	html += "<table class=\"food-info\">";
+	        	html += "<table class=\"food-info\">";;
 				html += "<tr><span class=\"food-name\">"+food_name+"</span>";
 				html += "<a href=\"food_detail?fseq="+fseq+"&type=r"+section_num+"\">";
 				html += "<img src=\"/assets/images/reading-glasses.png\" class=\"foodDetailGo\" title=\"상세보기\" alt=\"상세보기\">";
@@ -174,14 +193,15 @@ function reloadSection() {
 				
 				html += "</td></tr>";
 				html += "<tr><td>추천점수</td>";
-				html += "<td><span class=\"satisfaction\">";
+				html += "<td><span class=\"satisfaction\" title="+scoreView+"%"+" alt="+scoreView+">";
 				if (starScore == 0) {
 					html += "<img class=\"star\" src=\"/assets/images/star-empty.png\">";	
 				} else if (starScore == 1) {
 					html += "<img class=\"star\" src=\"/assets/images/star-half.png\">";
 				} else if (starScore >= 2) {
 					html += "<img class=\"star\" src=\"/assets/images/star-full.png\">";
-				} 
+				}
+				html += "&nbsp";
 				
 				if (starScore == 2) {
 					html += "<img class=\"star\" src=\"/assets/images/star-empty.png\">";	
@@ -190,6 +210,7 @@ function reloadSection() {
 				} else if (starScore >= 4) {
 					html += "<img class=\"star\" src=\"/assets/images/star-full.png\">";
 				}
+				html += "&nbsp";
 				
 				if (starScore == 4) {
 					html += "<img class=\"star\" src=\"/assets/images/star-empty.png\">";	
@@ -198,6 +219,7 @@ function reloadSection() {
 				} else if (starScore >= 6) {
 					html += "<img class=\"star\" src=\"/assets/images/star-full.png\">";
 				}
+				html += "&nbsp";
 				
 				if (starScore == 6) {
 					html += "<img class=\"star\" src=\"/assets/images/star-empty.png\">";	
@@ -206,6 +228,7 @@ function reloadSection() {
 				} else if (starScore >= 8) {
 					html += "<img class=\"star\" src=\"/assets/images/star-full.png\">";
 				}
+				html += "&nbsp";
 				
 				if (starScore == 8) {
 					html += "<img class=\"star\" src=\"/assets/images/star-empty.png\">";	
@@ -218,9 +241,9 @@ function reloadSection() {
 				html += "</span></td></tr>";
 				html += "<tr><td>수량</td>";
 				html += "<td><span class=\"quantity\">";
-				html += "<button class=\"decrease\"><img class=\"pmIcon\" src=\"/assets/images/minus.png\"></button>";
-				html += "<input class=\"quantity-input\" min=\"0\" type=\"number\" value=\"1\">";
-				html += "<button class=\"increase\"><img class=\"pmIcon\" src=\"/assets/images/plus.png\"></button>";
+				html += "<button class=\"decrease\" onclick=\"change_amount("+section_num+", 0)\"><img class=\"pmIcon\" src=\"/assets/images/minus.png\"></button>";
+				html += "<input class=\"quantity-input\" min=\"1\" max=\"99\" type=\"number\" value=\"1\" readonly>";
+				html += "<button class=\"increase\" onclick=\"change_amount("+section_num+", 1)\"><img class=\"pmIcon\" src=\"/assets/images/plus.png\"></button>";
 				html += "</span></td></tr></table>";
 				if (section_num == 1) {
 					$("#food_info1").html(html);	

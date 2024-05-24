@@ -41,6 +41,7 @@ public class FoodDetail {
 	private float prt;
 	
 	private String foodType;
+	private int n;
 
 	@OneToOne
 	@JoinColumn(name="fseq", nullable=false)

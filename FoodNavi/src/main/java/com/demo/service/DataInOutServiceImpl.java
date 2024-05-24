@@ -404,6 +404,7 @@ public class DataInOutServiceImpl implements DataInOutService {
 							foodIngredientList = new ArrayList<>();
 							tmp1 = tmp2;
 							food = new Food();
+							food.setUseyn("y");
 							food.setName(input[1]);
 							
 							foodDetail = new FoodDetail();
@@ -429,6 +430,12 @@ public class DataInOutServiceImpl implements DataInOutService {
 								foodDetail.setFoodType(null);
 							} else {
 								foodDetail.setFoodType(input[7]);
+							}
+							
+							if (input[8] == null) {
+								foodDetail.setN(1);
+							} else {
+								foodDetail.setN(Integer.parseInt(input[8]));
 							}
 							
 						}

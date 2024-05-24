@@ -1,6 +1,5 @@
 package com.demo.controller;
 
-import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -11,25 +10,32 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import com.demo.dto.FoodVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.demo.domain.Food;
 import com.demo.domain.History;
 import com.demo.domain.Users;
 import com.demo.dto.FoodRecommendVo;
 import com.demo.dto.UserVo;
+import com.demo.service.DataInOutService;
 import com.demo.service.FoodScanService;
 import com.demo.service.HistoryService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.Getter;
 import lombok.Setter;
+
 
 @Controller
 public class HistoryController {
@@ -37,11 +43,14 @@ public class HistoryController {
 	private HistoryService historyService;
 	@Autowired
 	private FoodScanService foodScanService;
+	@Autowired
+	private DataInOutService dataInOutService;
 
 	// 추천 목록에서 음식을 히스토리 테이블에 기록한다(확정전)
+	@Transactional
 	@PostMapping("/food_recommend_record")
 	@ResponseBody
-	public ResponseEntity<String> recordFood(@RequestBody FoodRecord foodRecord, HttpSession session) {
+	public ResponseEntity<String> recordFood(HttpSession session, HttpServletRequest request) {
 		// 세션에서 사용자 정보 가져오기
 		Users user = (Users) session.getAttribute("loginUser");
 
@@ -50,52 +59,88 @@ public class HistoryController {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("요청이 실패했습니다.");
 		}
 		
-		if (foodRecord.getAmount().equals("0")) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("요청이 실패했습니다.");
-		}
+		System.out.println("테스트");
+		int fseq1 = Integer.parseInt(request.getParameter("fseq1"));
+		int fseq2 = Integer.parseInt(request.getParameter("fseq2"));
+		int fseq3 = Integer.parseInt(request.getParameter("fseq3"));
+		int score1 = Integer.parseInt(request.getParameter("score1"));
+		int score2 = Integer.parseInt(request.getParameter("score2"));
+		int score3 = Integer.parseInt(request.getParameter("score3"));
+		int amount1 = Integer.parseInt(request.getParameter("amount1"));
+		int amount2 = Integer.parseInt(request.getParameter("amount2"));
+		int amount3 = Integer.parseInt(request.getParameter("amount3"));
 		
-		Food food = foodScanService.getFoodByName(foodRecord.getFood_name());
-		/*
-		 * 이미 히스토리가 존재하는지 확인하기 위해 유저정보로 히스토리 리스트를 가져오기(히스토리의 수정은 기록확인 페이지에서만 가능)
-		 */
-		List<History> hsList = historyService.getHistoryListByUser(user);
-		FoodRecommendVo vo = (FoodRecommendVo)session.getAttribute("foodRecommendVo");
-		List<String> mealList = Arrays.asList(vo.getMealTime());
-		String mealType = "";
-		for(String meal : mealList) {
-			System.out.println("mealtype:" + meal);
-			if (!meal.equals("")) {
-				mealType = meal;
-				break;
-			}
-		}
+		FoodRecord[] foodRecordArray = new FoodRecord[3];
+		FoodRecord fd1 = new FoodRecord();
+		FoodRecord fd2 = new FoodRecord();
+		FoodRecord fd3 = new FoodRecord();
+		fd1.setFseq(fseq1);
+		fd2.setFseq(fseq2);
+		fd3.setFseq(fseq3);
+		fd1.setScore(score1);
+		fd2.setScore(score2);
+		fd3.setScore(score3);
+		fd1.setAmount(amount1);
+		fd2.setAmount(amount2);
+		fd3.setAmount(amount3);
 		
-		if (!hsList.isEmpty()) { // 히스토리 리스트가 존재하는 경우
-			for (History history : hsList) {
-				Instant instant = history.getServedDate().toInstant();
-				LocalDate historyLocalDate = instant.atZone(ZoneId.systemDefault()).toLocalDate();
-				LocalDate today = LocalDate.now();
-				
-				if (history.getFood().equals(food) && historyLocalDate.equals(today) && history.getMealType().equals(mealType)) { // 현재 기록하려는 음식이 히스토리 상 존재하는지 확인하여 있다면 전송 실패
+		List<History> historyList = new ArrayList<>();
+		for (FoodRecord fd : foodRecordArray) {
+			if (fd.getFseq() != 0) {
+				if (fd.getAmount() == 0) {
 					return ResponseEntity.status(HttpStatus.NOT_FOUND).body("요청이 실패했습니다.");
-				} else { 
-					History hs = History.builder().user(user).food(food).serveNumber(Integer.parseInt(foodRecord.getAmount()))
+				}
+				Food food = foodScanService.getFoodByFseq(fd.getFseq());
+				
+				/*
+				 * 이미 히스토리가 존재하는지 확인하기 위해 유저정보로 히스토리 리스트를 가져오기(히스토리의 수정은 기록확인 페이지에서만 가능)
+				 */
+				List<History> hsList = historyService.getHistoryListByUser(user);
+				FoodRecommendVo vo = (FoodRecommendVo)session.getAttribute("foodRecommendVo");
+				List<String> mealList = Arrays.asList(vo.getMealTime());
+				String mealType = "";
+				for(String meal : mealList) {
+					System.out.println("mealtype:" + meal);
+					if (!meal.equals("")) {
+						mealType = meal;
+						break;
+					}
+				}
+				
+				if (!hsList.isEmpty()) { // 히스토리 리스트가 존재하는 경우
+					for (History history : hsList) {
+						Instant instant = history.getServedDate().toInstant();
+						LocalDate historyLocalDate = instant.atZone(ZoneId.systemDefault()).toLocalDate();
+						LocalDate today = LocalDate.now();
+						
+						if (history.getFood().equals(food) && historyLocalDate.equals(today) && history.getMealType().equals(mealType)) { // 현재 기록하려는 음식이 히스토리 상 존재하는지 확인하여 있다면 전송 실패
+							return ResponseEntity.status(HttpStatus.NOT_FOUND).body("요청이 실패했습니다.");
+						} else { 
+							History hs = History.builder().user(user).food(food).serveNumber(fd.getAmount())
+									.servedDate(null).mealType(mealType).no_egg(user.getNo_egg()).no_milk(user.getNo_milk())
+									.no_bean(user.getNo_bean()).no_shellfish(user.getNo_shellfish()).no_ingredient(user.getNo_ingredient())
+									.purpose(user.getUserGoal()).dietType(user.getDietType()).vegetarian(user.getVegetarian()).build();
+							System.out.println("-----------테스트1-------------");
+							historyService.historyUpdate(hs);
+							historyList.add(history);
+							break;
+						}
+					}
+				} else { // 히스토리 리스트가 존재하지 않는 경우
+					History history = History.builder().user(user).food(food).serveNumber(fd.getAmount())
 							.servedDate(null).mealType(mealType).no_egg(user.getNo_egg()).no_milk(user.getNo_milk())
 							.no_bean(user.getNo_bean()).no_shellfish(user.getNo_shellfish()).no_ingredient(user.getNo_ingredient())
 							.purpose(user.getUserGoal()).dietType(user.getDietType()).vegetarian(user.getVegetarian()).build();
-					System.out.println("-----------테스트1-------------");
-					historyService.historyUpdate(hs);
-					break;
-				}
+					System.out.println("-----------테스트2-------------");
+					historyService.historyUpdate(history);
+					historyList.add(history);
+				}				
 			}
-		} else { // 히스토리 리스트가 존재하지 않는 경우
-			History history = History.builder().user(user).food(food).serveNumber(Integer.parseInt(foodRecord.getAmount()))
-					.servedDate(null).mealType(mealType).no_egg(user.getNo_egg()).no_milk(user.getNo_milk())
-					.no_bean(user.getNo_bean()).no_shellfish(user.getNo_shellfish()).no_ingredient(user.getNo_ingredient())
-					.purpose(user.getUserGoal()).dietType(user.getDietType()).vegetarian(user.getVegetarian()).build();
-			System.out.println("-----------테스트2-------------");
-			historyService.historyUpdate(history);
 		}
+		
+		
+		dataInOutService.historyListToCsv(historyList);
+		
 		// 응답 반환
 		return ResponseEntity.ok("데이터가 성공적으로 저장되었습니다.");
 	}
@@ -323,8 +368,8 @@ public class HistoryController {
 	@Getter
 	@Setter
 	class FoodRecord {
-		private String food_name;
-		private String food_score;
-		private String amount;
+		private int fseq;
+		private int score;
+		private int amount;
 	}
 }

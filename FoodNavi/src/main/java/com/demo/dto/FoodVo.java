@@ -29,10 +29,10 @@ public class FoodVo {
 	
 	public FoodVo(Food food) {
 		this.food = food;
-		this.kcal = String.format("%d", Math.round((food.getFoodDetail().getKcal())));
-		this.carb = String.format("%.2f", Math.round((food.getFoodDetail().getCarb()*100))/100f);
-		this.prt = String.format("%.2f", Math.round((food.getFoodDetail().getPrt()*100))/100f);
-		this.fat = String.format("%.2f", Math.round((food.getFoodDetail().getFat()*100))/100f);
+		this.kcal = String.format("%d", Math.round((food.getFoodDetail().getKcal()/food.getFoodDetail().getN())));
+		this.carb = String.format("%.2f", Math.round((food.getFoodDetail().getCarb()/food.getFoodDetail().getN()*100))/100f);
+		this.prt = String.format("%.2f", Math.round((food.getFoodDetail().getPrt()/food.getFoodDetail().getN()*100))/100f);
+		this.fat = String.format("%.2f", Math.round((food.getFoodDetail().getFat()/food.getFoodDetail().getN()*100))/100f);
 	}
 	
 	public FoodVo(Food food, float score) {
@@ -40,10 +40,10 @@ public class FoodVo {
 		this.score = score;
 		this.starScore = (int)(score*10);
 		this.scoreView = (int)(score*100);
-		this.kcal = String.format("%d", Math.round((food.getFoodDetail().getKcal())));
-		this.carb = String.format("%.2f", Math.round((food.getFoodDetail().getCarb()*100))/100f);
-		this.prt = String.format("%.2f", Math.round((food.getFoodDetail().getPrt()*100))/100f);
-		this.fat = String.format("%.2f", Math.round((food.getFoodDetail().getFat()*100))/100f);
+		this.kcal = String.format("%d", Math.round((food.getFoodDetail().getKcal()/food.getFoodDetail().getN())));
+		this.carb = String.format("%.2f", Math.round((food.getFoodDetail().getCarb()/food.getFoodDetail().getN()*100))/100f);
+		this.prt = String.format("%.2f", Math.round((food.getFoodDetail().getPrt()/food.getFoodDetail().getN()*100))/100f);
+		this.fat = String.format("%.2f", Math.round((food.getFoodDetail().getFat()/food.getFoodDetail().getN()*100))/100f);
 	}
 
 	@Override
