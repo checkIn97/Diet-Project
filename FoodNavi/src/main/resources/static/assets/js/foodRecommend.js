@@ -84,20 +84,10 @@ function click_section(n) {
 
 /*수량 증가/감소*/
 var quantities = document.getElementsByClassName('quantity');
-function change_amount(i, direction) {
-	let decreaseButton = quantities[i-1].getElementsByClassName('decrease')[0];
-	let increaseButton = quantities[i-1].getElementsByClassName('increase')[0];
-	let input = quantities[i-1].getElementsByClassName('quantity-input')[0];
-	let currentValue = Number(input.value); 
-	if (direction == 0) {
-		if (currentValue > 1) {
-	        input.value = currentValue - 1;
-	    }
-	} else {
-		if (currentValue < 99) {
-	        input.value = currentValue + 1;
-	    }
-	}
+function change_amount(i) {
+	$("#amount_action").val(i);
+	$("#arrow_action").val(0);
+	reloadSection();
 }
 
 
@@ -119,42 +109,57 @@ var arrowR3 = document.getElementById('arrowR3');
 
 // 화살표에 클릭 이벤트 리스너를 추가합니다.
 arrowL1.addEventListener('click', function() {
+	$("#amount_action").val(0);
 	$("#arrow_action").val(1);
 	reloadSection();
 });
 
 arrowR1.addEventListener('click', function() {
+	$("#amount_action").val(0);
 	$("#arrow_action").val(2);
 	reloadSection();
 });
 
 arrowL2.addEventListener('click', function() {
+	$("#amount_action").val(0);
 	$("#arrow_action").val(3);
 	reloadSection();
 });
 
 arrowR2.addEventListener('click', function() {
+	$("#amount_action").val(0);
 	$("#arrow_action").val(4);
 	reloadSection();
 });
 
 arrowL3.addEventListener('click', function() {
+	$("#amount_action").val(0);
 	$("#arrow_action").val(5);
 	reloadSection();
 });
 
 arrowR3.addEventListener('click', function() {
+	$("#amount_action").val(0);
 	$("#arrow_action").val(6);
 	reloadSection();
 });
 
 function reloadSection() {
+	arrow_action = $("#arrow_action").val(); 
+	amount_action = $("#amount_action").val();
+	amount1 = $("#amount1").val();
+	amount2 = $("#amount2").val();
+	amount3 = $("#amount3").val();
 	$.ajax({
 		type: 'POST',
     	url: '/recommend_section_reload',
-    	dataType: 'json',
-    	data: $("#arrow_action"),
-    	contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+    	data: {
+			arrow_action: arrow_action, 
+			amount_action: amount_action,
+			amount1: amount1,
+			amount2: amount2,
+			amount3: amount3
+			},
     	success: function (data) {
 	        var result = data.result;
 	        if (result == 'success') {
@@ -165,14 +170,14 @@ function reloadSection() {
 	        	var carb = data.carb;
 	        	var prt = data.prt;
 	        	var fat = data.fat;
-	        	var fi_name = data.fi_name;
-	        	var fi_amount = data.fi_amount;
+	        	var amount = data.amount;
 	        	var starScore = data.starScore;
 	        	var scoreView = data.scoreView;
 	        	var html = "";
 	        	html += "<table class=\"food-info\">";;
 				html += "<tr><span class=\"food-name\">"+food_name+"</span>";
 				html += "<a href=\"food_detail?fseq="+fseq+"&type=r"+section_num+"\">";
+				html += "&nbsp";
 				html += "<img src=\"/assets/images/reading-glasses.png\" class=\"foodDetailGo\" title=\"상세보기\" alt=\"상세보기\">";
 				html == "</a></tr>";
 				html += "<tr><td style=\"width:40%\">칼로리</td>";
@@ -183,15 +188,6 @@ function reloadSection() {
 				html += "<td><span class=\"protein\">"+prt+"</span>g</td></tr>";
 				html += "<tr><td>지방</td>";
 				html += "<td><span class=\"fat\">"+fat+"</span>g</td></tr>";
-				html += "<tr><td>재료</td><td>";
-				
-				if (fi_name.length > 0) {
-					for (let i = 0 ; i < fi_name.length ; i++) {
-						html += "<span>"+fi_name[i]+" "+fi_amount[i]+"g</span><br>";
-					}
-				}
-				
-				html += "</td></tr>";
 				html += "<tr><td>추천점수</td>";
 				html += "<td><span class=\"satisfaction\" title="+scoreView+"%"+" alt="+scoreView+">";
 				if (starScore <= 0) {
@@ -241,9 +237,9 @@ function reloadSection() {
 				html += "</span></td></tr>";
 				html += "<tr><td>수량</td>";
 				html += "<td><span class=\"quantity\">";
-				html += "<button class=\"decrease\" onclick=\"change_amount("+section_num+", 0)\"><img class=\"pmIcon\" src=\"/assets/images/minus.png\"></button>";
-				html += "<input class=\"quantity-input\" min=\"1\" max=\"99\" type=\"number\" value=\"1\" readonly>";
-				html += "<button class=\"increase\" onclick=\"change_amount("+section_num+", 1)\"><img class=\"pmIcon\" src=\"/assets/images/plus.png\"></button>";
+				html += "<button class=\"decrease\" onclick=\"change_amount("+(section_num-1)*2+1+")\"><img class=\"pmIcon\" src=\"/assets/images/minus.png\"></button>";
+				html += "<input class=\"quantity-input\" id=\"amount"+section_num+"\" min=\"1\" max=\"99\" type=\"number\" value=\""+amount+"\" readonly>";
+				html += "<button class=\"increase\" onclick=\"change_amount("+(section_num-1)*2+2+")\"><img class=\"pmIcon\" src=\"/assets/images/plus.png\"></button>";
 				html += "</span></td></tr></table>";
 				if (section_num == 1) {
 					$("#food_info1").html(html);	

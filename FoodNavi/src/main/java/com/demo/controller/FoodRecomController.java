@@ -13,12 +13,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.demo.domain.Food;
-import com.demo.domain.FoodIngredient;
 import com.demo.domain.History;
 import com.demo.domain.Users;
 import com.demo.dto.FoodRecommendVo;
@@ -352,60 +352,85 @@ public class FoodRecomController {
 	
 	@ResponseBody
 	@PostMapping("recommend_section_reload")
-	public Map<String, Object> recommend_section_reload(HttpSession session, HttpServletRequest request) {
-		int arrow_action = Integer.parseInt(request.getParameter("arrow_action"));
+	public Map<String, Object> recommend_section_reload(HttpSession session, HttpServletRequest request, 
+			@RequestParam(value="arrow_action") int arrow_action, 
+			@RequestParam(value="amount_action") int amount_action, 
+			@RequestParam(value="amount1") int amount1, 
+			@RequestParam(value="amount2") int amount2, 
+			@RequestParam(value="amount3") int amount3) {
+		
 		int section_num = (arrow_action-1)/2;
+		int amount = 0;
+		if (section_num == 0) {
+			amount = amount1;
+		} else if (section_num == 1) {
+			amount = amount2;
+		} else {
+			amount = amount3;
+		}
 		Map<String, Object> section_reload_info = new HashMap<>();
 		// 세션에서 사용자 정보 가져오기
 		FoodRecommendVo[] foodRecommendVoArray = (FoodRecommendVo[])session.getAttribute("foodRecommendVoArray");
 		FoodRecommendVo foodRecommendVo = null;
     	Users user = (Users) session.getAttribute("loginUser");
-    	if (user != null || arrow_action == 0) {
-    		foodRecommendVo = foodRecommendVoArray[section_num];
-			if (arrow_action % 2 == 0) {
-				if (foodRecommendVo.getIndex() < foodRecommendVo.getTotal()) {
-					foodRecommendVo.setIndex(foodRecommendVo.getIndex()+1);
-					foodRecommendVoArray[section_num] = foodRecommendVo;
-					session.setAttribute("foodRecommendVoArray", foodRecommendVoArray);
-				} else {
-					foodRecommendVo = null;
-				}
-			} else {
-				if (foodRecommendVo.getIndex() > 1) {
-					foodRecommendVo.setIndex(foodRecommendVo.getIndex()-1);
-					foodRecommendVoArray[section_num] = foodRecommendVo;
-					session.setAttribute("foodRecommendVoArray", foodRecommendVoArray);
-				} else {
-					foodRecommendVo = null;
-				}
-			}
-        }
-    	List<FoodIngredient> foodIngredientList = null;
+    	if (user != null) {
+    		if (arrow_action != 0) {
+        		foodRecommendVo = foodRecommendVoArray[section_num];
+    			if (arrow_action % 2 == 0) {
+    				if (foodRecommendVo.getIndex() < foodRecommendVo.getTotal()) {
+    					amount = 1;
+    					foodRecommendVo.setIndex(foodRecommendVo.getIndex()+1);
+    					foodRecommendVoArray[section_num] = foodRecommendVo;
+    					session.setAttribute("foodRecommendVoArray", foodRecommendVoArray);
+    				} else {
+    					foodRecommendVo = null;
+    				}
+    			} else {
+    				if (foodRecommendVo.getIndex() > 1) {
+    					amount = 1;
+    					foodRecommendVo.setIndex(foodRecommendVo.getIndex()-1);
+    					foodRecommendVoArray[section_num] = foodRecommendVo;
+    					session.setAttribute("foodRecommendVoArray", foodRecommendVoArray);
+    				} else {
+    					foodRecommendVo = null;
+    				}
+    			}
+            } else {
+            	foodRecommendVo = foodRecommendVoArray[section_num];
+    			if (amount_action % 2 == 0) {
+    				if (amount < 99) {
+    					amount++;;
+    				} else {
+    					foodRecommendVo = null;
+    				}
+    			} else {
+    				if (amount > 1) {
+    					amount--;
+    				} else {
+    					foodRecommendVo = null;
+    				}
+    			}
+            }
+    	}
+    	
     	FoodVo foodVo = null;
     	if (foodRecommendVo != null ) {
     		foodVo = foodRecommendVo.getFoodRecommendList().get(foodRecommendVo.getIndex()-1);
-    		foodIngredientList = foodIngredientService.getFoodIngredientListByFood(foodVo.getFood().getFseq());
     	} 
+    	
     	
    		if (foodVo != null ) {
    			section_reload_info.put("result", "success");
    			section_reload_info.put("section_num", section_num+1);
    			section_reload_info.put("food_name", foodVo.getFood().getName());
    			section_reload_info.put("fseq", foodVo.getFood().getFseq());
-   			section_reload_info.put("kcal", foodVo.getKcal());
-   			section_reload_info.put("carb", foodVo.getCarb());
-   			section_reload_info.put("prt", foodVo.getPrt());
-   			section_reload_info.put("fat", foodVo.getFat());
+   			section_reload_info.put("kcal", Integer.parseInt(foodVo.getKcal())*amount);
+   			section_reload_info.put("carb", String.format("%.2f", (Float.parseFloat(foodVo.getCarb())*amount)));
+   			section_reload_info.put("prt", String.format("%.2f", (Float.parseFloat(foodVo.getPrt())*amount)));
+   			section_reload_info.put("fat", String.format("%.2f", (Float.parseFloat(foodVo.getFat())*amount)));
+   			section_reload_info.put("amount", amount);
    			section_reload_info.put("starScore", foodVo.getStarScore());
    			section_reload_info.put("scoreView", foodVo.getScoreView());
-   			String[] fi_name = new String[foodIngredientList.size()];
-   			int[] fi_amount = new int[foodIngredientList.size()];
-   			for (int i = 0 ; i < foodIngredientList.size(); i++) {
-   				fi_name[i] = foodIngredientList.get(i).getIngredient().getName();
-   				fi_amount[i] = foodIngredientList.get(i).getAmount();
-   			}
-   			section_reload_info.put("fi_name", fi_name);
-   			section_reload_info.put("fi_amount", fi_amount);   			
    		} else {
    			section_reload_info.put("result", "fail");
    		}
