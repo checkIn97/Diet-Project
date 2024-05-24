@@ -150,6 +150,7 @@ public class AdminController {
 		model.addAttribute("userScanVo", userScanVo);
 		model.addAttribute("userList", userScanVo.getUserList());
 		model.addAttribute("pageInfo", userScanVo.getPageInfo());
+		System.out.println("TEST!!!!!! 유저 pageInfo: " + userScanVo.getPageInfo());
 
 		return "admin/userList";
 	}
@@ -214,14 +215,13 @@ public class AdminController {
 		Map<String, Integer> pageInfo = new HashMap<>();
 		pageInfo.put("number", page);
 		pageInfo.put("size", size);
-		pageInfo.put("totalPages", (foodList.size()+size-1)/size);		
+		pageInfo.put("totalPages", (foodList.size()+size-1)/size);
 		foodScanVo.setPageInfo(pageInfo);
 		foodScanVo.setFoodList(foodData.getContent());
 		session.setAttribute("foodScanVo", foodScanVo);
 		model.addAttribute("foodScanVo", foodScanVo);
 		model.addAttribute("foodList", foodScanVo.getFoodList());
-		model.addAttribute("pageInfo", foodScanVo.getPageInfo());
-
+		model.addAttribute("pageInfo", foodData);
 		return "admin/foodList";
 
 	}
