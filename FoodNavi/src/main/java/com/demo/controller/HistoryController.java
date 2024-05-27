@@ -401,15 +401,19 @@ public class HistoryController {
             return "/user_login_form"; // 로그인 페이지로 이동.
         }
 
-        FoodRecommendVo vo = (FoodRecommendVo) session.getAttribute("foodRecommendVo");
+        FoodRecommendVo[] vo = (FoodRecommendVo[]) session.getAttribute("foodRecommendVoArray");
         FoodRecommendVo frvo = new FoodRecommendVo();
         List<String> mealList;
         String mealType = frvo.getMealTimeByTime();
-        if (vo != null) {
-            mealList = Arrays.asList(vo.getMealTime());
-            mealType = mealList.get(0);
-        }
+		for (FoodRecommendVo v : vo) {
+			if (v != null) {
+				mealList = Arrays.asList(v.getMealTime());
+				mealType = mealList.get(0);
+				break;
+			}
+		}
 
+		System.out.println("mealType" + mealType);
         // 받은 데이터를 처리하는 로직을 작성
         for (HistoryData historyData : historyDataList) {
             Food food = foodScanService.getFoodByName(historyData.getFood_name());
