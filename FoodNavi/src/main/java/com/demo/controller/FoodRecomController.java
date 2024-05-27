@@ -288,7 +288,7 @@ public class FoodRecomController {
 		if (totalCheck) {
 			return "food/foodRecommend";
 		} else {
-			return "결과값 없음 페이지 주소 입력";
+			return "food/foodRecommendNot";
 		}
 		
  		
