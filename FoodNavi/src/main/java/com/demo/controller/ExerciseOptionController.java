@@ -75,9 +75,4 @@ public class ExerciseOptionController {
         String redirect_uri = "http://localhost:8080/user_myactivity_view";
         response.sendRedirect(redirect_uri);
     }
-    
-    @GetMapping("/activities/validate")
-    public boolean validateActivityType(@RequestParam("type") String type) {
-        return exerciseOptionRepository.findByType(type).isPresent();
-    }
 }
