@@ -26,7 +26,7 @@ public class ChatRoom {
 
 	public static ChatRoom botCreate(String name){
 		ChatRoom chatRoom = new ChatRoom();
-		chatRoom.roomId = "bot123";
+		chatRoom.roomId = "chatbot"+UUID.randomUUID().toString();
 		chatRoom.name = name;
 		return chatRoom;
 	}

@@ -85,7 +85,7 @@
             },
             sendMessage: function() {
 
-                if (this.roomId === 'bot123'){
+                if (this.roomId.includes("chatbot")){
                     ws.send("/pub/chat/message", {}, JSON.stringify({type:'BOT', roomId:this.roomId, sender:this.sender, message:this.message}));
                     this.message = '';
                 } else {
