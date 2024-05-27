@@ -2,6 +2,7 @@ package com.demo.service;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -233,6 +234,15 @@ public class DataInOutServiceImpl implements DataInOutService {
 		}catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("admin 데이터 내보내기 실패");
+		}
+		
+		File file = new File(csvFile);
+		if (file.exists()) {
+			if (file.delete()) {
+				System.out.println("임시파일 삭제 완료");
+			} else {
+				System.out.println("임시파일 삭제 실패");
+			}
 		}
 
 		
@@ -591,6 +601,15 @@ public class DataInOutServiceImpl implements DataInOutService {
 			e.printStackTrace();
 			System.out.println("food 푸드 데이터 내보내기 실패");
 		}
+		
+		File file = new File(csvFile);
+		if (file.exists()) {
+			if (file.delete()) {
+				System.out.println("임시파일 삭제 완료");
+			} else {
+				System.out.println("임시파일 삭제 실패");
+			}
+		}
 	}
 	
 	@Override
@@ -922,7 +941,16 @@ public class DataInOutServiceImpl implements DataInOutService {
 		}catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("History 데이터 내보내기 실패");
-		}		
+		}
+		
+		File file = new File(csvFile);
+		if (file.exists()) {
+			if (file.delete()) {
+				System.out.println("임시파일 삭제 완료");
+			} else {
+				System.out.println("임시파일 삭제 실패");
+			}
+		}
 	}
 	
 	@Override

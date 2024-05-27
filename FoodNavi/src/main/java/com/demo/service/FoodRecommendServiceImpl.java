@@ -1,19 +1,20 @@
 package com.demo.service;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.demo.domain.FoodDetail;
-import com.demo.persistence.FoodDetailScanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.demo.domain.Food;
+import com.demo.domain.FoodDetail;
 import com.demo.dto.FoodVo;
 import com.demo.dto.UserVo;
+import com.demo.persistence.FoodDetailScanRepository;
 
 @Service
 public class FoodRecommendServiceImpl implements FoodRecommendService {
@@ -60,40 +61,69 @@ public class FoodRecommendServiceImpl implements FoodRecommendService {
 			e.printStackTrace();
 			System.out.println("파이썬 프로그램 실행 실패!");
 		}
-		// 받아오기 프로세스 입력
-		int check = -1;
-		int count = 0;
-		String text = "";
 		
-		try {
-			FileReader fr = new FileReader("tmp_recommendList.csv");
-			BufferedReader br = new BufferedReader(fr);
-
-			while(true) {
-				text = br.readLine();
-				if (text == null)
-					break;			
-
-				if (check != -1) {
-					String[] input = text.split(",");
-					Food food = foodScanService.getFoodByFseq(Integer.parseInt(input[0]));
-					FoodVo foodVo = new FoodVo(food, Float.parseFloat(input[1]));
-					boolean isEqual = foodRecommendList.contains(foodVo);
-					if (!isEqual) {
-						foodRecommendList.add(foodVo);
-					}							
-					text = "";
-				} else {
-					check = 0;
-					text = "";
-				}	
+		File file = new File("tmp_filtered.csv");
+		if (file.exists()) {
+			if (file.delete()) {
+				System.out.println("tmp_filtered.csv 삭제 완료");
+			} else {
+				System.out.println("tmp_filtered.csv 삭제 실패");
 			}
+		}
+		
+		file = new File("tmp_recommendList.csv");
+		if (file.exists()) {
+			System.out.println("tmp_recommendList.csv 파일 생성 성공");
 			
-			br.close();
-			fr.close();			
-		} catch (IOException e) {
-			System.out.println((count+1)+"번 데이터 입력 중 오류 발생!");
-			e.printStackTrace();
+			// 받아오기 프로세스 입력
+			int check = -1;
+			int count = 0;
+			String text = "";
+			
+			try {
+				FileReader fr = new FileReader("tmp_recommendList.csv");
+				BufferedReader br = new BufferedReader(fr);
+
+				while(true) {
+					text = br.readLine();
+					if (text == null)
+						break;			
+
+					if (check != -1) {
+						String[] input = text.split(",");
+						Food food = foodScanService.getFoodByFseq(Integer.parseInt(input[0]));
+						FoodVo foodVo = new FoodVo(food, Float.parseFloat(input[1]));
+						boolean isEqual = foodRecommendList.contains(foodVo);
+						if (!isEqual) {
+							foodRecommendList.add(foodVo);
+						}							
+						text = "";
+					} else {
+						check = 0;
+						text = "";
+					}	
+				}
+				
+				br.close();
+				fr.close();
+				
+				file = new File("tmp_recommendList.csv");
+				if (file.exists()) {
+					if (file.delete()) {
+						System.out.println("tmp_recommendList.csv 삭제 완료");
+					} else {
+						System.out.println("tmp_recommendList.csv 삭제 실패");
+					}
+				}
+				
+				
+				
+			} catch (IOException e) {
+				System.out.println((count+1)+"번 데이터 입력 중 오류 발생!");
+				e.printStackTrace();
+			}
+		} else {
+			System.out.println("tmp_recommendList.csv 파일 생성 실패");
 		}
 		
 		System.out.println(stringBuilder.toString());
