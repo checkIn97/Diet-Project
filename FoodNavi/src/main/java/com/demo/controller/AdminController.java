@@ -446,7 +446,8 @@ public class AdminController {
 								  @RequestParam(value = "fat") float fat,
 								  @RequestParam(value = "ingredient") String[] ingredient,
 								  @RequestParam(value = "quantity") int[] quantity,
-								  @RequestParam(value = "foodType") String foodType) {
+								  @RequestParam(value = "foodType") String foodType, 
+								  @RequestParam(value = "n") int n) {
 
 		// 세션에서 사용자 정보 가져오기
 		Admin admin = (Admin) session.getAttribute("adminUser");
@@ -479,6 +480,7 @@ public class AdminController {
 		foodDetail.setPrt(prt);
 		foodDetail.setFat(fat);
 		foodDetail.setFoodType(foodType);
+		foodDetail.setN(n);
 		foodDetailService.updateFoodDetail(foodDetail);
 
 		for (int i = 0 ; i < ingredient.length ; i++) {

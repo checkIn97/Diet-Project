@@ -50,7 +50,7 @@
             </table>
             <div class="food-detail-row">
                 <div class="food-detail-item">
-                    <span class="food-detail-title">재료 ([[${foodVo.food.foodDetail.n}]]인분 기준)</span><br>
+                    <span class="food-detail-title">재료 ([[${foodVo.food.foodDetail.n}]]인분 기준량)</span><br>
                     <th:block th:each="foodIngredient, iterStat : ${foodIngredientsList}">
                         <span th:unless="${iterStat.last}">[[${foodIngredient.ingredient.name}]] [[${foodIngredient.amount}]]g, </span>
                         <span th:if="${iterStat.last}">[[${foodIngredient.ingredient.name}]] [[${foodIngredient.amount}]]g</span>
