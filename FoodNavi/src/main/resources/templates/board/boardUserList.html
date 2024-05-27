@@ -39,11 +39,6 @@
 
         </tbody>
     </table>
-    <!-- 페이지 영역 -->
-    <!-- 리스트에 맞게 페이지가 입력되는 영역 -->
-    <!-- 리스트의 사이즈가 0인 경우에는 표시되지 않음 -->
-    <th:block id="page_insert" th:if="${pageInfo.totalPages != 0}"
-              th:insert="~{/board/include/board_page_area}"></th:block>
 
     <h3><span th:text="${authorList[0].user.userid}"></span>님의 댓글 목록</h3>
     <table>
@@ -65,11 +60,6 @@
 
         </tbody>
     </table>
-    <!-- 페이지 영역 -->
-    <!-- 리스트에 맞게 페이지가 입력되는 영역 -->
-    <!-- 리스트의 사이즈가 0인 경우에는 표시되지 않음 -->
-    <th:block id="page_insert" th:if="${pageInfo.totalPages != 0}"
-              th:insert="~{/board/include/board_page_area}"></th:block>
 
     <button onclick="window.location.href='/board_insert_form'" class="button">새로운
         글 작성
