@@ -35,7 +35,6 @@
     <iframe id="roomDetailFrame" style="width:100%; height:700px; display: none;"></iframe>
 </div>
 
-<!-- <form method="get" action="chat/room"> -->
 <button class="primary" id="chatToggleButtonControl" type="submit">
     <img alt="채팅 아이콘" id="chatToggleButtonControlImg" src="/assets/images/chat.png">
 </button>
@@ -108,10 +107,7 @@
                     .catch(response => {
                         alert("챗봇 연결에 실패하였습니다.");
                     });
-
             },
-
-
             enterRoom: function (roomId) {
                 var sender = prompt('대화명을 입력해 주세요.\n' + '대화명을 입력하지 않을 시 로그인하신정보( ' + userVo_user_name + ' ) 으로 입장합니다.');
                 if (sender != "") {
@@ -120,6 +116,7 @@
                     document.getElementById('roomDetailFrame').style.display = "block";
                     document.getElementById('roomDetailFrame').src = "/chat/room/enter/" + roomId;
                     document.querySelector('.input-group').style.display = "none"; // 방에 들어가면 input-group이 안보이게 함
+                    document.getElementById('chatClose').style.display = "block"; // 방에 들어오면 나가기 버튼이 보임
                 } else {
                     sender = userVo_user_name;
                     localStorage.setItem('wschat.sender', sender);
@@ -133,7 +130,6 @@
                     alert('대화명을 입력해 주세요.');
                     return this.enterRoom(roomId);
                 }
-
             }
         }
     });
@@ -148,10 +144,9 @@
 
     // 'roomDetailFrame'의 display 속성이 변경될 때마다 호출되는 함수를 정의합니다.
     function checkFrameVisibility() {
-        var frame = document.getElementById('roomDetailFrame'); // 'roomDetailFrame' 요소를 가져옵니다.
-        var button = document.getElementById('chatClose'); // 'chatClose' 버튼 요소를 가져옵니다.
+        var frame = document.getElementById('roomDetailFrame');
+        var button = document.getElementById('chatClose');
 
-        // 'roomDetailFrame'이 보이는 경우 'chatClose' 버튼을 보이게 하고, 그렇지 않은 경우 'chatClose' 버튼을 숨깁니다.
         if (frame.style.display === "block") {
             button.style.display = "block";
         } else {
@@ -159,7 +154,7 @@
         }
     }
 
-    // 'roomDetailFrame'의 display 속성이 변경될 수 있을 때마다 함수를 호출하세요.
+
     document.getElementById('roomDetailFrame').addEventListener('change', checkFrameVisibility);
     document.getElementById('chatClose').addEventListener('click', function () {
         document.getElementById('roomDetailFrame').style.display = "none";

@@ -16,7 +16,7 @@
     <div>
         <h2>{{room.name}}</h2>
     </div>
-    <button type="button" class="button" id="chatClose" onclick="chatClose()">나가기</button>
+
     <div class="input-group">
         <div class="input-group-prepend">
             <label class="input-group-text">내용</label>
@@ -36,7 +36,7 @@
             </p>
             <iframe v-if="message.link" :src="message.link" width="500px" height="400" sandbox></iframe>
             <p v-if="message.cate">
-                <a style="color:blueviolet" v-if="message.cate" :href="message.cate" target="_top"> ==> 이동 </a>
+                <a style="color:blueviolet" v-if="message.cate" :href="message.cate" target="_top"><button>클릭시 이동</button></a>
             </p>
         </li>
     </ul>
@@ -50,11 +50,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.js"></script>
 <script src="/assets/js/jquery.min.js"></script>
-<script>
-    function chatClose() {
-        window.close();
-    }
-</script>
+
 
 <script>
     //alert(document.title);
@@ -79,6 +75,7 @@
             this.sender = localStorage.getItem('wschat.sender');
             this.findRoom();
         },
+
         methods: {
             hideInputGroup: function() {
                 document.getElementById('inputGroup').style.display = "none";

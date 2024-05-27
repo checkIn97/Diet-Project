@@ -43,27 +43,28 @@ public class ChatController {
 		if (ChatMessage.MessageType.ENTER.equals(message.getType())) {
 			message.setMessage(message.getSender() + "님이 입장하셨습니다.");
 		} else if (ChatMessage.MessageType.BOT.equals(message.getType())){
+			message.setSender("[챗봇 상담사]");
 			String result = searchFood(message.getMessage());
 			if (!result.equals(message.getMessage())){
-				if (result.equals("커뮤니티")){
+				if (result.equals("커뮤니티1")){
 					String cate = "/board_list";
-					message.setMessage("커뮤니티 으로 이동하시겠습니까?");
+					message.setMessage("커뮤니티 페이지로 이동하시겠습니까?");
 					message.setCate(cate);
-				} else if (result.equals("나의변화")) {
+				} else if (result.equals("나의변화1")) {
 					String cate = "/user_mychange_view";
-					message.setMessage("나의변화 으로 이동하시겠습니까?");
+					message.setMessage("나의변화 페이지로 이동하시겠습니까?");
 					message.setCate(cate);
-				} else if (result.equals("나의활동")) {
+				} else if (result.equals("나의활동1")) {
 					String cate = "/user_myactivity_view";
-					message.setMessage("나의활동 으로 이동하시겠습니까?");
+					message.setMessage("나의활동 페이지로 이동하시겠습니까?");
 					message.setCate(cate);
-				} else if (result.equals("마이페이지")) {
+				} else if (result.equals("마이페이지1")) {
 					String cate = "/pw_check";
-					message.setMessage("마이페이지 으로 이동하시겠습니까?");
+					message.setMessage("마이페이지 로 이동하시겠습니까?");
 					message.setCate(cate);
-				} else if (result.equals("식단추천")){
+				} else if (result.equals("식단추천1")){
 					String cate = "/foodRecommendation";
-					message.setMessage("식단추천 으로 이동하시겠습니까?");
+					message.setMessage("식단추천 페이지로 이동하시겠습니까?");
 					message.setCate(cate);
 				} else {
 					String link = "https://m.coupang.com/nm/search?q=" + result;
@@ -74,9 +75,9 @@ public class ChatController {
 				message.setMessage("'" + result + "'"
 						+"의 요청을 처리하지 못했습니다.\n (데이터에 존재하지 않거나 처리할 수 없는 요청입니다.)");
 			}
-			message.setSender("[챗봇 상담사]");
 		}
 		messagingTemplate.convertAndSend("/sub/chat/room/" + message.getRoomId(),message);
+
 	}
 
 	public String searchFood(String message){
@@ -94,8 +95,8 @@ public class ChatController {
 				break;
 			} else {
 				for (String category : categoryList) {
-					if(message.replaceAll(" ", "").contains(category)){
-						result = category;
+					if(message.replaceAll(" ", "").contains(category) || message.equals(category)){
+						result = category + "1";
 						break;
 					} else {
 						result = message;
