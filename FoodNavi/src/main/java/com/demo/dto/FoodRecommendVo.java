@@ -1,6 +1,7 @@
 package com.demo.dto;
 
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -47,10 +48,10 @@ public class FoodRecommendVo {
 	
 	private int index = 0;
 	private int total = 0;
-	private List<FoodVo> foodRecommendList = null;
+	private List<FoodVo> foodRecommendList = new ArrayList<>();;
 	private boolean listPossible = false;
 	private boolean recommend = false;
-	private List<Food> foodList = null;
+	private List<Food> foodList = new ArrayList<>();;
 	private Map<String, Integer> PageInfo = null;
 	private String sortBy = "";
 	private String sortDirection = "";
