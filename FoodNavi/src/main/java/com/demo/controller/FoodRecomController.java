@@ -216,9 +216,7 @@ public class FoodRecomController {
 				foodRecommendVo.setPageMaxDisplay(pageMaxDisplay);
 			}
 			FoodRecommendVo foodRecommendVo = foodRecommendVoArray[0];
-			System.out.println("확인0");
 			List<Food> filteredList = foodScanService.getFoodScanList(user, foodRecommendVo);
-			System.out.println("확인1");
 			foodRecommendVo.setFoodList(filteredList);
 			List<FoodVo> foodRecommendList = foodRecommendService.getFoodRecommendList("Recommend.py", userVo, filteredList);
 			

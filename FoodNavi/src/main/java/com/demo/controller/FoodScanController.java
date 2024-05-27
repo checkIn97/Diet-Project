@@ -25,6 +25,7 @@ import com.demo.dto.FoodRecommendVo;
 import com.demo.dto.FoodVo;
 import com.demo.dto.UserVo;
 import com.demo.service.DataInOutService;
+import com.demo.service.FoodIngredientService;
 import com.demo.service.FoodRecommendService;
 import com.demo.service.FoodScanService;
 import com.demo.service.HistoryService;
@@ -53,6 +54,9 @@ public class FoodScanController {
 	
 	@Autowired
 	RcdService rcdService;
+	
+	@Autowired
+	FoodIngredientService foodIngredientService;
 	
 	// food 검색조건에 따른 리스트를 생성한다.
 	// 만들어진 리스트는 검색조건과 함께 FoodRecommendVo에 담겨저 세션 영역에 저장된다.
@@ -263,6 +267,7 @@ public class FoodScanController {
             	food = foodScanService.getFoodByFseq(food.getFseq()); 
             	foodVo = new FoodVo(food);        	
             }
+            foodVo.setFoodIngredientList(foodIngredientService.getFoodIngredientListByFood(foodVo.getFood().getFseq()));
             model.addAttribute("foodVo", foodVo);
             
             UserVo userVo = new UserVo(user);
@@ -289,6 +294,7 @@ public class FoodScanController {
         			break;
         		}
         	}
+        	foodVo.setFoodIngredientList(foodIngredientService.getFoodIngredientListByFood(foodVo.getFood().getFseq()));
             model.addAttribute("foodVo", foodVo);
             UserVo userVo = new UserVo(user);
             model.addAttribute("userVo", userVo);
@@ -311,6 +317,7 @@ public class FoodScanController {
         			break;
         		}
         	}
+        	foodVo.setFoodIngredientList(foodIngredientService.getFoodIngredientListByFood(foodVo.getFood().getFseq()));
             model.addAttribute("foodVo", foodVo);
             UserVo userVo = new UserVo(user);
             model.addAttribute("userVo", userVo);
@@ -333,6 +340,7 @@ public class FoodScanController {
         			break;
         		}
         	}
+        	foodVo.setFoodIngredientList(foodIngredientService.getFoodIngredientListByFood(foodVo.getFood().getFseq()));
             model.addAttribute("foodVo", foodVo);
             UserVo userVo = new UserVo(user);
             model.addAttribute("userVo", userVo);
@@ -354,7 +362,6 @@ public class FoodScanController {
 	/*
 	@PostMapping("/history_in_from_detail")
 	public String historyInFromDetail(HttpSession session, Food food) {
-		System.out.println(1111);
 		// 세션에서 사용자 정보 가져오기
     	Users user = (Users) session.getAttribute("loginUser");
     	// 세션에 로그인 정보가 없는 경우
