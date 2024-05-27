@@ -25,23 +25,19 @@ function initAutocomplete() {
             $(this).val(ui.item.value);
         },
         change: function (event, ui) {
-            var input = $(this);
+            // 입력 필드의 새 값이 자동완성 목록의 항목과 일치하지 않으면
             if (!ui.item) {
-                $.ajax({
-                    url: "/activities/validate", // 유효성 검사를 위한 서버의 URL
-                    type: "GET",
-                    data: {
-                        term: input.val()
-                    },
-                    success: function (data) {
-                        if (!data) { // 서버가 false를 반환하면 입력한 값이 유효하지 않다는 것입니다.
-                            event.preventDefault();
-                            input.val("");
-                            alert("사용할 수 없는 운동 종류입니다.");
-                        }
-                    }
-                });
+                // 이벤트를 취소
+                event.preventDefault();
+                // 입력 필드를 지우고
+                $(this).val("");
+                // 경고 메시지를 표시합니다.
+                alert("사용할 수 없는 운동 입니다.");
             }
+        },
+        focus: function (event, ui) {
+            // 사용자가 키보드의 방향키를 사용하여 목록 항목에 포커스를 맞추었을 때 입력 필드의 값을 변경하지 않도록 합니다.
+            event.preventDefault();
         }
     });
 }
