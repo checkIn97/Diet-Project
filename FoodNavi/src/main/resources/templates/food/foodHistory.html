@@ -85,6 +85,7 @@
                 </td>
                 <td>
                     <span th:text="${history.servedDate}"></span>
+                    <input type="hidden" name="history_hseq" th:value="${history.hseq}">
                 </td>
                 <td>
                     <input onclick="delete_history(this)" type="button" value="삭제">
@@ -108,6 +109,7 @@
                 </td>
                 <td>
                     <span th:text="${history.servedDate}"></span>
+                    <input type="hidden" name="history_hseq" th:value="${history.hseq}">
                 </td>
                 <td>
                     <input onclick="delete_history(this)" type="button" value="삭제">
@@ -129,6 +131,7 @@
         </td>
         <td>
             <span th:text="${history.servedDate}"></span>
+            <input type="hidden" name="history_hseq" th:value="${history.hseq}">
         </td>
         <td>
             <input type="button" value="삭제" onclick="delete_history(this)">
@@ -150,6 +153,7 @@
         </td>
         <td>
             <span th:text="${history.servedDate}"></span>
+            <input type="hidden" name="history_hseq" th:value="${history.hseq}">
         </td>
         <td>
             <input type="button" value="삭제" onclick="delete_history(this)">
