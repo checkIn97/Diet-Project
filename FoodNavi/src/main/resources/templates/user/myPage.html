@@ -55,6 +55,8 @@
                 <label for="userWeight">몸무게</label>
                 <input type="text" name="weight" id="userWeight" th:value="${user.weight}"/>
             </div>
+            <label for="userWeight">BMI 지수</label>
+            <input type="text" name="bmi" id="bmi" th:value="${userVo.BMI}" readonly/>
 
             <div class="field half">
                 <input type="submit" value="정보 수정" class="primary"/> <input
