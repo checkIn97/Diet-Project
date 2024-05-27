@@ -89,6 +89,8 @@ function goBack() {
 		                <span th:text="${history.servedDate}"></span>
             		</td>
             		<td>
+						<h2 class="major">먹은 시간대</h2>
+						<input type="text" name="history_mealType" id="history_mealType" th:value="${history.mealType == 'morning' ? '아침' : history.mealType == 'lunch' ? '점심' : history.mealType == 'dinner' ? '저녁' : '간식'}" readonly>
             			<input type="hidden" name="history_hseq" th:value="${history.hseq}">
             		</td>
             		<td>
