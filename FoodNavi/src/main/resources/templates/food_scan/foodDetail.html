@@ -49,7 +49,7 @@
             <th>재료 <img id="ingredientHeader" src="/assets/images/triangleU.png" style="width: 20px"></th>
             <td id="ingredientContent" style="display: none;">
                 <[[${foodVo.food.foodDetail.n}]]인분 기준><br>
-                <block th:each="foodIngredient : ${foodVo.food.foodIngredientList}">
+                <block th:each="foodIngredient : ${foodVo.foodIngredientList}">
                     <span>[[${foodIngredient.ingredient.name}]] [[${foodIngredient.amount}]]g</span><br>
                 </block>
             </td>

@@ -1,8 +1,11 @@
 package com.demo.dto;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import com.demo.domain.Food;
+import com.demo.domain.FoodIngredient;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,6 +29,7 @@ public class FoodVo {
 	private String carb = "";
 	private String prt = "";
 	private String fat = "";
+	private List<FoodIngredient> foodIngredientList = new ArrayList<>();
 	
 	public FoodVo(Food food) {
 		this.food = food;

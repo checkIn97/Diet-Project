@@ -90,7 +90,6 @@ public class FoodScanController {
         }
         
         UserVo userVo = new UserVo(user);
-        
         if (page == 0 && scan) {
 			page = 1;
 			foodScanVo.setSearchField(searchField);
@@ -106,7 +105,7 @@ public class FoodScanController {
 			mealTime = new String[foodScanVo.getMealTimeArray().length];
 			for (int i = 0 ; i < foodScanVo.getMealTimeArray().length ; i++) {
 				String meal = foodScanVo.getMealTimeArray()[i][0];
-				if (mealTimeList.size() == 0 || mealTimeList.contains(meal)) {
+				if (mealTimeList.contains(meal)) {
 					mealTime[i] = meal;
 				} else {
 					mealTime[i] = "";
@@ -165,7 +164,6 @@ public class FoodScanController {
 				foodScanVo.setBanIngredient(user.getNo_ingredient());
 				foodScanVo.setBanWord(user.getNo_ingredient());
 			}			
-			
 			String currentMealTime = foodScanVo.getMealTimeByTime();
 			mealTime = new String[foodScanVo.getMealTimeArray().length];
 			for (int i = 0 ; i < foodScanVo.getMealTimeArray().length ; i++) {

@@ -164,7 +164,7 @@ public class FoodRecomController {
 				String[] mealType = new String[foodRecommendVo.getMealTimeArray().length];
 				for (int i = 0 ; i < foodRecommendVo.getMealTimeArray().length ; i++) {
 					String meal = foodRecommendVo.getMealTimeArray()[i][0];
-					if (mealTimeList.size() == 0 || mealTimeList.contains(meal)) {
+					if (mealTimeList.contains(meal)) {
 						mealType[i] = meal;
 					} else {
 						mealType[i] = "";
@@ -172,8 +172,12 @@ public class FoodRecomController {
 				}
 				foodRecommendVo.setMealTime(mealType);
 				String lastMealType = null;
-				if (mealTimeList.size() !=0 )
+				if (mealTimeList.size() ==0 ) {
+					lastMealType = foodRecommendVo.getMealTimeByTime();
+				} else {
 					lastMealType = mealTimeList.get(0);
+				}
+					
 				userVo.setLastMealType(lastMealType);
 	
 				foodRecommendVo.setFoodType("all");
@@ -212,7 +216,9 @@ public class FoodRecomController {
 				foodRecommendVo.setPageMaxDisplay(pageMaxDisplay);
 			}
 			FoodRecommendVo foodRecommendVo = foodRecommendVoArray[0];
+			System.out.println("확인0");
 			List<Food> filteredList = foodScanService.getFoodScanList(user, foodRecommendVo);
+			System.out.println("확인1");
 			foodRecommendVo.setFoodList(filteredList);
 			List<FoodVo> foodRecommendList = foodRecommendService.getFoodRecommendList("Recommend.py", userVo, filteredList);
 			
@@ -249,11 +255,11 @@ public class FoodRecomController {
 			if (check) {
 				foodRecommendVoArray[i].setIndex(1);
 				foodVo = foodRecommendList.get(0);
-				foodVo.getFood().setFoodIngredientList(foodIngredientService.getFoodIngredientListByFood(foodVo.getFood().getFseq()));
+				foodVo.setFoodIngredientList(foodIngredientService.getFoodIngredientListByFood(foodVo.getFood().getFseq()));
 				foodRecommendList.set(0, foodVo);
 			} else {
 				foodVo = foodRecommendList.get(foodRecommendVoArray[i].getIndex()-1);
-				foodVo.getFood().setFoodIngredientList(foodIngredientService.getFoodIngredientListByFood(foodVo.getFood().getFseq()));
+				foodVo.setFoodIngredientList(foodIngredientService.getFoodIngredientListByFood(foodVo.getFood().getFseq()));
 				foodRecommendList.set(foodRecommendVoArray[i].getIndex()-1, foodVo);
 			}
 			
@@ -416,6 +422,7 @@ public class FoodRecomController {
     	FoodVo foodVo = null;
     	if (foodRecommendVo != null ) {
     		foodVo = foodRecommendVo.getFoodRecommendList().get(foodRecommendVo.getIndex()-1);
+    		foodVo.setFoodIngredientList(foodIngredientService.getFoodIngredientListByFood(foodVo.getFood().getFseq()));
     	} 
     	
     	

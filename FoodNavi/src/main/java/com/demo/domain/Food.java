@@ -36,8 +36,4 @@ public class Food {
 	@OneToOne(mappedBy="food", fetch=FetchType.EAGER)
 	private FoodDetail foodDetail;
 
-	@ToString.Exclude
-	@OneToMany(mappedBy="food", fetch=FetchType.LAZY)
-	private List<FoodIngredient> foodIngredientList;
-	
 }

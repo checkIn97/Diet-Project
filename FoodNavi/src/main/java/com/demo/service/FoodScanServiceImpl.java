@@ -67,7 +67,19 @@ public class FoodScanServiceImpl implements FoodScanService {
 		}
 		
 		// 한끼유형 반영
-		List<String> mealParams = Arrays.asList(foodScanVo.getMealTime());
+		List<String> mealParams = new ArrayList<>();
+		List<String> mealCheck = Arrays.asList(foodScanVo.getMealTime());
+		for (String[] meal : foodScanVo.getMealTimeArray()) {
+			if (mealCheck.contains(meal[0])) {
+				mealParams.add(meal[0]);
+			} else {
+				mealParams.add("");
+			}
+		}
+		
+		if (mealParams.size() == 0) {
+			mealParams.add(foodScanVo.getMealTimeByTime());
+		}
 
 		
 		// 음식유형 반영

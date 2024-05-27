@@ -69,7 +69,7 @@ public class FoodScanRepositoryTest {
 		String no_egg = "a"; // 계란 알러지일 경우 "y" (기본값 : "a")
 		String no_milk = "a"; // 우유 알러지일 경우 "y" (기본값 : "a")
 		String no_bean = "a"; // 콩 알러지일 경우 "y" (기본값 : "a")
-		String no_shellfish = "y"; // 갑각류 알러지일 경우 "y"  (기본값 : "a")
+		String no_shellfish = "a"; // 갑각류 알러지일 경우 "y"  (기본값 : "a")
 		String allergyEtc = "|"; // 기타 알러지가 있으면 "재료이름" (기본값 : "|")
 		
 		// 채식단계에 따른 검색
@@ -100,7 +100,7 @@ public class FoodScanRepositoryTest {
 				foodRecommendVo.setRecommend(false);
 			}
 		}
-		
+
 		List<Food> foodList = null;		
 		if (foodRecommendVo.isRecommend()) {
 			foodList = foodScanRepo.getFoodRecommendList(
@@ -124,6 +124,7 @@ public class FoodScanRepositoryTest {
 			System.out.println(food.getFseq()+" : "+food.getName());
 		}
 		System.out.println("총 "+foodList.size()+"개");
+		System.out.println(foodRecommendVo.isRecommend());
 		
 	}
 	
