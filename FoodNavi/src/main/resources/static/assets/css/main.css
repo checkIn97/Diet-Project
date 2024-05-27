@@ -458,11 +458,11 @@ select {
     height: 2.75rem;
 }
 
-input[type="text"]:hover{
+input[type="text"]:hover {
     background-color: rgba(255, 255, 255, 0.075)
 }
 
-input[type="number"]:hover{
+input[type="number"]:hover {
     background-color: rgba(255, 255, 255, 0.075)
 }
 
@@ -524,6 +524,7 @@ textarea {
     border-radius: 0;
     padding: 0;
 }
+
 .box {
     width: auto;
     background: rgba(35, 37, 45, 0.85);
@@ -1163,7 +1164,7 @@ button {
     align-items: center;
 }
 
-.foodLogo{
+.foodLogo {
     transform: translateX(-2px);
 }
 
@@ -1720,7 +1721,7 @@ input[type=range]::-moz-range-thumb {
     bottom: 0;
 }
 
-#toggleButton.box{
+#toggleButton.box {
     margin-top: 20px;
 }
 
@@ -1729,8 +1730,7 @@ input[type=range]::-moz-range-thumb {
 }
 
 
-
-input[type="number"]{
+input[type="number"] {
     background: transparent;
     border: 1px solid #ffffff;
     border-radius: 4px;
@@ -1933,14 +1933,14 @@ button.searchButton {
 
 /* chatToggleButton*/
 
-#chatToggleButtonControl{
+#chatToggleButtonControl {
     width: 10%;
     background: transparent;
     border: none;
     box-shadow: none;
 }
 
-#chatToggleButtonControlImg{
+#chatToggleButtonControlImg {
     width: 50px;
     display: flex;
 
@@ -1953,7 +1953,7 @@ button.searchButton {
     width: 100%;
 }
 
-.chatBox{
+.chatBox {
     width: 30%;
     height: 100%;
     background: rgba(35, 37, 45, 0.85);
@@ -2002,6 +2002,12 @@ button.searchButton {
 }
 
 /*foodDay*/
+
+.kcalNum {
+    font-size: 2em;
+    font-weight: bold;
+}
+
 .foodContainer {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -2018,20 +2024,20 @@ button.searchButton {
     align-items: center;
     border-radius: 5px;
     background: rgba(238, 238, 238, 0.17);
-    height:300px;
+    height: 300px;
 }
 
 
-.foodContainer .btn:hover{
+.foodContainer .btn:hover {
     background: none;
 }
 
-.foodContainer .box:hover{
+.foodContainer .box:hover {
     background: rgba(238, 238, 238, 0.3);
     /*transform: scale(1.05);*/
 }
 
-.foodContainer .foodIcon{
+.foodContainer .foodIcon {
     width: 100px;
 
 }
@@ -2172,7 +2178,7 @@ button.searchButton {
 
 #foodRecord {
     margin-top: 50px;
-    width : 60%;
+    width: 60%;
     font-size: 1.1em;
 }
 
@@ -2233,26 +2239,24 @@ button.searchButton {
 }
 
 
-/*
-#rcdCount:hover.active {
-    opacity: 1;
+#rcdCount {
+    opacity: 0.5;
 }
-*/
 
 /*mainImg*/
 
-.mainLike{
+.mainLike {
     width: 40px;
 }
 
-.mainWarning{
+.mainWarning {
     width: 40px;
     margin-left: 10px;
     margin-right: 10px;
     margin-top: 10px;
 }
 
-.chart-container .mainWarning{
+.chart-container .mainWarning {
     width: 60px;
     margin-left: 10px;
     margin-right: 10px;
@@ -2260,9 +2264,15 @@ button.searchButton {
 }
 
 @keyframes blinking {
-    0% { opacity: 1; }
-    50% { opacity: 0; }
-    100% { opacity: 1; }
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }
 
 .mainWarning {
