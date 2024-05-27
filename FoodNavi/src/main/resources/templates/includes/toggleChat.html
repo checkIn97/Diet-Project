@@ -26,7 +26,7 @@
             <table class="list-group">
                 <tr class="board_list" v-bind:key="item.roomId" v-for="item in chatrooms"
                     v-on:click="enterRoom(item.roomId)">
-                    <td>{{item.name}}</td>
+                    <td>{{ item.name }}</td>
                 </tr>
             </table>
         </div>
@@ -54,7 +54,8 @@
         el: '#app',
         data: {
             room_name: '',
-            chatrooms: []
+            chatrooms: [],
+            userVo_user_name: userVo_user_name
         },
         created() {
             this.findAllRoom();
@@ -63,6 +64,13 @@
             findAllRoom: function () {
                 axios.get('/chat/rooms').then(response => {
                     this.chatrooms = response.data;
+                    // 챗봇 방은 userVo_user_name을 포함한 경우에만 저장
+                    this.chatrooms = this.chatrooms.filter(room => {
+                        if (room.name.includes("챗봇")) {
+                            return room.name.includes(this.userVo_user_name);
+                        }
+                        return true; // 챗봇 방이 아니면 그대로 포함
+                    });
                 });
             },
             createRoom: function () {
@@ -88,7 +96,7 @@
 
             createBotRoom: function () {
                 var params = new URLSearchParams();
-                params.append("name", "챗봇상담");
+                params.append("name", userVo_user_name + "의 챗봇");
                 localStorage.setItem('roomName', "챗봇상담");
                 axios.post('/chat/bot_room', params)
                     .then(

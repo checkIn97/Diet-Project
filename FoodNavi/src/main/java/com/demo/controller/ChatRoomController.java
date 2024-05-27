@@ -48,7 +48,7 @@ public class ChatRoomController {
     //챗봇 생성
     @PostMapping("/bot_room")
     @ResponseBody
-    public ChatRoom createBotRoom(Model model, @RequestParam String name){
+    public ChatRoom createBotRoom(@RequestParam String name){
         System.out.println("챗봇생성");
         return chatRoomRepository.createChatBotRoom(name);
     }
