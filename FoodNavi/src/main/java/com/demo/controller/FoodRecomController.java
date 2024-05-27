@@ -434,7 +434,6 @@ public class FoodRecomController {
     	FoodVo foodVo = null;
     	if (foodRecommendVo != null ) {
     		foodVo = foodRecommendVo.getFoodRecommendList().get(foodRecommendVo.getIndex()-1);
-    		foodVo.setFoodIngredientList(foodIngredientService.getFoodIngredientListByFood(foodVo.getFood().getFseq()));
     	} 
     	
     	
