@@ -25,7 +25,7 @@
             data: JSON.stringify(foodRecord),
             contentType: 'application/json',
             success: function (response) {
-                alert("성공적으로 기록되었습니다.");
+                alert(response.message);
 				console.log("response" + response);
 				window.location.href="/foodTodayHistory_view"
             },
