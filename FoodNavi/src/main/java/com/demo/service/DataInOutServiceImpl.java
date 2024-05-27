@@ -14,6 +14,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.demo.config.PathConfig;
 import com.demo.domain.Admin;
 import com.demo.domain.Board;
 import com.demo.domain.Comments;
@@ -564,9 +565,10 @@ public class DataInOutServiceImpl implements DataInOutService {
 	
 	@Override
 	public void foodListToCsv(List<Food> foodList) {
-		String path = System.getProperty("user.dir")+"\\";
 		String csvFile = "tmp_food.csv";
 		String pyFile = "FoodListToCsv.py";
+		csvFile = PathConfig.realPath(csvFile);
+		pyFile = PathConfig.realPath(pyFile);
 		
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder
@@ -588,13 +590,13 @@ public class DataInOutServiceImpl implements DataInOutService {
 		}
 
 		try {
-			FileWriter fileWriter = new FileWriter(path+csvFile);
+			FileWriter fileWriter = new FileWriter(csvFile);
 			try (BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
 				bufferedWriter.write(stringBuilder.toString());
 				bufferedWriter.close();
 			}
 			fileWriter.close();
-			ProcessBuilder processBuilder = new ProcessBuilder("python", path+pyFile, path+csvFile);
+			ProcessBuilder processBuilder = new ProcessBuilder("python", pyFile, csvFile);
 			Process process = processBuilder.start();
 			process.waitFor();
 			System.out.println("food 데이터 내보내기 성공");			
@@ -615,8 +617,8 @@ public class DataInOutServiceImpl implements DataInOutService {
 	
 	@Override
 	public void filteredListToCsv(List<Food> filteredList) {
-		String path = System.getProperty("user.dir")+"\\";
 		String csvFile = "tmp_filtered.csv";
+		csvFile = PathConfig.realPath(csvFile);
 		
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder
@@ -627,7 +629,7 @@ public class DataInOutServiceImpl implements DataInOutService {
 		}
 
 		try {
-			FileWriter fileWriter = new FileWriter(path+csvFile);
+			FileWriter fileWriter = new FileWriter(csvFile);
 			try (BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
 				bufferedWriter.write(stringBuilder.toString());
 				bufferedWriter.close();
@@ -875,9 +877,10 @@ public class DataInOutServiceImpl implements DataInOutService {
 	
 	@Override
 	public void historyListToCsv(List<History> historyList) {
-		String path = System.getProperty("user.dir")+"\\";
 		String csvFile = "tmp_history.csv";
 		String pyFile = "historyListToCsv.py";
+		csvFile = PathConfig.realPath(csvFile);
+		pyFile = PathConfig.realPath(pyFile);
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder
 			.append("hseq,")
@@ -931,13 +934,13 @@ public class DataInOutServiceImpl implements DataInOutService {
 				.append(history.getFood().getFoodDetail().getFat()).append("\n");
 		}
 		try {
-			FileWriter fileWriter = new FileWriter(path+csvFile);
+			FileWriter fileWriter = new FileWriter(csvFile);
 			try (BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
 				bufferedWriter.write(stringBuilder.toString());
 				bufferedWriter.close();
 			}
 			fileWriter.close();
-			ProcessBuilder processBuilder = new ProcessBuilder("python", path+pyFile, path+csvFile);
+			ProcessBuilder processBuilder = new ProcessBuilder("python", pyFile, csvFile);
 			Process process = processBuilder.start();
 			process.waitFor();
 			System.out.println("History 데이터 내보내기 성공");			
@@ -946,7 +949,7 @@ public class DataInOutServiceImpl implements DataInOutService {
 			System.out.println("History 데이터 내보내기 실패");
 		}
 		
-		File file = new File(path+csvFile);
+		File file = new File(csvFile);
 		if (file.exists()) {
 			if (file.delete()) {
 				System.out.println("임시파일 삭제 완료");
