@@ -140,6 +140,7 @@ public class FoodRecomController {
         if (user == null) {
             return "redirect:user_login_form"; // 로그인 페이지로 이동.
         }
+        
 		boolean check = false;
 		UserVo userVo = new UserVo(user);
 		FoodRecommendVo foodRecommendVo1 = new FoodRecommendVo();

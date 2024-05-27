@@ -251,6 +251,7 @@ public class FoodScanController {
         if (user == null) {
             return "redirect:user_login_form"; // 로그인 페이지로 이동.
         }
+        
         if (showType.equals("s")) {
         	foodScanVo = (FoodRecommendVo)session.getAttribute("foodScanVo");
         	foodScanVo.setResultType("s");
