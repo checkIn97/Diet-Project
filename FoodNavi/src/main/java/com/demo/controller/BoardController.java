@@ -317,14 +317,6 @@ public class BoardController {
     @GetMapping("/board_userList/{useq}")
     public String showBoardList(Model model,
                                 @PathVariable(value = "useq") int useq,
-                                @RequestParam(value = "page", defaultValue = "0") int page,
-                                @RequestParam(value = "size", defaultValue = "5") int size,
-                                @RequestParam(value = "sortBy", defaultValue = "bseq") String sortBy,
-                                @RequestParam(value = "sortDirection", defaultValue = "DESC") String sortDirection,
-                                @RequestParam(value = "pageMaxDisplay", defaultValue = "5") int pageMaxDisplay,
-                                @RequestParam(value = "searchField", defaultValue = "") String searchField,
-                                @RequestParam(value = "searchWord", defaultValue = "") String searchWord,
-                                BoardScanVo boardScanVo,
                                 HttpSession session) {
 
         // 세션에서 사용자 정보 가져오기
@@ -338,40 +330,12 @@ public class BoardController {
             return "board/board_alert";
         }
 
-        if (page == 0) {
-            page = 1;
-            boardScanVo = new BoardScanVo(); // 새로운 객체로 초기화
-            boardScanVo.setSearchField(searchField);
-            boardScanVo.setSearchWord(searchWord);
-            boardScanVo.setSortBy(sortBy);
-            boardScanVo.setSortDirection(sortDirection);
-            boardScanVo.setPageMaxDisplay(pageMaxDisplay);
-
-        } else {
-            boardScanVo = (BoardScanVo) session.getAttribute("boardScanVo");
-
-        }
-
-        Page<Board> boardData = boardService.findBoardList(boardScanVo, page, size);
-
-        if (boardData.isEmpty()) {
-            model.addAttribute("msg", "검색 결과가 없습니다.");
-            model.addAttribute("redirectTo", "/board_list");
-            return "board/board_alert";
-        } else {
-
-            boardScanVo.setPageInfo(boardData);
-            boardScanVo.setBoardList(boardData.getContent());
-            session.setAttribute("boardScanVo", boardScanVo);
-            model.addAttribute("boardScanVo", boardScanVo);
-            model.addAttribute("boardList", boardScanVo.getBoardList());
-            model.addAttribute("pageInfo", boardScanVo.getPageInfo());
             model.addAttribute("authorList", boardService.getAuthorBoardList(useq));
             model.addAttribute("commentList", boardCommentService.getCommentUserList(useq));
             model.addAttribute("userVo", userVo);
             return "board/boardUserList";
         }
-    }
+
 
     @PostMapping("board_like/{bseq}")
     @ResponseBody

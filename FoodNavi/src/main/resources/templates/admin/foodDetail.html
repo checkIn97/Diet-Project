@@ -42,9 +42,9 @@
                     <!--채식 여부-->
                     <td>[[${vegan}]]</td>
                     <!--식탄 종류-->
-                    <td th:if="${foodVo.food.foodDetail.foodType == '주식'}">주식</td>
-                    <td th:if="${foodVo.food.foodDetail.foodType == '부식'}">부식</td>
-                    <td th:if="${foodVo.food.foodDetail.foodType == '간식'}">간식</td>
+                    <td th:if="${foodVo.food.foodDetail.foodType == '주식'}">메인 요리</td>
+                    <td th:if="${foodVo.food.foodDetail.foodType == '부식'}">사이드 요리</td>
+                    <td th:if="${foodVo.food.foodDetail.foodType == '간식'}">디저트</td>
                     <td>[[${foodVo.food.useyn}]]</td>
                 </tr>
             </table>
