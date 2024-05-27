@@ -27,13 +27,14 @@ public class ChatRoomRepository {
         return chatRoomMap.get(id);
     }
 
-    public ChatRoom createChatRoom(String name){
-        ChatRoom chatRoom = new ChatRoom().create(name);
+    public ChatRoom createChatRoom(String name) {
+        ChatRoom chatRoom = ChatRoom.create(name);
         chatRoomMap.put(chatRoom.getRoomId(), chatRoom);
         return chatRoom;
     }
-    public ChatRoom createChatBotRoom(String name){
-        ChatRoom chatRoom = new ChatRoom().botCreate(name);
+
+    public ChatRoom createChatBotRoom(String name) {
+        ChatRoom chatRoom = ChatRoom.botCreate(name);
         chatRoomMap.put(chatRoom.getRoomId(), chatRoom);
         return chatRoom;
     }
