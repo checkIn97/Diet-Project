@@ -1715,7 +1715,7 @@ input[type=range]::-moz-range-thumb {
 
 #toggleButton {
     display: none;
-    /*position: fixed;*/
+    position: relative;
     right: 0;
     bottom: 0;
 }
@@ -1970,6 +1970,7 @@ button.searchButton {
     position: fixed;
     bottom: 0;
     width: 100%;
+    background: black;
 }
 
 #chatClose {
@@ -1980,6 +1981,13 @@ button.searchButton {
 
 .chatBotConnection {
     margin-top: 10px;
+}
+
+#chatClose {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 10px;
 }
 
 /*myChange*/
@@ -2218,17 +2226,16 @@ button.searchButton {
     width: 20px;
 }
 
-#rcdCount {
-    opacity: 0.5;
-}
-
-#rcdCount:hover {
-    opacity: 1;
-}
-
-.foodList:hover {
+.foodList {
     scale: 1.1;
 }
+
+
+/*
+#rcdCount:hover.active {
+    opacity: 1;
+}
+*/
 
 /*mainImg*/
 
@@ -2263,3 +2270,4 @@ button.searchButton {
 .foodNaviFont {
     width: 300px;
 }
+

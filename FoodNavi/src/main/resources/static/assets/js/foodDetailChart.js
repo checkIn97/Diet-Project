@@ -10,7 +10,7 @@ fetch('/foodDetailChart/data/drawChart')
             data: {
                 labels: ['탄수화물', '단백질', '지방'],
                 datasets: [{
-                    label: '영양성분',
+                    label: ['함량(g)'],
                     data: data, // 운동 시간을 데이터로 사용
                     backgroundColor: [
                         'rgb(255, 99, 132)',

@@ -4,40 +4,39 @@
 <meta charset="UTF-8">
 <script th:inline="javascript">
     function foodRecord() {
-        var fseq1 = $("#fseq1").val();
-        var fseq2 = $("#fseq2").val();
-        var fseq3 = $("#fseq3").val();
-        var score1 = $("#score1").val();
-        var score2 = $("#score2").val();
-        var score3 = $("#score3").val();
-        var amount1 = $("#amount1").val();
-        var amount2 = $("#amount2").val();
-        var amount3 = $("#amount3").val();
+		var foodRecord = {
+			fseq1: $("#fseq1").val(),
+			fseq2: $("#fseq2").val(),
+			fseq3: $("#fseq3").val(),
+			score1: $("#score1").val(),
+			score2: $("#score2").val(),
+			score3: $("#score3").val(),
+			amount1: $("#amount1").val(),
+			amount2: $("#amount2").val(),
+			amount3: $("#amount3").val(),
+			checked1: $("#checked1").val(),
+			checked2: $("#checked2").val(),
+			checked3: $("#checked3").val()
+		};
 
         $.ajax({
             type: "POST",
             url: "/food_recommend_record",
-            data: {
-                fseq1: fseq1,
-                fseq2: fseq2,
-                fseq3: fseq3,
-                score1: score1,
-                score2: score2,
-                score3: score3,
-                amount1: amount1,
-                amount2: amount2,
-                amount3: amount3
-            },
-            contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+            data: JSON.stringify(foodRecord),
+            contentType: 'application/json',
             success: function (response) {
                 alert("성공적으로 기록되었습니다.");
+				console.log("response" + response);
+				window.location.href="/foodTodayHistory_view"
             },
             error: function (error) {
                 alert("기록에 실패했습니다.");
+				console.log("error" + error);
             }
         });
     }
 </script>
+<form>
 <h1><a href="/mainpage"><img src="/assets/images/foodNaviFont.png" alt="foodNaviFont" class="foodNaviFont"></a></h1>
 
 <article class="foodRecommend">
@@ -46,12 +45,12 @@
 	<input type="hidden" id="fseq1Original" name="fseq1Original" th:value="${foodRecommendVo1.foodRecommendList[foodRecommendVo1.index-1].food.fseq}">
 	<input type="hidden" id="fseq2Original" name="fseq2Original" th:value="${foodRecommendVo2.foodRecommendList[foodRecommendVo2.index-1].food.fseq}">
 	<input type="hidden" id="fseq3Original" name="fseq3Original" th:value="${foodRecommendVo3.foodRecommendList[foodRecommendVo3.index-1].food.fseq}">
-	<input type="hidden" id="fseq1" name="fseq1" value=0>
-	<input type="hidden" id="fseq2" name="fseq2" value=0>
-	<input type="hidden" id="fseq3" name="fseq3" value=0>
 	<input type="hidden" id="score1" name="score1" th:value="${foodRecommendVo1.foodRecommendList[foodRecommendVo1.index-1].scoreView}">
 	<input type="hidden" id="score2" name="score2" th:value="${foodRecommendVo2.foodRecommendList[foodRecommendVo2.index-1].scoreView}">
 	<input type="hidden" id="score3" name="score3" th:value="${foodRecommendVo3.foodRecommendList[foodRecommendVo3.index-1].scoreView}">
+	<input type="hidden" id="checked1" name="checked1" value="false">
+	<input type="hidden" id="checked2" name="checked2" value="false">
+	<input type="hidden" id="checked3" name="checked3" value="false">
     <div class="section" id="section1" onclick="click_section(1)">
         <div class="arrow">
             <img class="arrowL" id="arrowL1" src="/assets/images/arrowL.png">
@@ -64,6 +63,7 @@
         <div id="food_info1">
 	        <table class="food-info">
 				<block th:each="foodVo, iterStat : ${foodRecommendVo1.foodRecommendList}" th:if="${foodRecommendVo1.index == iterStat.count}">
+					<input type="hidden" id="fseq1" name="fseq1" th:value="${foodVo.food.fseq}"/>
 		            <tr><span class="food-name" th:text="${foodVo.food.name}"></span>
 						<a th:href="@{food_detail(fseq=${foodVo.food.fseq}, type=r1)}">
 							<img src="/assets/images/reading-glasses.png" class="foodDetailGo" title="상세보기" alt="상세보기">
@@ -134,6 +134,7 @@
         <div id="food_info2">
 	        <table class="food-info">
 				<block th:each="foodVo, iterStat : ${foodRecommendVo2.foodRecommendList}" th:if="${foodRecommendVo2.index == iterStat.count}">
+					<input type="hidden" id="fseq2" name="fseq2" th:value="${foodVo.food.fseq}"/>
 		            <tr><span class="food-name" th:text="${foodVo.food.name}"></span>
 						<a th:href="@{food_detail(fseq=${foodVo.food.fseq}, type=r2)}">
 							<img src="/assets/images/reading-glasses.png" class="foodDetailGo" title="상세보기" alt="상세보기">
@@ -204,6 +205,7 @@
         <div id="food_info3">
 	        <table class="food-info">
 				<block th:each="foodVo, iterStat : ${foodRecommendVo3.foodRecommendList}" th:if="${foodRecommendVo3.index == iterStat.count}">
+					<input type="hidden" id="fseq3" name="fseq3" th:value="${foodVo.food.fseq}"/>
 		            <tr><span class="food-name" th:text="${foodVo.food.name}"></span>
 						<a th:href="@{food_detail(fseq=${foodVo.food.fseq}, type=r3)}">
 							<img src="/assets/images/reading-glasses.png" class="foodDetailGo" title="상세보기" alt="상세보기">
@@ -263,7 +265,7 @@
     </div>
 
 </article>
-
+</form>
 <a class="button" onclick="foodRecord()" id="foodRecord">기록</a>
 
 <div class="search-container">
