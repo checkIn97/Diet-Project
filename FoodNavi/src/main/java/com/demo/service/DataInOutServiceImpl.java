@@ -564,6 +564,7 @@ public class DataInOutServiceImpl implements DataInOutService {
 	
 	@Override
 	public void foodListToCsv(List<Food> foodList) {
+		String path = System.getProperty("user.dir")+"\\";
 		String csvFile = "tmp_food.csv";
 		String pyFile = "FoodListToCsv.py";
 		
@@ -587,13 +588,13 @@ public class DataInOutServiceImpl implements DataInOutService {
 		}
 
 		try {
-			FileWriter fileWriter = new FileWriter(csvFile);
+			FileWriter fileWriter = new FileWriter(path+csvFile);
 			try (BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
 				bufferedWriter.write(stringBuilder.toString());
 				bufferedWriter.close();
 			}
 			fileWriter.close();
-			ProcessBuilder processBuilder = new ProcessBuilder("python", pyFile, csvFile);
+			ProcessBuilder processBuilder = new ProcessBuilder("python", path+pyFile, path+csvFile);
 			Process process = processBuilder.start();
 			process.waitFor();
 			System.out.println("food 데이터 내보내기 성공");			
@@ -614,6 +615,7 @@ public class DataInOutServiceImpl implements DataInOutService {
 	
 	@Override
 	public void filteredListToCsv(List<Food> filteredList) {
+		String path = System.getProperty("user.dir")+"\\";
 		String csvFile = "tmp_filtered.csv";
 		
 		StringBuilder stringBuilder = new StringBuilder();
@@ -625,7 +627,7 @@ public class DataInOutServiceImpl implements DataInOutService {
 		}
 
 		try {
-			FileWriter fileWriter = new FileWriter(csvFile);
+			FileWriter fileWriter = new FileWriter(path+csvFile);
 			try (BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
 				bufferedWriter.write(stringBuilder.toString());
 				bufferedWriter.close();
@@ -873,6 +875,7 @@ public class DataInOutServiceImpl implements DataInOutService {
 	
 	@Override
 	public void historyListToCsv(List<History> historyList) {
+		String path = System.getProperty("user.dir")+"\\";
 		String csvFile = "tmp_history.csv";
 		String pyFile = "historyListToCsv.py";
 		StringBuilder stringBuilder = new StringBuilder();
@@ -928,13 +931,13 @@ public class DataInOutServiceImpl implements DataInOutService {
 				.append(history.getFood().getFoodDetail().getFat()).append("\n");
 		}
 		try {
-			FileWriter fileWriter = new FileWriter(csvFile);
+			FileWriter fileWriter = new FileWriter(path+csvFile);
 			try (BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
 				bufferedWriter.write(stringBuilder.toString());
 				bufferedWriter.close();
 			}
 			fileWriter.close();
-			ProcessBuilder processBuilder = new ProcessBuilder("python", pyFile, csvFile);
+			ProcessBuilder processBuilder = new ProcessBuilder("python", path+pyFile, path+csvFile);
 			Process process = processBuilder.start();
 			process.waitFor();
 			System.out.println("History 데이터 내보내기 성공");			
@@ -943,7 +946,7 @@ public class DataInOutServiceImpl implements DataInOutService {
 			System.out.println("History 데이터 내보내기 실패");
 		}
 		
-		File file = new File(csvFile);
+		File file = new File(path+csvFile);
 		if (file.exists()) {
 			if (file.delete()) {
 				System.out.println("임시파일 삭제 완료");

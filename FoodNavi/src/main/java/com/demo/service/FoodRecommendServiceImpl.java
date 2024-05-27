@@ -28,6 +28,7 @@ public class FoodRecommendServiceImpl implements FoodRecommendService {
 	
 	@Override
 	public List<FoodVo> getFoodRecommendList(String pyFile, UserVo userVo, List<Food> filteredList) {
+		String path = System.getProperty("user.dir")+"\\";
 		List<FoodVo> foodRecommendList = new ArrayList<>();
 		dataInOutService.filteredListToCsv(filteredList);
 		StringBuilder stringBuilder = new StringBuilder();
@@ -46,7 +47,7 @@ public class FoodRecommendServiceImpl implements FoodRecommendService {
 			.append(userVo.getUser().getVegetarian()).append(",")
 			.append(userVo.getLastMealType()).append("\n");
 			
-		ProcessBuilder processBuilder = new ProcessBuilder("python", pyFile, stringBuilder.toString());
+		ProcessBuilder processBuilder = new ProcessBuilder("python", path+pyFile, stringBuilder.toString());
 		try {
 			Process process = processBuilder.start();
 			System.out.println("파이썬 프로그램 실행 성공!");
@@ -62,7 +63,7 @@ public class FoodRecommendServiceImpl implements FoodRecommendService {
 			System.out.println("파이썬 프로그램 실행 실패!");
 		}
 		
-		File file = new File("tmp_filtered.csv");
+		File file = new File(path+"tmp_filtered.csv");
 		if (file.exists()) {
 			if (file.delete()) {
 				System.out.println("tmp_filtered.csv 삭제 완료");
@@ -71,7 +72,7 @@ public class FoodRecommendServiceImpl implements FoodRecommendService {
 			}
 		}
 		
-		file = new File("tmp_recommendList.csv");
+		file = new File(path+"tmp_recommendList.csv");
 		if (file.exists()) {
 			System.out.println("tmp_recommendList.csv 파일 생성 성공");
 			
@@ -81,7 +82,7 @@ public class FoodRecommendServiceImpl implements FoodRecommendService {
 			String text = "";
 			
 			try {
-				FileReader fr = new FileReader("tmp_recommendList.csv");
+				FileReader fr = new FileReader(path+"tmp_recommendList.csv");
 				BufferedReader br = new BufferedReader(fr);
 
 				while(true) {
@@ -107,7 +108,7 @@ public class FoodRecommendServiceImpl implements FoodRecommendService {
 				br.close();
 				fr.close();
 				
-				file = new File("tmp_recommendList.csv");
+				file = new File(path+"tmp_recommendList.csv");
 				if (file.exists()) {
 					if (file.delete()) {
 						System.out.println("tmp_recommendList.csv 삭제 완료");

@@ -53,10 +53,11 @@ public class DataInOutRepositoryTest {
 	@Test
 	public void ingredientInFromCsv() {
 		// 재료파일(igrd.csv)로부터 Ingredient 테이블에 데이터 입력하기
+		String path = System.getProperty("user.dir")+"\\";
 		String csvFile = "igrd.csv";
 		String pyFile = "";
 		String n = "all";// igrd.csv 파일에 있는 데이터 전부 읽기
-		List<Ingredient> ingredientList = dataInOutService.ingredientInFromCsv(csvFile, n);
+		List<Ingredient> ingredientList = dataInOutService.ingredientInFromCsv(path+csvFile, n);
 	}
 		
 	
@@ -76,10 +77,11 @@ public class DataInOutRepositoryTest {
 	public void foodInFromCsv() {
 		// FoodIngredient.csv 파일로부터 Food와 FoodIngredient, FoodDetail 테이블에 데이터 입력
 		// Ingredient 테이블에 데이터가 먼저 입력되어 있어야 한다.
+		String path = System.getProperty("user.dir")+"\\";
 		String csvFile = "FoodIngredient.csv";
 		String pyFile = "";
 		String n = "all"; // FoodIngredient.csv 파일에 있는 데이터 전부 읽기	
-		List<Food> foodList = dataInOutService.foodInFromCsv(csvFile, n);
+		List<Food> foodList = dataInOutService.foodInFromCsv(path+csvFile, n);
 		for (Food food : foodList) {
 			System.out.println(food.getName());
 		}
@@ -93,7 +95,8 @@ public class DataInOutRepositoryTest {
 	public void historyInDummy(String mealTime, String n) {
 		// 현재 생성되어 있는 유저와 음식을 기준으로 완전히 랜덤하게 선택 기록을 생성
 		// 입력매개변수 mealTime은 mealType 생성변수. random : 시간기준, morning : 아침, lunch : 점심, dinner : 저녁, snack : 간식
-		// 입력매개변수 n은 끼니를 생성하는 유저 숫자. all 입력시 모든 User의 끼니 기록 생성. 
+		// 입력매개변수 n은 끼니를 생성하는 유저 숫자. all 입력시 모든 User의 끼니 기록 생성.
+		String path = System.getProperty("user.dir")+"\\";
 		String csvFile = "tmp_history.csv"; // 생성한 기록이 임시 저장되는 csv 파일
 		String pyFile = "HistoryListToCsv.py"; // 임시 저장된 csv 파일과 기존의 History.csv 파일을 합치는 명령을 수행하는 파이썬 파일
 		
