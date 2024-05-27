@@ -48,6 +48,7 @@ public class FoodRecommendVo {
 	private int index = 0;
 	private int total = 0;
 	private List<FoodVo> foodRecommendList = null;
+	private boolean listPossible = false;
 	private boolean recommend = false;
 	private List<Food> foodList = null;
 	private Map<String, Integer> PageInfo = null;

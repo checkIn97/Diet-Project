@@ -142,6 +142,7 @@ public class FoodRecomController {
         }
         
 		boolean check = false;
+		boolean totalCheck = false;
 		UserVo userVo = new UserVo(user);
 		FoodRecommendVo foodRecommendVo1 = new FoodRecommendVo();
 		FoodRecommendVo foodRecommendVo2 = new FoodRecommendVo();
@@ -233,7 +234,8 @@ public class FoodRecomController {
 			usersService.insertUser(user);
 			
 		} else {
-			foodRecommendVoArray = (FoodRecommendVo[])session.getAttribute("foodRecommendVoArray");						
+			foodRecommendVoArray = (FoodRecommendVo[])session.getAttribute("foodRecommendVoArray");
+			totalCheck = true;
 		}
 		
 		Map<String, Integer> pageInfo = null;
@@ -252,10 +254,16 @@ public class FoodRecomController {
 			foodRecommendVoArray[i].setPageInfo(pageInfo);
 			FoodVo foodVo = null;
 			if (check) {
-				foodRecommendVoArray[i].setIndex(1);
-				foodVo = foodRecommendList.get(0);
-				foodVo.setFoodIngredientList(foodIngredientService.getFoodIngredientListByFood(foodVo.getFood().getFseq()));
-				foodRecommendList.set(0, foodVo);
+				if (foodRecommendVoArray[i].getFoodRecommendList().size() != 0) {
+					totalCheck = true;
+					foodRecommendVoArray[i].setListPossible(true);
+					foodRecommendVoArray[i].setIndex(1);
+					foodVo = foodRecommendList.get(0);
+					foodVo.setFoodIngredientList(foodIngredientService.getFoodIngredientListByFood(foodVo.getFood().getFseq()));
+					foodRecommendList.set(0, foodVo);
+				} else {
+					
+				}
 			} else {
 				foodVo = foodRecommendList.get(foodRecommendVoArray[i].getIndex()-1);
 				foodVo.setFoodIngredientList(foodIngredientService.getFoodIngredientListByFood(foodVo.getFood().getFseq()));
@@ -277,8 +285,13 @@ public class FoodRecomController {
 		model.addAttribute("foodRecommendList2", foodRecommendVoArray[1].getFoodRecommendList());
 		model.addAttribute("foodRecommendList3", foodRecommendVoArray[2].getFoodRecommendList());
 		model.addAttribute("userVo", userVo);
+		if (totalCheck) {
+			return "food/foodRecommend";
+		} else {
+			return "결과값 없음 페이지 주소 입력";
+		}
 		
- 		return "food/foodRecommend";
+ 		
  	}
 
     @PostMapping("/food_other_recommend")

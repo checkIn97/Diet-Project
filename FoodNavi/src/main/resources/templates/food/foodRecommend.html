@@ -51,7 +51,7 @@
 	<input type="hidden" id="checked1" name="checked1" value="false">
 	<input type="hidden" id="checked2" name="checked2" value="false">
 	<input type="hidden" id="checked3" name="checked3" value="false">
-    <div class="section" id="section1" onclick="click_section(1)">
+    <div class="section" id="section1" onclick="click_section(1)" th:if="${foodRecommendVo1.listPossible}">
         <div class="arrow">
             <img class="arrowL" id="arrowL1" src="/assets/images/arrowL.png">
             <img class="arrowR" id="arrowR1" src="/assets/images/arrowR.png">
@@ -123,7 +123,7 @@
         </div>
     </div>
 
-    <div class="section" id="section2" onclick="click_section(2)">
+    <div class="section" id="section2" onclick="click_section(2)" th:if="${foodRecommendVo2.listPossible}">
         <div class="arrow">
             <img class="arrowL" id="arrowL2" src="/assets/images/arrowL.png">
             <img class="arrowR" id="arrowR2" src="/assets/images/arrowR.png">
@@ -195,7 +195,7 @@
         </div>
     </div>
 
-    <div class="section" id="section3" onclick="click_section(3)">
+    <div class="section" id="section3" onclick="click_section(3)" th:if="${foodRecommendVo3.listPossible}">
         <div class="arrow">
             <img class="arrowL" id="arrowL3" src="/assets/images/arrowL.png">
             <img class="arrowR" id="arrowR3" src="/assets/images/arrowR.png">
