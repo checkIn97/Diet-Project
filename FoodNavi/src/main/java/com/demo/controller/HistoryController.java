@@ -408,7 +408,12 @@ public class HistoryController {
 		for (FoodRecommendVo v : vo) {
 			if (v != null) {
 				mealList = Arrays.asList(v.getMealTime());
-				mealType = mealList.get(0);
+				for(String meal : mealList) {
+					if(meal != "") {
+						mealType = meal;
+						break;
+					}
+				}
 				break;
 			}
 		}
