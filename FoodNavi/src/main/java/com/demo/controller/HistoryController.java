@@ -82,7 +82,12 @@ public class HistoryController {
 		}
         List<History> historyList = new ArrayList<>();
 		LocalDate today = LocalDate.now();
-
+		System.out.println("checked1: " + checked1);
+		System.out.println("checked2: " + checked2);
+		System.out.println("checked3: " + checked3);
+		System.out.println("food1: " + food1.getName());
+		System.out.println("food2: " + food2.getName());
+		System.out.println("food3: " + food3.getName());
 		if (checked1 && checked2 && checked3) { // 전부 체크 되었을 때
 			if (foodRecord.getAmount1() == 0 || foodRecord.getAmount2() == 0 || foodRecord.getAmount3() == 0) {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("요청이 실패했습니다.");
@@ -107,23 +112,35 @@ public class HistoryController {
 					if(historyFseq == fseq1) {
 						if (historyLocalDate == null || historyLocalDate.equals(today)) {
 							fseq1List.add(hsList.get(i));
+							System.out.println("fseq1List test");
 						}
 					} else if (historyFseq == fseq2) {
 						if (historyLocalDate == null || historyLocalDate.equals(today)) {
 							fseq2List.add(hsList.get(i));
+							System.out.println("fseq2List test");
 						}
 					} else if (historyFseq == fseq3) {
 						if (historyLocalDate == null || historyLocalDate.equals(today)) {
 							fseq3List.add(hsList.get(i));
+							System.out.println("fseq3List test");
 						}
 					}
 				}
+
+				System.out.println("fseq1List.size(): " + fseq1List.size());
+				System.out.println("fseq2List.size(): " + fseq2List.size());
+				System.out.println("fseq3List.size(): " + fseq3List.size());
 				if (fseq1List.size() == 0) { // 선택한 음식이 승인 목록에 다 없을 때
 					historyRecord(user, food1, foodRecord.getAmount1(), mealType, historyService);
-				} else if (fseq2List.size() == 0) {
+					System.out.println("inserttest1");
+				}
+				if (fseq2List.size() == 0) {
 					historyRecord(user, food2, foodRecord.getAmount2(), mealType, historyService);
-				} else if (fseq3List.size() == 0) {
+					System.out.println("inserttest2");
+				}
+				if (fseq3List.size() == 0) {
 					historyRecord(user, food3, foodRecord.getAmount3(), mealType, historyService);
+					System.out.println("inserttest3");
 				}
 			} else { // 히스토리 리스트가 존재하지 않는 경우
 				historyRecord(user, food1, foodRecord.getAmount1(), mealType, historyService);
