@@ -2283,3 +2283,6 @@ button.searchButton {
     width: 300px;
 }
 
+#logout:hover {
+    transform: none!important;
+}
