@@ -10,8 +10,14 @@ import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import com.demo.domain.Food;
+import com.demo.domain.Rcd;
 import com.demo.domain.UserChange;
+import com.demo.dto.FoodRecommendVo;
 import com.demo.persistence.UserChangeRepository;
+import com.demo.service.FoodScanService;
+import com.demo.service.HistoryService;
+import com.demo.service.RcdService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,6 +40,12 @@ public class UsersController {
 	private UsersRepository usersRepo;
 	@Autowired
 	private UserChangeRepository userChangeRepo;
+	@Autowired
+	private HistoryService historyService;
+	@Autowired
+	private RcdService rcdService;
+	@Autowired
+	private FoodScanService foodScanService;
 
 
 	@GetMapping("/user_membership")
@@ -238,6 +250,8 @@ public class UsersController {
 	public String myPageView(HttpSession session, Model model) {
 		Users user = (Users)session.getAttribute("loginUser");
 		UserVo userVo = new UserVo(user);
+		List<Rcd> rcdList = rcdService.getRcdListByUser(user);
+		user.setLikeList(rcdList);
 		model.addAttribute("userVo", userVo);
 		model.addAttribute("user", user);
 		return "user/myPage";

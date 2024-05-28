@@ -79,7 +79,7 @@ public class DataInOutRepositoryTest {
 		String pyFile = "";
 		csvFile = PathConfig.realPath(csvFile);
 		pyFile = PathConfig.realPath(pyFile);
-		String n = "all"; // FoodIngredient.csv 파일에 있는 데이터 전부 읽기	
+		String n = "all"; // FoodIngredient.csv 파일에 있는 데이터 전부 읽기
 		List<Food> foodList = dataInOutService.foodInFromCsv(csvFile, n);
 		for (Food food : foodList) {
 			System.out.println(food.getName());

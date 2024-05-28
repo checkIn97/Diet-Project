@@ -22,7 +22,7 @@ import lombok.ToString;
 public class FoodRecommendVo {
 	private String[][] mealTimeArray = {{"morning", "아침"}, {"lunch", "점심"}, {"dinner", "저녁"}, {"snack", "간식"}};
 	private String[] mealTime = {"", "", "", ""};
-	private String[][] foodTypeCategory = {{"all", "선택없음"}, {"주식", "주식"}, {"부식", "부식"}, {"간식", "간식"}};
+	private String[][] foodTypeCategory = {{"all", "선택없음"}, {"main", "메인 요리"}, {"side", "사이드 요리"}, {"dessert", "디저트"}};
 	private String foodType = "";
 	private String[][] purposeCategory = {{"all", "선택없음"}, {"diet", "다이어트"}, {"bulkup", "벌크업"}}; // 다이어트는 칼로리 기준, 벌크업은 단백질 기준
 	private String purpose = "";
