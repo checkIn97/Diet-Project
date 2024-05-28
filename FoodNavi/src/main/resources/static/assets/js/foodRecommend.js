@@ -170,10 +170,20 @@ function reloadSection() {
 	        	var amount = data.amount;
 	        	var starScore = data.starScore;
 	        	var scoreView = data.scoreView;
+				var food_img = data.food_img;
 	        	var html = "";
 	        	html += "<table class=\"food-info\">";
-				html += "<tr><img class=\"foodImg\" src=\"/assets/images/chicken.png\" th:if=\"${foodVo.food.img == null}\">";
-				html += "<img class=\"foodImg\" th:src=\"@{/assets/foodimages/${foodVo.food.img}}\" th:if=\"${foodVo.food.img != null}\"></tr>"
+				if(food_img) {
+					html += "<tr><img class=\"foodImg\" src=\"/assets/foodimages/"+food_img+"\"></tr>";
+				} else {
+					if(section_num == 1) {
+						html += "<tr><img class=\"foodImg\" src=\"/assets/images/chicken.png\"></tr>";
+					} else if(section_num == 2) {
+						html += "<tr><img class=\"foodImg\" src=\"/assets/images/rice.png\"></tr>";
+					} else {
+						html += "<tr><img class=\"foodImg\" src=\"/assets/images/snack.png\"></tr>";
+					}
+				}
 				html += "<tr><span class=\"food-name\">"+food_name+"</span>";
 				html += "<a href=\"food_detail?fseq="+fseq+"&type=r"+section_num+"\">";
 				html += "&nbsp";

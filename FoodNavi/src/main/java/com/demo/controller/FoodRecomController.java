@@ -421,6 +421,7 @@ public class FoodRecomController {
             section_reload_info.put("result", "success");
             section_reload_info.put("section_num", section_num + 1);
             section_reload_info.put("food_name", foodVo.getFood().getName());
+            section_reload_info.put("food_img", foodVo.getFood().getImg());
             section_reload_info.put("fseq", foodVo.getFood().getFseq());
             section_reload_info.put("kcal", Integer.parseInt(foodVo.getKcal()) * amount);
             section_reload_info.put("carb", String.format("%.2f", (Float.parseFloat(foodVo.getCarb()) * amount)));
