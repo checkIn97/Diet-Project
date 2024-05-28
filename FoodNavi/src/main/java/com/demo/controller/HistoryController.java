@@ -404,41 +404,11 @@ public class HistoryController {
         Date now = new Date();
         List<History> historyList = new ArrayList<>();
 
-        FoodRecommendVo[] vo = (FoodRecommendVo[]) session.getAttribute("foodRecommendVoArray");
-        FoodRecommendVo frvo = new FoodRecommendVo();
-        List<String> mealList;
-        String mealType = frvo.getMealTimeByTime();
-		for (FoodRecommendVo v : vo) {
-			if (v != null) {
-				mealList = Arrays.asList(v.getMealTime());
-				for(String meal : mealList) {
-					if(meal != "") {
-						mealType = meal;
-						break;
-					}
-				}
-				break;
-			}
-		}
+        List<History> tmp_historyList = historyService.getHistoryListNotConfirmedYet(user);
 
-		System.out.println("mealType" + mealType);
         // 받은 데이터를 처리하는 로직을 작성
-        for (HistoryData historyData : historyDataList) {
-            Food food = foodScanService.getFoodByName(historyData.getFood_name());
-
-            History hs = historyService.getHistoryByUserAndFood(user, food);
-            hs.setServeNumber(historyData.getServeNumber());
+        for (History hs : tmp_historyList) {
             hs.setServedDate(now);
-            hs.setNo_egg(user.getNo_egg());
-            hs.setNo_milk(user.getNo_milk());
-            hs.setNo_bean(user.getNo_bean());
-            hs.setNo_shellfish(user.getNo_shellfish());
-            hs.setNo_ingredient(user.getNo_ingredient());
-            hs.setDietType(user.getDietType());
-            hs.setVegetarian(user.getVegetarian());
-            hs.setPurpose(user.getUserGoal());
-            hs.setMealType(mealType);
-
             historyService.historyUpdate(hs);
             historyList.add(hs);
 
