@@ -63,7 +63,7 @@ public class FoodScanController {
 	@RequestMapping("/food_scan")
 	public String foodList(
 			@RequestParam(value="page", defaultValue="0") int page, 
-			@RequestParam(value="size", defaultValue="20") int size,
+			@RequestParam(value="size", defaultValue="8") int size,
 			@RequestParam(value="sortBy", defaultValue="name") String sortBy,
 			@RequestParam(value="sortDirection", defaultValue="ASC") String sortDirection,
 			@RequestParam(value="pageMaxDisplay", defaultValue="5") int pageMaxDisplay,

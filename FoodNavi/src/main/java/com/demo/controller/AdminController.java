@@ -146,7 +146,7 @@ public class AdminController {
 	@GetMapping("admin_user_list")
 	public String userList(Model model, HttpServletRequest request,
 						   @RequestParam(value = "page", defaultValue = "0") int page,
-						   @RequestParam(value = "size", defaultValue = "20") int size,
+						   @RequestParam(value = "size", defaultValue = "8") int size,
 						   @RequestParam(value = "sortBy", defaultValue = "useq") String sortBy,
 						   @RequestParam(value = "sortDirection", defaultValue = "ASC") String sortDirection,
 						   @RequestParam(value = "pageMaxDisplay", defaultValue = "5") int pageMaxDisplay,
@@ -237,7 +237,7 @@ public class AdminController {
 	// 2. 검색시 사용될 name 값 key 와 다를시 수정
 	@GetMapping("/admin_food_list")
 	public String adminFoodList(Model model, @RequestParam(value = "page", defaultValue = "0") int page,
-								@RequestParam(value = "size", defaultValue = "20") int size,
+								@RequestParam(value = "size", defaultValue = "8") int size,
 								@RequestParam(value = "sortBy", defaultValue = "fseq") String sortBy,
 								@RequestParam(value = "sortDirection", defaultValue = "ASC") String sortDirection,
 								@RequestParam(value = "pageMaxDisplay", defaultValue = "5") int pageMaxDisplay,
@@ -504,7 +504,7 @@ public class AdminController {
 		foodList.add(food);
 		dataInOutService.foodListToCsv(foodList);
 		
-		return "redirect:admin_food_Detail";
+		return "redirect:admin_food_detail";
 	}
 
 	// 음식 삭제
@@ -532,7 +532,7 @@ public class AdminController {
 	// 게시글 리스트 보기
 	@GetMapping("/admin_board_list")
 	public String adminBoardList(Model model, @RequestParam(value = "page", defaultValue = "0") int page,
-								 @RequestParam(value = "size", defaultValue = "20") int size,
+								 @RequestParam(value = "size", defaultValue = "8") int size,
 								 @RequestParam(value = "sortBy", defaultValue = "bseq") String sortBy,
 								 @RequestParam(value = "sortDirection", defaultValue = "DESC") String sortDirection,
 								 @RequestParam(value = "pageMaxDisplay", defaultValue = "5") int pageMaxDisplay,
@@ -574,7 +574,7 @@ public class AdminController {
 	@GetMapping("/admin_board_list_search")
 	public String searchBoardList(Model model,
 								  @RequestParam(value = "page", defaultValue = "0") int page,
-								  @RequestParam(value = "size", defaultValue = "5") int size,
+								  @RequestParam(value = "size", defaultValue = "8") int size,
 								  @RequestParam(value = "sortBy", defaultValue = "bseq") String sortBy,
 								  @RequestParam(value = "sortDirection", defaultValue = "DESC") String sortDirection,
 								  @RequestParam(value = "pageMaxDisplay", defaultValue = "5") int pageMaxDisplay,
