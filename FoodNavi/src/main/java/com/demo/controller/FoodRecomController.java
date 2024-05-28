@@ -107,7 +107,6 @@ public class FoodRecomController {
             @RequestParam(value = "searchIngredient", defaultValue = "") String searchIngredient,
             @RequestParam(value = "banName", defaultValue = "") String banName,
             @RequestParam(value = "banIngredient", defaultValue = "") String banIngredient,
-            @RequestParam(value = "mealTime", defaultValue = "all") String[] mealTime,
             @RequestParam(value = "foodType", defaultValue = "all") String foodType,
             @RequestParam(value = "purpose", defaultValue = "all") String purpose,
             @RequestParam(value = "recommend", defaultValue = "false") boolean recommend,
@@ -116,14 +115,13 @@ public class FoodRecomController {
             @RequestParam(value = "allergyEtc", defaultValue = "") String allergyEtc,
             @RequestParam(value = "vegetarian", defaultValue = "0") String vegetarian,
             Model model, HttpSession session) {
-
+        String mealTime = (String) session.getAttribute("mealTime");
         // 세션에서 사용자 정보 가져오기
         Users user = (Users) session.getAttribute("loginUser");
         // 세션에 로그인 정보가 없는 경우
         if (user == null) {
             return "redirect:user_login_form"; // 로그인 페이지로 이동.
         }
-
         boolean check = false;
         boolean totalCheck = false;
         UserVo userVo = new UserVo(user);
@@ -440,8 +438,8 @@ public class FoodRecomController {
     }
 
     @GetMapping("/loading")
-    public String loading(@RequestParam String mealTime, Model model) {
-        model.addAttribute("mealTime", mealTime);
+    public String loading(@RequestParam String mealTime, HttpSession session) {
+        session.setAttribute("mealTime", mealTime);
         return "food/loading";
     }
 
