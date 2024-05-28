@@ -42,12 +42,12 @@
 <article class="foodRecommend">
 	<input type="hidden" id="arrow_action" name="arrow_action" value=0>
 	<input type="hidden" id="amount_action" name="amount_action" value=0>
-	<input type="hidden" id="fseq1Original" name="fseq1Original" th:value="${foodRecommendVo1.foodRecommendList[foodRecommendVo1.index-1].food.fseq}">
-	<input type="hidden" id="fseq2Original" name="fseq2Original" th:value="${foodRecommendVo2.foodRecommendList[foodRecommendVo2.index-1].food.fseq}">
-	<input type="hidden" id="fseq3Original" name="fseq3Original" th:value="${foodRecommendVo3.foodRecommendList[foodRecommendVo3.index-1].food.fseq}">
-	<input type="hidden" id="score1" name="score1" th:value="${foodRecommendVo1.foodRecommendList[foodRecommendVo1.index-1].scoreView}">
-	<input type="hidden" id="score2" name="score2" th:value="${foodRecommendVo2.foodRecommendList[foodRecommendVo2.index-1].scoreView}">
-	<input type="hidden" id="score3" name="score3" th:value="${foodRecommendVo3.foodRecommendList[foodRecommendVo3.index-1].scoreView}">
+	<input type="hidden" id="fseq1Original" name="fseq1Original" th:value="${foodRecommendVo1.listPossible} ? ${foodRecommendVo1.foodRecommendList[foodRecommendVo1.index-1].food.fseq} : 0">
+	<input type="hidden" id="fseq2Original" name="fseq2Original" th:value="${foodRecommendVo2.listPossible} ? ${foodRecommendVo2.foodRecommendList[foodRecommendVo2.index-1].food.fseq} : 0">
+	<input type="hidden" id="fseq3Original" name="fseq3Original" th:value="${foodRecommendVo3.listPossible} ? ${foodRecommendVo3.foodRecommendList[foodRecommendVo3.index-1].food.fseq} : 0">
+	<input type="hidden" id="score1" name="score1" th:value="${foodRecommendVo1.listPossible} ? ${foodRecommendVo1.foodRecommendList[foodRecommendVo1.index-1].scoreView} : 0">
+	<input type="hidden" id="score2" name="score2" th:value="${foodRecommendVo2.listPossible} ? ${foodRecommendVo2.foodRecommendList[foodRecommendVo2.index-1].scoreView} : 0">
+	<input type="hidden" id="score3" name="score3" th:value="${foodRecommendVo3.listPossible} ? ${foodRecommendVo3.foodRecommendList[foodRecommendVo3.index-1].scoreView} : 0">
 	<input type="hidden" id="checked1" name="checked1" value="false">
 	<input type="hidden" id="checked2" name="checked2" value="false">
 	<input type="hidden" id="checked3" name="checked3" value="false">
