@@ -4,81 +4,76 @@
 
 <meta charset="UTF-8">
 
-<title>User Info</title>
+<title>Food Info</title>
 
 <h1><a href="admin_main"><img alt="foodNaviFont" class="foodNaviFont" src="/assets/images/foodNaviFont.png"></a></h1>
 
 <article id="box">
-    <h2>Food Insert</h2>
+    <h2>Food Edit</h2>
     <form action="admin_food_edit" enctype="multipart/form-data" method="post">
-        <table>
+		<input type="hidden" name="fseq" th:value="${foodVo.food.fseq}">
+	        <table>
             <tr>
                 <th><label for="img">이미지 첨부 :</label></th>
-                <td><input accept="food_images/*" id="img" name="img" type="file" th:value="${foodVo.food.img}"></td>
+                <td th:if="${foodVo.food.img == null}"><input accept="food_images/*" id="img" name="img" type="file"></td>
+                <td th:unless="${foodVo.food.img == null}"><input accept="food_images/*" id="img" name="img" type="file" value="${fileInfo}"></td>
             </tr>
             <tr>
                 <th>이름</th>
-                <td><input name="name" type="text" th:value="${foodVo.food.name}"/></td>
+                <td><input name="name" type="text" th:value="${foodVo.food.name}" /></td>
             </tr>
             <tr>
                 <th>칼로리(kcal)</th>
                 <td>
-                    <span id="span_kcal" name="span_kcal" type="number">[[${foodVo.kcal*foodVo.food.foodDetail.n}]]</span>
-                    <input id="kcal" name="kcal" type="hidden" value=""/>
+                    <span id="span_kcal" name="span_kcal" th:text="${kcal}"/>
                 </td>
 
             </tr>
             <tr>
                 <th>탄수화물(g)</th>
                 <td>
-                    <span id="span_carb" name="span_carb" type="number">[[${foodVo.carb*foodVo.food.foodDetail.n}]]</span>
-                    <input id="carb" name="carb" type="hidden" value=""/>
+                    <span id="span_carb" name="span_carb" th:text="${carb}"/>
                 </td>
             </tr>
             <tr>
                 <th>단백질(g)</th>
                 <td>
-                    <span id="span_prt" name="span_prt" type="number">[[${foodVo.prt*foodVo.food.foodDetail.n}]]</span>
-                    <input id="prt" name="prt" type="hidden" value=""/>
+                    <span id="span_prt" name="span_prt" th:text="${prt}"/>
                 </td>
             </tr>
             <tr>
                 <th>지방(g)</th>
                 <td>
-                    <span id="span_fat" name="span_fat" type="number">[[${foodVo.fat*foodVo.food.foodDetail.n}]]</span>
-                    <input id="fat" name="fat" type="hidden" value=""/>
+                    <span id="span_fat" name="span_fat" th:text="${fat}"/>
                 </td>
             </tr>
         </table>
 
         
-     	<h2>재료</h2>    	  
+     	<h2>재료</h2>
+     	<input class="button" id='btn-add-row' type="button" value="행 추가">    	  
         
         <table id="mytable">
             <thead>
-            <tr>
-                <th>재료</th>
-                <th>수량</th>
-                <th></th>
-            </tr>
+	            <tr>
+	                <th>재료</th>
+	                <th>수량</th>
+	                <th></th>
+	            </tr>
             </thead>
             <tbody>
-            <input class="button" id='btn-add-row' type="button" value="행 추가">
-            <block th:each="foodIngredient : ${foodVo.food.foodIngredientList}">
-            	<tr>
-            		<td><input type="text" name="ingredient" th:value="${foodIngredient.ingredient.name}"></td>
-            		<td><input type="number" name="quantity" min="0" th:value="${foodIngredient.amount}">g</td>
-            		<td><input type="button" class="button" id="btn-delete-row" value="삭제"></td></tr>            
-            </block>
-            </tbody>
+				<block th:each="foodIngredient : ${foodIngredientList}">
+					<tr>
+						<td><input type="text" name="ingredient" th:value="${foodIngredient.ingredient.name}"></td>
+	                    <td><input type="number" name="quantity" min="0" th:value="${foodIngredient.amount}">g</td>
+	                    <td><input type="button" class="button" id="btn-delete-row" value="삭제"></td>
+                	</tr>
+				</block>			
+			</tbody>            
         </table>
 
         <script src="//code.jquery.com/jquery.min.js"></script>
         <script>
-
-            $(document).ready(function () {
-                $('#btn-add-row').trigger('click');
-            });
 
             $(document).on('keydown', function (event) {
                 if (event.key == "Enter" && document.activeElement.name === "quantity") {
@@ -140,18 +135,9 @@
                         if (response && response.kcal !== undefined && response.carb !== undefined &&
                             response.prt !== undefined && response.fat !== undefined) {
                             $("#span_kcal").text(response.kcal);
-                            $("#kcal").val(response.kcal);
                             $("#span_carb").text(response.carb);
-                            $("#carb").val(response.carb);
                             $("#span_prt").text(response.prt);
-                            $("#prt").val(response.prt);
                             $("#span_fat").text(response.fat);
-                            $("#fat").val(response.fat);
-
-                            $("form").append('<input type="hidden" name="kcal" value="' + response.kcal + '">');
-                            $("form").append('<input type="hidden" name="carb" value="' + response.carb + '">');
-                            $("form").append('<input type="hidden" name="prt" value="' + response.prt + '">');
-                            $("form").append('<input type="hidden" name="fat" value="' + response.fat + '">');
                         } else {
                             console.error("Unexpected response format:", response);
                             alert('Unexpected response format');
@@ -209,25 +195,27 @@
             <label for="foodType">식단 종류</label>
             <select id="foodType" name="foodType">
                 <option value="주식" th:if="${foodVo.food.foodDetail.foodType == '주식'}" selected>주식</option>
-                <option value="주식" th:unless="${foodVo.food.foodDetail.foodType == '주식'}" >주식</option>
+                <option value="주식" th:unless="${foodVo.food.foodDetail.foodType == '주식'}">주식</option>
                 <option value="부식" th:if="${foodVo.food.foodDetail.foodType == '부식'}" selected>부식</option>
-                <option value="부식" th:unless="${foodVo.food.foodDetail.foodType == '부식'}" >부식</option>
+                <option value="부식" th:unless="${foodVo.food.foodDetail.foodType == '부식'}">부식</option>
                 <option value="간식" th:if="${foodVo.food.foodDetail.foodType == '간식'}" selected>간식</option>
-                <option value="간식" th:unless="${foodVo.food.foodDetail.foodType == '간식'}" >간식</option>
+                <option value="간식" th:unless="${foodVo.food.foodDetail.foodType == '간식'}">간식</option>
             </select>
         </div>
         <div class="field">
             <label for="n">기준량</label>
-            <input type="number" name="n" id="n" value=1 min=1 max=99 th:value="${foodVo.food.foodDetail.n}">
+            <input type="number" name="n" id="n" value=1 min=1 max=99 th:value="${foodVo.food.foodDetail.n}" >
         </div>
 
 
         <div class="adminButton">
             <input class="button" type="submit" value="수정하기">
             <input class="button" type="reset" value="다시하기">
-            <a th:href="@{/admin_food_Detail(fseq=${food.fseq})}"><button>수정취소</button></a>
         </div>
     </form>
+    <a th:href="@{admin_food_detail(fseq=${foodVo.food.fseq})}">
+        <button type="button">수정취소</button>
+    </a>
 </article>
 <th:block th:insert="~{/includes/footer}"></th:block>
 

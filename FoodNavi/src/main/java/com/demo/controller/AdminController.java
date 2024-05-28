@@ -289,7 +289,7 @@ public class AdminController {
 
 
 	// 식품정보 상세보기
-	@GetMapping("admin_food_Detail")
+	@GetMapping("admin_food_detail")
 	public String adminFoodInfo(Model model, @RequestParam(value = "fseq") int fseq, HttpSession session,
 								HttpServletRequest request) {
 
@@ -348,8 +348,6 @@ public class AdminController {
 	@PostMapping("admin_food_insert")
 	public String adminFoodWriteAction(RedirectAttributes re, HttpSession session, HttpServletRequest request,
 									   @RequestParam(value = "name") String name, @RequestParam(value = "img") MultipartFile uploadFile,
-									   @RequestParam(value = "kcal") float kcal, @RequestParam(value = "carb") float carb,
-									   @RequestParam(value = "prt") float prt, @RequestParam(value = "fat") float fat,
 									   @RequestParam(value = "ingredient") String[] ingredient,
 									   @RequestParam(value = "quantity") int [] quantity,
 									   @RequestParam(value = "foodType") String foodType,
@@ -364,7 +362,7 @@ public class AdminController {
 			request.setAttribute("message", "로그인이 필요합니다.");
 			return "admin/login"; // 로그인 페이지로 이동.
 		}
-
+		
 		Food food = new Food();
 		food.setName(name);
 		if (!uploadFile.isEmpty()) {
@@ -378,33 +376,28 @@ public class AdminController {
 //				e.printStackTrace();
 //			}
 		}
-		System.out.println(carb);
 		food.setUseyn("y");
 		foodService.insertFood(food);
 		food = foodService.getFoodByMaxFseq();
 		FoodDetail foodDetail = new FoodDetail();
 		foodDetail.setFood(food);
-		foodDetail.setKcal(kcal);
-		foodDetail.setCarb(carb);
-		foodDetail.setPrt(prt);
-		foodDetail.setFat(fat);
 		foodDetail.setFoodType(foodType);
 		foodDetail.setN(n);
 
-		foodDetailService.insertFoodDetail(foodDetail);
-
-
-
-
+		
 		for (int i = 0 ; i < ingredient.length ; i++) {
 			FoodIngredient fing = new FoodIngredient();
 			fing.setFood(food);
 			fing.setIngredient(ingredientService.findByName(ingredient[i]).get());
 			fing.setAmount(quantity[i]);
+			foodDetail.setKcal(fing.getAmount()*fing.getIngredient().getKcal()/100f + foodDetail.getKcal());
+			foodDetail.setCarb(fing.getAmount()*fing.getIngredient().getCarb()/100f + foodDetail.getCarb());
+			foodDetail.setPrt(fing.getAmount()*fing.getIngredient().getPrt()/100f + foodDetail.getPrt());
+			foodDetail.setFat(fing.getAmount()*fing.getIngredient().getFat()/100f + foodDetail.getFat());
 			foodIngredientService.insertFoodIngredient(fing);
 		}
 
-
+		foodDetailService.insertFoodDetail(foodDetail);
 
 		re.addAttribute("fseq", food.getFseq());
 		List<Food> foodList = new ArrayList<>();
@@ -432,7 +425,12 @@ public class AdminController {
 
 		Food food = foodService.getFoodByFseq(fvo.getFseq());
 		FoodVo foodVo = new FoodVo(food);
+		model.addAttribute("kcal", (int)foodVo.getFood().getFoodDetail().getKcal());
+		model.addAttribute("carb", String.format("%.2f", foodVo.getFood().getFoodDetail().getCarb()));
+		model.addAttribute("prt", String.format("%.2f", foodVo.getFood().getFoodDetail().getPrt()));
+		model.addAttribute("fat", String.format("%.2f", foodVo.getFood().getFoodDetail().getFat()));
 		model.addAttribute("fileInfo", food.getImg());
+		model.addAttribute("foodIngredientList", foodIngredientService.getFoodIngredientListByFood(foodVo.getFood().getFseq()));
 		model.addAttribute("foodVo", foodVo);
 		return "/admin/foodEdit";
 	}
@@ -441,9 +439,7 @@ public class AdminController {
 	@PostMapping("admin_food_edit")
 	public String adminFoodUpdate(RedirectAttributes re, HttpSession session, HttpServletRequest request,
 								  @RequestParam(value = "fseq") int fseq, @RequestParam(value = "name") String name,
-								  @RequestParam(value = "img") MultipartFile uploadFile, @RequestParam(value = "kcal") float kcal,
-								  @RequestParam(value = "carb") float carb, @RequestParam(value = "prt") float prt,
-								  @RequestParam(value = "fat") float fat,
+								  @RequestParam(value = "img") MultipartFile uploadFile, 
 								  @RequestParam(value = "ingredient") String[] ingredient,
 								  @RequestParam(value = "quantity") int[] quantity,
 								  @RequestParam(value = "foodType") String foodType, 
@@ -475,24 +471,39 @@ public class AdminController {
 		foodService.updateFood(food);
 		FoodDetail foodDetail = food.getFoodDetail();
 		foodDetail.setFood(food);
-		foodDetail.setKcal(kcal);
-		foodDetail.setCarb(carb);
-		foodDetail.setPrt(prt);
-		foodDetail.setFat(fat);
 		foodDetail.setFoodType(foodType);
 		foodDetail.setN(n);
-		foodDetailService.updateFoodDetail(foodDetail);
-
+		foodDetail.setKcal(0f);
+		foodDetail.setCarb(0f);
+		foodDetail.setPrt(0f);
+		foodDetail.setFat(0f);
+		
+		for (FoodIngredient fi : foodIngredientService.getFoodIngredientListByFood(fseq)) {
+			foodIngredientService.deleteFoodIngredient(fi);
+		}
+		
 		for (int i = 0 ; i < ingredient.length ; i++) {
 			FoodIngredient fing = new FoodIngredient();
 			fing.setFood(food);
 			fing.setIngredient(ingredientService.findByName(ingredient[i]).get());
 			fing.setAmount(quantity[i]);
+			foodDetail.setKcal(fing.getAmount()*fing.getIngredient().getKcal()/100f + foodDetail.getKcal());
+			foodDetail.setCarb(fing.getAmount()*fing.getIngredient().getCarb()/100f + foodDetail.getCarb());
+			foodDetail.setPrt(fing.getAmount()*fing.getIngredient().getPrt()/100f + foodDetail.getPrt());
+			foodDetail.setFat(fing.getAmount()*fing.getIngredient().getFat()/100f + foodDetail.getFat());
 			foodIngredientService.insertFoodIngredient(fing);
 		}
 
+		foodDetailService.insertFoodDetail(foodDetail);
+
 		re.addAttribute("fseq", food.getFseq());
-		foodInsertPythonRun(foodDetail, food);
+		List<Food> foodList = new ArrayList<>();
+		food = foodService.getFoodByMaxFseq();
+		foodDetail = foodDetailService.getFoodDetailByMaxFdseq();
+		food.setFoodDetail(foodDetail);
+		foodList.add(food);
+		dataInOutService.foodListToCsv(foodList);
+		
 		return "redirect:admin_food_Detail";
 	}
 
@@ -790,10 +801,10 @@ public class AdminController {
 			}
 		}
 		Map<String, Object> response = new HashMap<>();
-		response.put("kcal", kcal);
-		response.put("carb", carb);
-		response.put("prt", prt);
-		response.put("fat", fat);
+		response.put("kcal", (int)kcal);
+		response.put("carb", String.format("%.2f", carb));
+		response.put("prt",  String.format("%.2f", prt));
+		response.put("fat",  String.format("%.2f", fat));
 		return response;
 	}
 

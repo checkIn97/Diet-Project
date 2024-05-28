@@ -4,7 +4,7 @@
 
 <meta charset="UTF-8">
 
-<title>User Info</title>
+<title>Food Info</title>
 
 <h1><a href="admin_main"><img alt="foodNaviFont" class="foodNaviFont" src="/assets/images/foodNaviFont.png"></a></h1>
 
@@ -23,49 +23,44 @@
             <tr>
                 <th>칼로리(kcal)</th>
                 <td>
-                    <span id="span_kcal" name="span_kcal" type="number"/>
-                    <input id="kcal" name="kcal" type="hidden"/>
+                    <span id="span_kcal" name="span_kcal"/>
                 </td>
 
             </tr>
             <tr>
                 <th>탄수화물(g)</th>
                 <td>
-                    <span id="span_carb" name="span_carb" type="number"/>
-                    <input id="carb" name="carb" type="hidden"/>
+                    <span id="span_carb" name="span_carb"/>
                 </td>
             </tr>
             <tr>
                 <th>단백질(g)</th>
                 <td>
-                    <span id="span_prt" name="span_prt" type="number"/>
-                    <input id="prt" name="prt" type="hidden"/>
+                    <span id="span_prt" name="span_prt"/>
                 </td>
             </tr>
             <tr>
                 <th>지방(g)</th>
                 <td>
-                    <span id="span_fat" name="span_fat" type="number"/>
-                    <input id="fat" name="fat" type="hidden"/>
+                    <span id="span_fat" name="span_fat"/>
                 </td>
             </tr>
         </table>
 
         
-     	<h2>재료</h2>    	  
+     	<h2>재료</h2>
+     	<input class="button" id='btn-add-row' type="button" value="행 추가">    	  
         
         <table id="mytable">
             <thead>
-            <tr>
-                <th>재료</th>
-                <th>수량</th>
-                <th></th>
-            </tr>
+	            <tr>
+	                <th>재료</th>
+	                <th>수량</th>
+	                <th></th>
+	            </tr>
             </thead>
-            <tbody>
-            <input class="button" id='btn-add-row' type="button" value="행 추가">
-
-            </tbody>
+            <tbody>				
+			</tbody>            
         </table>
 
         <script src="//code.jquery.com/jquery.min.js"></script>
@@ -135,18 +130,9 @@
                         if (response && response.kcal !== undefined && response.carb !== undefined &&
                             response.prt !== undefined && response.fat !== undefined) {
                             $("#span_kcal").text(response.kcal);
-                            $("#kcal").val(response.kcal);
                             $("#span_carb").text(response.carb);
-                            $("#carb").val(response.carb);
                             $("#span_prt").text(response.prt);
-                            $("#prt").val(response.prt);
                             $("#span_fat").text(response.fat);
-                            $("#fat").val(response.fat);
-
-                            $("form").append('<input type="hidden" name="kcal" value="' + response.kcal + '">');
-                            $("form").append('<input type="hidden" name="carb" value="' + response.carb + '">');
-                            $("form").append('<input type="hidden" name="prt" value="' + response.prt + '">');
-                            $("form").append('<input type="hidden" name="fat" value="' + response.fat + '">');
                         } else {
                             console.error("Unexpected response format:", response);
                             alert('Unexpected response format');

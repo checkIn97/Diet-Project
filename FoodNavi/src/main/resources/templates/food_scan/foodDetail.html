@@ -48,7 +48,7 @@
         <tr>
             <th>재료 <img id="ingredientHeader" src="/assets/images/triangleU.png" style="width: 20px"></th>
             <td id="ingredientContent" style="display: none;">
-                <[[${foodVo.food.foodDetail.n}]]인분 기준><br>
+                - [[${foodVo.food.foodDetail.n}]]인분 기준 -<br>
                 <block th:each="foodIngredient : ${foodVo.foodIngredientList}">
                     <span>[[${foodIngredient.ingredient.name}]] [[${foodIngredient.amount}]]g</span><br>
                 </block>
@@ -88,6 +88,7 @@
         </tr>
     </table>
     <input id="fseq" name="fseq" th:value="${foodVo.food.fseq}" type="hidden">
+    <input id="resultType" name="resultType" th:value="${foodSRVo.resultType}" type="hidden">
     <input onclick="history_in()" type="button" value="기록하기">
     <a th:href="@{food_scan(page=${pageInfo.number +1})}" th:if="${foodSRVo.resultType == 's'}">
         <input type="button" value="목록 보기">

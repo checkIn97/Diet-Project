@@ -400,6 +400,9 @@ public class HistoryController {
         if (user == null) {
             return "/user_login_form"; // 로그인 페이지로 이동.
         }
+        
+        Date now = new Date();
+        List<History> historyList = new ArrayList<>();
 
         FoodRecommendVo[] vo = (FoodRecommendVo[]) session.getAttribute("foodRecommendVoArray");
         FoodRecommendVo frvo = new FoodRecommendVo();
@@ -425,7 +428,7 @@ public class HistoryController {
 
             History hs = historyService.getHistoryByUserAndFood(user, food);
             hs.setServeNumber(historyData.getServeNumber());
-            hs.setServedDate(new Date());
+            hs.setServedDate(now);
             hs.setNo_egg(user.getNo_egg());
             hs.setNo_milk(user.getNo_milk());
             hs.setNo_bean(user.getNo_bean());
@@ -437,8 +440,11 @@ public class HistoryController {
             hs.setMealType(mealType);
 
             historyService.historyUpdate(hs);
+            historyList.add(hs);
 
         }
+        
+        dataInOutService.historyListToCsv(historyList);
 
         return "success";
     }
@@ -514,7 +520,8 @@ public class HistoryController {
     }
 
     @PostMapping ("/history_in_from_detail")
-    public String historyInFromDetail(@RequestParam ("fseq") String fseq,
+    public String historyInFromDetail(@RequestParam ("fseq") String fseq, 
+    		@RequestParam("resultType") String resultType,
                                       HttpSession session, Model model) {
         // 세션에서 사용자 정보 가져오기
         Users user = (Users) session.getAttribute("loginUser");
@@ -526,8 +533,25 @@ public class HistoryController {
 
         // 유저의 히스토리가 있는지 확인
         List<History> hsList = historyService.getHistoryListByUser(user);
-        FoodRecommendVo frvo = new FoodRecommendVo();
-        String mealType = frvo.getMealTimeByTime();
+        FoodRecommendVo fsrvo = null;
+        if (resultType.equals("s")) {
+        	fsrvo = (FoodRecommendVo)session.getAttribute("foodScanVo");
+        } else {
+        	for (FoodRecommendVo vo : (FoodRecommendVo[])session.getAttribute("foodRecommendVoArray")) {
+        		if (vo != null) {
+        			fsrvo = vo;
+        			break;
+        		}
+        	}
+        }
+        
+        String mealType = "";
+        for (String meal : fsrvo.getMealTime()) {
+        	if (!meal.equals("")) {
+        		mealType = meal;
+        		break;
+        	}
+        }
         int intFseq = Integer.parseInt(fseq);
         Food food = foodScanService.getFoodByFseq(intFseq);
 
