@@ -478,9 +478,4 @@ public class FoodScanController {
         re.addAttribute("fseq", food.getFseq());
         return "redirect:mypage_like_list";
 	}
-
-	@GetMapping("/foodRecommendScan")
-	public String foodRecommendScan() {
-		return "foodRecommendScan";
-	}
 }
