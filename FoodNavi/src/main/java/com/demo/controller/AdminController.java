@@ -504,7 +504,7 @@ public class AdminController {
 		foodList.add(food);
 		dataInOutService.foodListToCsv(foodList);
 		
-		return "redirect:admin_food_Detail";
+		return "redirect:admin_food_detail";
 	}
 
 	// 음식 삭제
