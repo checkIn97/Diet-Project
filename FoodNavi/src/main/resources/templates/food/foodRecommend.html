@@ -59,11 +59,15 @@
 
         <img class="checkmark" src="/assets/images/check.png">
         <h2 class="major">메인 요리</h2>
-        <img class="foodImg" src="/assets/images/chicken.png">
+
         <div id="food_info1">
 	        <table class="food-info">
 				<block th:each="foodVo, iterStat : ${foodRecommendVo1.foodRecommendList}" th:if="${foodRecommendVo1.index == iterStat.count}">
 					<input type="hidden" id="fseq1" name="fseq1" th:value="${foodVo.food.fseq}"/>
+					<tr>
+						<img class="foodImg" src="/assets/images/chicken.png" th:if="${foodVo.food.img == null}">
+						<img class="foodImg" th:src="@{/assets/foodimages/${foodVo.food.img}}" th:if="${foodVo.food.img != null}">
+					</tr>
 		            <tr><span class="food-name" th:text="${foodVo.food.name}"></span>
 		            	<!-- r1 : 첫 번째 리스트 상세보기 -->
 						<a th:href="@{food_detail(fseq=${foodVo.food.fseq}, type=r1)}">

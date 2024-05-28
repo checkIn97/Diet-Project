@@ -172,6 +172,8 @@ function reloadSection() {
 	        	var scoreView = data.scoreView;
 	        	var html = "";
 	        	html += "<table class=\"food-info\">";
+				html += "<tr><img class=\"foodImg\" src=\"/assets/images/chicken.png\" th:if=\"${foodVo.food.img == null}\">";
+				html += "<img class=\"foodImg\" th:src=\"@{/assets/foodimages/${foodVo.food.img}}\" th:if=\"${foodVo.food.img != null}\"></tr>"
 				html += "<tr><span class=\"food-name\">"+food_name+"</span>";
 				html += "<a href=\"food_detail?fseq="+fseq+"&type=r"+section_num+"\">";
 				html += "&nbsp";

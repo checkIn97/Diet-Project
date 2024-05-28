@@ -1,9 +1,6 @@
 package com.demo.controller;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -462,11 +459,12 @@ public class AdminController {
 			String uuid = UUID.randomUUID().toString();
 			String saveName = uuid + "_" + fileName;
 			food.setImg(saveName);
-//				try {
-//					uploadFile.transferTo(new File(uploadPath + File.separator + fileName));
-//				} catch (IllegalStateException | IOException e) {
-//					e.printStackTrace();
-//				}
+				try {
+					String uploadPath = "E:\\Student\\Diet-Project\\FoodNavi\\src\\main\\resources\\static\\assets\\foodimages";
+					uploadFile.transferTo(new File(uploadPath + File.separator + saveName));
+				} catch (IllegalStateException | IOException e) {
+					e.printStackTrace();
+				}
 		}
 		foodService.updateFood(food);
 		FoodDetail foodDetail = food.getFoodDetail();
