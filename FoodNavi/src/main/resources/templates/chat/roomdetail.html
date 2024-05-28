@@ -31,8 +31,9 @@
     <ul class="list-group">
         <li class="list-group-item" v-for="message in messages">
             {{message.sender}} - {{message.message}}<br>
-            <p v-if="message.link"> => 주문페이지로
-            <a style="color:blueviolet" v-if="message.link" :href="message.link" target="_blank"> 이동</a>
+            <p v-if="message.link">
+            <a style="color:blueviolet" v-if="message.link" :href="message.link" target="_blank"><button>주문페이지 이동</button></a>
+                <a style="color:blueviolet" v-if="message.foodLink" :href="generateFoodDetailLink(message.foodLink)" target="_top"><button>음식정보 상세보기</button></a>
             </p>
             <iframe v-if="message.link" :src="message.link" width="500px" height="400" sandbox></iframe>
             <p v-if="message.cate">
@@ -95,10 +96,15 @@
 
             },
             recvMessage: function(recv) {
-                this.messages.unshift({"type":recv.type,"sender":recv.type=='ENTER'?'[알림]':recv.sender,"message":recv.message, "link":recv.link, "cate":recv.cate})
+                this.messages.unshift({"type":recv.type,"sender":recv.type=='ENTER'?'[알림]':recv.sender,"message":recv.message, "link":recv.link, "cate":recv.cate, "foodLink":recv.foodLink})
 
+            },
+            generateFoodDetailLink(foodLink) {
+                return `/food_detail?fseq=${foodLink}&type=c`;
             }
+
         }
+
     });
 
     function connect() {

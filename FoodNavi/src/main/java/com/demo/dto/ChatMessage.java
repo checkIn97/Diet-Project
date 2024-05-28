@@ -22,5 +22,6 @@ public class ChatMessage {
 	private String message;
 	private String link;
 	private String cate;
+	private String foodLink;
 	
 }

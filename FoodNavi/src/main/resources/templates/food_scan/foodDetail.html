@@ -93,8 +93,11 @@
     <a th:href="@{food_scan(page=${pageInfo.number +1})}" th:if="${foodSRVo.resultType == 's'}">
         <input type="button" value="목록 보기">
     </a>
-    <a th:href="@{food_recommend(page=${1})}" th:unless="${foodSRVo.resultType == 's'}">
+    <a th:href="@{food_recommend(page=${1})}" th:if="${foodSRVo.resultType == 'r'}">
         <input type="button" value="이전">
+    </a>
+    <a href="javascript:history.back()" th:if="${foodSRVo.resultType == 'c'}">
+        <input type="button" value="돌아가기">
     </a>
 </form>
 

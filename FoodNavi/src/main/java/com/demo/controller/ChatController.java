@@ -2,6 +2,7 @@ package com.demo.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.demo.domain.Food;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.awt.Desktop;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Map;
 
 import com.demo.dto.ChatRoom;
 
@@ -44,35 +46,35 @@ public class ChatController {
 			message.setMessage(message.getSender() + "님이 입장하셨습니다.");
 		} else if (ChatMessage.MessageType.BOT.equals(message.getType())){
 			message.setSender("[챗봇 상담사]");
-			String result = searchFood(message.getMessage());
-			if (!result.equals(message.getMessage())){
-				if (result.equals("커뮤니티1")){
-					String cate = "/board_list";
+			Map<String, Object> result = new HashMap<>();
+			result.put("name", searchFood(message.getMessage()).get("name"));
+			result.put("fseq", searchFood(message.getMessage()).get("fseq"));
+			if (!result.get("name").equals(message.getMessage())){
+				if (result.get("name").equals("커뮤니티1")){
 					message.setMessage("커뮤니티 페이지로 이동하시겠습니까?");
-					message.setCate(cate);
-				} else if (result.equals("나의변화1")) {
-					String cate = "/user_mychange_view";
+					message.setCate("/board_list");
+				} else if (result.get("name").equals("나의변화1")) {
 					message.setMessage("나의변화 페이지로 이동하시겠습니까?");
-					message.setCate(cate);
-				} else if (result.equals("나의활동1")) {
-					String cate = "/user_myactivity_view";
+					message.setCate("/user_mychange_view");
+				} else if (result.get("name").equals("나의활동1")) {
 					message.setMessage("나의활동 페이지로 이동하시겠습니까?");
-					message.setCate(cate);
-				} else if (result.equals("마이페이지1")) {
-					String cate = "/pw_check";
+					message.setCate("/user_myactivity_view");
+				} else if (result.get("name").equals("마이페이지1")) {
 					message.setMessage("마이페이지 로 이동하시겠습니까?");
-					message.setCate(cate);
-				} else if (result.equals("식단추천1")){
-					String cate = "/foodRecommendation";
+					message.setCate("/pw_check");
+				} else if (result.get("name").equals("식단추천1")){
 					message.setMessage("식단추천 페이지로 이동하시겠습니까?");
-					message.setCate(cate);
+					message.setCate("/foodRecommendation");
 				} else {
-					String link = "https://m.coupang.com/nm/search?q=" + result;
-					message.setMessage(result + "의 주문페이지를 보여드릴게요.\n");
+					String link = "https://m.coupang.com/nm/search?q=" + result.get("name");
+					String foodLink = String.valueOf(result.get("fseq"));
+					System.out.println(result.get("fseq"));
+					message.setMessage(result.get("name") + "의 주문페이지를 보여드릴게요.\n");
 					message.setLink(link);
+					message.setFoodLink(foodLink);
 				}
 			} else {
-				message.setMessage("'" + result + "'"
+				message.setMessage("'" + result.get("name") + "'"
 						+"의 요청을 처리하지 못했습니다.\n (데이터에 존재하지 않거나 처리할 수 없는 요청입니다.)");
 			}
 		}
@@ -80,7 +82,7 @@ public class ChatController {
 
 	}
 
-	public String searchFood(String message){
+	public Map<String, Object> searchFood(String message){
 		List<Food> foodList = foodScanService.getFoodSearchList();
 		List<String> categoryList = new ArrayList<>();
 		categoryList.add("커뮤니티");
@@ -88,18 +90,19 @@ public class ChatController {
 		categoryList.add("나의활동");
 		categoryList.add("마이페이지");
 		categoryList.add("식단추천");
-		String result = "";
+		Map<String, Object> result = new HashMap<>();
 		for(Food foodName : foodList){
 			if(message.replaceAll(" ", "").contains(foodName.getName().replaceAll(" ", ""))){
-				result = "'" + foodName.getName() + "'";
+				result.put("name","'" + foodName.getName() + "'");
+				result.put("fseq", Integer.toString(foodName.getFseq()));
 				break;
 			} else {
 				for (String category : categoryList) {
 					if(message.replaceAll(" ", "").contains(category) || message.equals(category)){
-						result = category + "1";
+						result.put("name", category + "1");
 						break;
 					} else {
-						result = message;
+						result.put("name", message);
 					}
 				}
 			}

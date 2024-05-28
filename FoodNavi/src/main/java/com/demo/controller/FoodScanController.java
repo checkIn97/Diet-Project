@@ -236,7 +236,8 @@ public class FoodScanController {
 		model.addAttribute("foodRecommendList", currentRecommendList);
 		model.addAttribute("pageInfo", foodScanVo.getPageInfo());
 		model.addAttribute("userVo", userVo);
-		
+
+
 		return "food_scan/foodScanList";
 	}
 	
@@ -352,7 +353,25 @@ public class FoodScanController {
             model.addAttribute("rcdStatus", rcdStatus);    		
     		model.addAttribute("foodSRVo", foodRecommendVo);
     		session.setAttribute("foodVo", foodVo);
-        }
+        } else if(showType.equals("c")){
+			food = foodScanService.getFoodByFseq(food.getFseq());
+			FoodVo foodVo = new FoodVo(food);
+			foodVo.setFoodIngredientList(foodIngredientService.getFoodIngredientListByFood(foodVo.getFood().getFseq()));
+			model.addAttribute("foodVo", foodVo);
+
+			UserVo userVo = new UserVo(user);
+			model.addAttribute("userVo", userVo);
+			foodScanVo.setResultType("c");
+			Map<String, Integer> rcdStatus = new HashMap<>();
+			rcdStatus.put("rcdStatus", rcdService.rcdStatus(user, foodVo.getFood()));
+			rcdStatus.put("rcdCount", rcdService.getRcdCountByFood(foodVo.getFood()));
+			model.addAttribute("rcdStatus", rcdStatus);
+
+			model.addAttribute("pageInfo", foodScanVo.getPageInfo());
+			model.addAttribute("foodList", foodScanVo.getFoodList());
+			model.addAttribute("foodSRVo", foodScanVo);
+			session.setAttribute("foodVo", foodVo);
+		}
         
 		
 		return "food_scan/foodDetail";
