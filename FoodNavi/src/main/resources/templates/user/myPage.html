@@ -55,12 +55,37 @@
                 <label for="userWeight">몸무게</label>
                 <input type="text" name="weight" id="userWeight" th:value="${user.weight}"/>
             </div>
-            <label for="userWeight">BMI 지수</label>
-            <input type="text" name="bmi" id="bmi" th:value="${userVo.BMI}" readonly/>
+            <div class="field">
+                <label for="userWeight">BMI 지수</label>
+                <input type="text" name="bmi" id="bmi" th:value="${userVo.BMI}" readonly/>
+            </div>
+            <div class="field">
+                <label for="likeList">내가 추천한 식단</label>
+                <table name="likeList" id="likeList">
+                    <tr>
+                        <th>음식명</th>
+                        <th>칼로리</th>
+                        <th>탄수화물</th>
+                        <th>단백질</th>
+                        <th>지방</th>
+                    </tr>
+                    <tr th:if="${user.likeList == null or user.likeList.size() == 0}">
+                        <td colspan="5" th:text="'추천한 음식이 없습니다. 음식을 등록해주세요.'"></td>
+                    </tr>
+                    <tr th:each="like, iterStat : ${user.likeList}" th:unless="${user.likeList == null or user.likeList.size() == 0}">
+                        <!--<td><a th:href="@{food_detail(fseq=${like.food.fseq})}">[[${like.food.name}]]</a></td>-->
+                        <td th:text="${like.food.name}"></td>
+                        <td th:text="${like.food.foodDetail.kcal}"></td>
+                        <td th:text="${like.food.foodDetail.carb}"></td>
+                        <td th:text="${like.food.foodDetail.prt}"></td>
+                        <td th:text="${like.food.foodDetail.fat}"></td>
+                    </tr>
+                </table>
+            </div>
 
-            <div class="field half">
-                <input type="submit" value="정보 수정" class="primary"/> <input
-                    type="button" value="회원탈퇴" class="button" onclick="delete_user()" />
+            <div class="field">
+                <input type="submit" value="정보 수정" class="primary"/>
+                <input type="button" value="회원탈퇴" class="button" onclick="delete_user()" />
                 <input type="button" value="나의 식단 기록" id="my_history" onclick="goMyHistory()" />
                 <input type="button" value="식단 바구니" id="confirm_history" onclick="goConfirmHistory()" />
             </div>

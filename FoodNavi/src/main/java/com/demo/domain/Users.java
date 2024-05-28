@@ -60,7 +60,8 @@ public class Users {
 	private String dietType;
 	@ColumnDefault(value="0")
 	private String vegetarian;
-	
+
+	@ToString.Exclude
 	@OneToMany(mappedBy="user", fetch=FetchType.EAGER)
 	private List<Rcd> likeList;
 	

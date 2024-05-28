@@ -13,4 +13,5 @@ public interface RcdRepository extends JpaRepository<Rcd, Integer> {
 	
 	public Optional<Rcd> findByUserAndFood(Users user, Food food);
 	public List<Rcd> findByFood(Food food);
+	public List<Rcd> findByUser(Users user);
 }

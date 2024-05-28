@@ -49,6 +49,11 @@ public class RcdServiceImpl implements RcdService {
 		List<Rcd> rcdList = rcdRepo.findByFood(food);
 		return rcdList.size();
 	}
-	
-	
+
+	@Override
+	public List<Rcd> getRcdListByUser(Users user) {
+		return rcdRepo.findByUser(user);
+	}
+
+
 }
