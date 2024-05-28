@@ -144,9 +144,9 @@ arrowR3.addEventListener('click', function() {
 function reloadSection() {
 	arrow_action = $("#arrow_action").val(); 
 	amount_action = $("#amount_action").val();
-	amount1 = $("#amount1").val();
-	amount2 = $("#amount2").val();
-	amount3 = $("#amount3").val();
+	amount1 = $("#amount1").val() != null ? $("#amount1").val() : 0;
+	amount2 = $("#amount2").val() != null ? $("#amount2").val() : 0;
+	amount3 = $("#amount3").val() != null ? $("#amount3").val() : 0;
 	$.ajax({
 		type: 'POST',
     	url: '/recommend_section_reload',
