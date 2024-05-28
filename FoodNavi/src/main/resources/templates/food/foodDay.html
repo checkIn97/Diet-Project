@@ -63,10 +63,15 @@
 <script src="/assets/js/chatToggle.js"></script>
 
 <script>
+
     function food_recommend(mealTime) {
-        $("#mealTime").val(mealTime)
-        $("#recommendForm").attr("action", "food_recommend").submit();
+        window.location.href = "/loading?mealTime=" + mealTime;
     }
+
+    // function food_recommend(mealTime) {
+    //     $("#mealTime").val(mealTime)
+    //     $("#recommendForm").attr("action", "food_recommend").submit();
+    // }
 
     function goMyHistory() {
         window.location.href="foodHistory_view";

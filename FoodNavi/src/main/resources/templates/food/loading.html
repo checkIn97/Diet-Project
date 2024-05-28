@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:insert="~{/includes/headeNoBg}"></th:block>
+    <meta charset="UTF-8">
+</head>
+<body>
+<img alt="loading" class="loading" src="/assets/images/loading.gif">
+<h1>식단을 가져오고 있습니다!</h1>
+<h2>잠시만 기다려주세요!</h2>
+
+<th:block th:insert="~{includes/footer}"></th:block>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery 추가 -->
+
+<script>
+    $(document).ready(function() {
+        $.ajax({
+            url: '/food_recommend',  // 식단 추천 처리를 위한 URL
+            type: 'GET',  // HTTP 메소드
+            data: {
+                mealTime: getParameterByName('mealTime')  // URL에서 mealTime 파라미터 값을 가져옵니다.
+            },
+            success: function() {
+                // AJAX 요청이 성공하면 food_recommend 페이지로 리다이렉트합니다.
+                window.location.href = '/food_recommend';
+            },
+            error: function() {
+                // AJAX 요청이 실패하면 에러 메시지를 표시합니다.
+                alert('식단 추천 처리에 실패했습니다. 다시 시도해 주세요.');
+            }
+        });
+    });
+
+    // URL에서 파라미터 값을 가져오는 함수입니다.
+    function getParameterByName(name) {
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+</script>
+
+</body>
+</html>
