@@ -194,12 +194,12 @@
         <div class="field">
             <label for="foodType">식단 종류</label>
             <select id="foodType" name="foodType">
-                <option value="주식" th:if="${foodVo.food.foodDetail.foodType == '주식'}" selected>주식</option>
-                <option value="주식" th:unless="${foodVo.food.foodDetail.foodType == '주식'}">주식</option>
-                <option value="부식" th:if="${foodVo.food.foodDetail.foodType == '부식'}" selected>부식</option>
-                <option value="부식" th:unless="${foodVo.food.foodDetail.foodType == '부식'}">부식</option>
-                <option value="간식" th:if="${foodVo.food.foodDetail.foodType == '간식'}" selected>간식</option>
-                <option value="간식" th:unless="${foodVo.food.foodDetail.foodType == '간식'}">간식</option>
+                <option value="main" th:if="${foodVo.food.foodDetail.foodType == 'main'}" selected>메인 요리</option>
+                <option value="main" th:unless="${foodVo.food.foodDetail.foodType == 'main'}">메인 요리</option>
+                <option value="side" th:if="${foodVo.food.foodDetail.foodType == 'side'}" selected>사이드 요리</option>
+                <option value="side" th:unless="${foodVo.food.foodDetail.foodType == 'side'}">사이드 요리</option>
+                <option value="dessert" th:if="${foodVo.food.foodDetail.foodType == 'dessert'}" selected>디저트</option>
+                <option value="dessert" th:unless="${foodVo.food.foodDetail.foodType == 'dessert'}">디저트</option>
             </select>
         </div>
         <div class="field">
