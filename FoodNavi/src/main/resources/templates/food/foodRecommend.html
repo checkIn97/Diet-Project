@@ -5,18 +5,18 @@
 <script th:inline="javascript">
     function foodRecord() {
 		var foodRecord = {
-			fseq1: $("#fseq1").val(),
-			fseq2: $("#fseq2").val(),
-			fseq3: $("#fseq3").val(),
-			score1: $("#score1").val(),
-			score2: $("#score2").val(),
-			score3: $("#score3").val(),
-			amount1: $("#amount1").val(),
-			amount2: $("#amount2").val(),
-			amount3: $("#amount3").val(),
-			checked1: $("#checked1").val(),
-			checked2: $("#checked2").val(),
-			checked3: $("#checked3").val()
+			fseq1: $("#fseq1").val() != null? $("#fseq1").val() : 0,
+			fseq2: $("#fseq2").val() != null? $("#fseq2").val() : 0,
+			fseq3: $("#fseq3").val() != null? $("#fseq3").val() : 0,
+			score1: $("#score1").val() != null? $("#score1").val() : 0,
+			score2: $("#score2").val() != null? $("#score2").val() : 0,
+			score3: $("#score3").val() != null? $("#score3").val() : 0,
+			amount1: $("#amount1").val() != null? $("#amount1").val() : 0,
+			amount2: $("#amount2").val() != null? $("#amount2").val() : 0,
+			amount3: $("#amount3").val() != null? $("#amount3").val() : 0,
+			checked1: $("#checked1").val() != null? $("#checked1").val() : "false",
+			checked2: $("#checked2").val() != null? $("#checked2").val() : "false",
+			checked3: $("#checked3").val() != null? $("#checked3").val() : "false"
 		};
 
         $.ajax({
