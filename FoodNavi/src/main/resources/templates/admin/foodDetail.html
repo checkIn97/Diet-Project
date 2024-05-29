@@ -13,7 +13,8 @@
 
         <div class="food-detail-Image">
             <div>
-                <img src="/assets/images/food.png" alt="Food Image"/>
+                <img th:if="${foodVo.food.img == null}" src="/assets/images/food.png" alt="Food Image"/>
+                <img th:unless="${foodVo.food.img == null}" th:src="@{/assets/foodimages/} + ${foodVo.food.img}" alt="Food Image"/>
             </div>
             <div class="food-detail-item-large">
                 <span class="food-detail-title">[[${foodVo.food.name}]]</span>
