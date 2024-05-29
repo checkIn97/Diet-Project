@@ -2100,7 +2100,7 @@ button.searchButton {
 
 
 .food-info {
-    display: flex;
+    display: revert;
     flex-direction: column;
     align-items: flex-start;
 }
