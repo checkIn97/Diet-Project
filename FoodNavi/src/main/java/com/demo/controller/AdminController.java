@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.demo.config.PathConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
@@ -460,8 +461,14 @@ public class AdminController {
 			String saveName = uuid + "_" + fileName;
 			food.setImg(saveName);
 				try {
-					String uploadPath = "E:\\Student\\Diet-Project\\FoodNavi\\src\\main\\resources\\static\\assets\\foodimages";
-					uploadFile.transferTo(new File(uploadPath + File.separator + saveName));
+					String uploadPath = PathConfig.intelliJPath + saveName;
+					boolean exists = PathConfig.isExistsPath();
+					if(exists) {
+						uploadFile.transferTo(new File(PathConfig.realPath(uploadPath)));
+					} else {
+						uploadPath = PathConfig.eclipsePath + saveName;
+						uploadFile.transferTo(new File(PathConfig.realPath(uploadPath)));
+					}
 				} catch (IllegalStateException | IOException e) {
 					e.printStackTrace();
 				}
