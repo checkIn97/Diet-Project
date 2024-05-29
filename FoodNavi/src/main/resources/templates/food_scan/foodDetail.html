@@ -19,7 +19,10 @@
     <table>
         <tr>
             <th>이미지</th>
-            <td>내용</td>
+            <td>
+                <span th:if="${foodVo.food.img == null}" th:text="없음"></span>
+                <img th:unless="${foodVo.food.img == null}" th:src="@{/assets/foodimages/} + ${foodVo.food.img}" th:width="100" th:height="100">
+            </td>
         </tr>
         <tr>
             <th>이름</th>

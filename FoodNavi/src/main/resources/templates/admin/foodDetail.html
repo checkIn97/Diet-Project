@@ -8,13 +8,12 @@
 
 <body>
 <h2>Food Info</h2>
-<article class="adminFoodDetailBox">
+<article class="box">
     <form method="post" action="admin_food_edit_form">
 
         <div class="food-detail-Image">
             <div>
-                <img class="foodImg" src="/assets/images/chef.png" th:if="${foodVo.food.img == null}">
-                <img class="foodImgR" th:src="@{/assets/foodimages/} + ${foodVo.food.img}" th:if="${foodVo.food.img != null}">
+                <img src="/assets/images/food.png" alt="Food Image"/>
             </div>
             <div class="food-detail-item-large">
                 <span class="food-detail-title">[[${foodVo.food.name}]]</span>
@@ -62,7 +61,7 @@
         </div>
 
         <input type="hidden" name="fseq" th:value="${foodVo.food.fseq}">
-        <input type="submit" class="adminFoodButton" value="수정하기">
+        <input type="submit" value="수정하기">
     </form>
     <a th:href="@{admin_food_delete(fseq=${foodVo.food.fseq})}">
         <button>삭제하기</button>
