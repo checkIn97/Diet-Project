@@ -5,28 +5,37 @@ package com.demo.controller;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.time.format.TextStyle;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
 
 import com.demo.domain.Food;
 import com.demo.domain.Rcd;
 import com.demo.domain.UserChange;
-import com.demo.dto.FoodRecommendVo;
+import com.demo.domain.Users;
+import com.demo.dto.FoodVo;
+import com.demo.dto.UserVo;
 import com.demo.persistence.UserChangeRepository;
+import com.demo.persistence.UsersRepository;
+import com.demo.service.FoodRecommendService;
 import com.demo.service.FoodScanService;
 import com.demo.service.HistoryService;
 import com.demo.service.RcdService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.support.SessionStatus;
-
-import com.demo.domain.Users;
-import com.demo.dto.UserVo;
-import com.demo.persistence.UsersRepository;
 import com.demo.service.UsersService;
 
 import jakarta.servlet.http.HttpSession;
@@ -46,6 +55,8 @@ public class UsersController {
 	private RcdService rcdService;
 	@Autowired
 	private FoodScanService foodScanService;
+	@Autowired
+	private FoodRecommendService foodRecommendService;
 
 
 	@GetMapping("/user_membership")
@@ -250,8 +261,13 @@ public class UsersController {
 	public String myPageView(HttpSession session, Model model) {
 		Users user = (Users)session.getAttribute("loginUser");
 		UserVo userVo = new UserVo(user);
-		List<Rcd> rcdList = rcdService.getRcdListByUser(user);
-		user.setLikeList(rcdList);
+		List<Rcd> rcdList = user.getLikeList();
+		List<FoodVo> foodVoList = new ArrayList<>();
+		for (Rcd rcd : rcdList) {
+			Food food = foodScanService.getFoodByFseq(rcd.getFood().getFseq());
+			foodVoList.add(new FoodVo(food));
+		}
+		model.addAttribute("foodVoList", foodVoList);
 		model.addAttribute("userVo", userVo);
 		model.addAttribute("user", user);
 		return "user/myPage";

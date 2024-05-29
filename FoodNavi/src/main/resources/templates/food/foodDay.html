@@ -65,7 +65,8 @@
 <script>
 
     function food_recommend(mealTime) {
-        window.location.href = "/loading?mealTime=" + mealTime;
+		$("#mealTime").val(mealTime);
+		$("#recommendForm").attr("action", "loading").submit();
     }
 
     // function food_recommend(mealTime) {

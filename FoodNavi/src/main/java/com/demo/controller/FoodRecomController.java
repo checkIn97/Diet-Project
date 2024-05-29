@@ -96,24 +96,6 @@ public class FoodRecomController {
     public String foodRecommendList(
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "20") int size,
-            @RequestParam(value = "sortBy", defaultValue = "name") String sortBy,
-            @RequestParam(value = "sortDirection", defaultValue = "ASC") String sortDirection,
-            @RequestParam(value = "pageMaxDisplay", defaultValue = "5") int pageMaxDisplay,
-            @RequestParam(value = "searchField", defaultValue = "name") String searchField,
-            @RequestParam(value = "searchWord", defaultValue = "") String searchWord,
-            @RequestParam(value = "banField", defaultValue = "name") String banField,
-            @RequestParam(value = "banWord", defaultValue = "") String banWord,
-            @RequestParam(value = "searchName", defaultValue = "") String searchName,
-            @RequestParam(value = "searchIngredient", defaultValue = "") String searchIngredient,
-            @RequestParam(value = "banName", defaultValue = "") String banName,
-            @RequestParam(value = "banIngredient", defaultValue = "") String banIngredient,
-            @RequestParam(value = "foodType", defaultValue = "all") String foodType,
-            @RequestParam(value = "purpose", defaultValue = "all") String purpose,
-            @RequestParam(value = "recommend", defaultValue = "false") boolean recommend,
-            @RequestParam(value = "dietType", defaultValue = "all") String dietType,
-            @RequestParam(value = "allergys", defaultValue = "") String[] allergys,
-            @RequestParam(value = "allergyEtc", defaultValue = "") String allergyEtc,
-            @RequestParam(value = "vegetarian", defaultValue = "0") String vegetarian,
             Model model, HttpSession session) {
         String mealTime = (String) session.getAttribute("mealTime");
         // 세션에서 사용자 정보 가져오기
@@ -125,82 +107,15 @@ public class FoodRecomController {
         boolean check = false;
         boolean totalCheck = false;
         UserVo userVo = new UserVo(user);
-        FoodRecommendVo foodRecommendVo1 = new FoodRecommendVo();
-        FoodRecommendVo foodRecommendVo2 = new FoodRecommendVo();
-        FoodRecommendVo foodRecommendVo3 = new FoodRecommendVo();
-        FoodRecommendVo[] foodRecommendVoArray = {foodRecommendVo1, foodRecommendVo2, foodRecommendVo3};
+        userVo.setLastMealType(mealTime);
+        FoodRecommendVo[] foodRecommendVoArray = (FoodRecommendVo[])session.getAttribute("foodRecommendVoArray");
         if (page == 0) {
             check = true;
             page = 1;
-            for (int h = 0; h < 3; h++) {
-                FoodRecommendVo foodRecommendVo = foodRecommendVoArray[h];
-                foodRecommendVo.setSearchField(searchField);
-                foodRecommendVo.setSearchWord(searchWord);
-                foodRecommendVo.setBanField(banField);
-                foodRecommendVo.setBanWord(banWord);
-                foodRecommendVo.setSearchName(searchName);
-                foodRecommendVo.setSearchIngredient(searchIngredient);
-                foodRecommendVo.setBanName(banName);
-                foodRecommendVo.setBanIngredient(banIngredient);
-
-                List<String> mealTimeList = Arrays.asList(mealTime);
-                String[] mealType = new String[foodRecommendVo.getMealTimeArray().length];
-                for (int i = 0; i < foodRecommendVo.getMealTimeArray().length; i++) {
-                    String meal = foodRecommendVo.getMealTimeArray()[i][0];
-                    if (mealTimeList.contains(meal)) {
-                        mealType[i] = meal;
-                    } else {
-                        mealType[i] = "";
-                    }
-                }
-                foodRecommendVo.setMealTime(mealType);
-                String lastMealType = null;
-                if (mealTimeList.size() == 0) {
-                    lastMealType = foodRecommendVo.getMealTimeByTime();
-                } else {
-                    lastMealType = mealTimeList.get(0);
-                }
-
-                userVo.setLastMealType(lastMealType);
-
-                foodRecommendVo.setFoodType("all");
-
-                foodRecommendVo.setPurpose(purpose);
-                user.setUserGoal(purpose);
-
-                foodRecommendVo.setDietType(dietType);
-                user.setDietType(dietType);
-
-                List<String> allergyList = Arrays.asList(allergys);
-                String[] tmp_allergys = new String[foodRecommendVo.getAllergyArray().length];
-                for (int i = 0; i < foodRecommendVo.getAllergyArray().length; i++) {
-                    String allergy = foodRecommendVo.getAllergyArray()[i][0];
-                    if (allergyList.contains(allergy)) {
-                        tmp_allergys[i] = "y";
-                    } else {
-                        tmp_allergys[i] = "a";
-                    }
-                }
-                foodRecommendVo.setAllergys(tmp_allergys);
-                user.setNo_egg(tmp_allergys[0]);
-                user.setNo_milk(tmp_allergys[1]);
-                user.setNo_bean(tmp_allergys[2]);
-                user.setNo_shellfish(tmp_allergys[3]);
-
-                foodRecommendVo.setAllergyEtc(allergyEtc);
-                user.setNo_ingredient(allergyEtc);
-
-                foodRecommendVo.setVegetarian(vegetarian);
-                user.setVegetarian(vegetarian);
-
-                foodRecommendVo.setRecommend(recommend);
-                foodRecommendVo.setSortBy(sortBy);
-                foodRecommendVo.setSortDirection(sortDirection);
-                foodRecommendVo.setPageMaxDisplay(pageMaxDisplay);
-            }
             FoodRecommendVo foodRecommendVo = foodRecommendVoArray[0];
             List<Food> filteredList = foodScanService.getFoodScanList(user, foodRecommendVo);
             foodRecommendVo.setFoodList(filteredList);
+            System.out.println(mealTime);
             List<FoodVo> foodRecommendList = foodRecommendService.getFoodRecommendList("Recommend.py", userVo, filteredList);
 
             for (int h = 0; h < 3; h++) {
@@ -212,10 +127,7 @@ public class FoodRecomController {
                     foodRecommendVoArray[h].setFoodRecommendList(list);
                 }
             }
-            usersService.insertUser(user);
-
         } else {
-            foodRecommendVoArray = (FoodRecommendVo[]) session.getAttribute("foodRecommendVoArray");
             totalCheck = true;
         }
 
@@ -438,9 +350,107 @@ public class FoodRecomController {
         return section_reload_info;
     }
 
-    @GetMapping("/loading")
-    public String loading(@RequestParam String mealTime, HttpSession session) {
+    @PostMapping("/loading")
+    public String loading(@RequestParam String mealTime, HttpSession session, 
+    		@RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "20") int size,
+            @RequestParam(value = "sortBy", defaultValue = "name") String sortBy,
+            @RequestParam(value = "sortDirection", defaultValue = "ASC") String sortDirection,
+            @RequestParam(value = "pageMaxDisplay", defaultValue = "5") int pageMaxDisplay,
+            @RequestParam(value = "searchField", defaultValue = "name") String searchField,
+            @RequestParam(value = "searchWord", defaultValue = "") String searchWord,
+            @RequestParam(value = "banField", defaultValue = "name") String banField,
+            @RequestParam(value = "banWord", defaultValue = "") String banWord,
+            @RequestParam(value = "searchName", defaultValue = "") String searchName,
+            @RequestParam(value = "searchIngredient", defaultValue = "") String searchIngredient,
+            @RequestParam(value = "banName", defaultValue = "") String banName,
+            @RequestParam(value = "banIngredient", defaultValue = "") String banIngredient,
+            @RequestParam(value = "foodType", defaultValue = "all") String foodType,
+            @RequestParam(value = "purpose", defaultValue = "all") String purpose,
+            @RequestParam(value = "recommend", defaultValue = "false") boolean recommend,
+            @RequestParam(value = "dietType", defaultValue = "all") String dietType,
+            @RequestParam(value = "allergys", defaultValue = "") String[] allergys,
+            @RequestParam(value = "allergyEtc", defaultValue = "") String allergyEtc,
+            @RequestParam(value = "vegetarian", defaultValue = "0") String vegetarian) {
         session.setAttribute("mealTime", mealTime);
+
+        // 세션에서 사용자 정보 가져오기
+        Users user = (Users) session.getAttribute("loginUser");
+        // 세션에 로그인 정보가 없는 경우
+        if (user == null) {
+            return "redirect:user_login_form"; // 로그인 페이지로 이동.
+        }
+        boolean check = false;
+        boolean totalCheck = false;
+        UserVo userVo = new UserVo(user);
+        FoodRecommendVo foodRecommendVo1 = new FoodRecommendVo();
+        FoodRecommendVo foodRecommendVo2 = new FoodRecommendVo();
+        FoodRecommendVo foodRecommendVo3 = new FoodRecommendVo();
+        FoodRecommendVo[] foodRecommendVoArray = {foodRecommendVo1, foodRecommendVo2, foodRecommendVo3};
+
+        for (int h = 0; h < 3; h++) {
+            FoodRecommendVo foodRecommendVo = foodRecommendVoArray[h];
+            foodRecommendVo.setSearchField(searchField);
+            foodRecommendVo.setSearchWord(searchWord);
+            foodRecommendVo.setBanField(banField);
+            foodRecommendVo.setBanWord(banWord);
+            foodRecommendVo.setSearchName(searchName);
+            foodRecommendVo.setSearchIngredient(searchIngredient);
+            foodRecommendVo.setBanName(banName);
+            foodRecommendVo.setBanIngredient(banIngredient);
+
+            String[] mealType = new String[foodRecommendVo.getMealTimeArray().length];
+            for (int i = 0; i < foodRecommendVo.getMealTimeArray().length; i++) {
+                String meal = foodRecommendVo.getMealTimeArray()[i][0];
+                if (mealTime.equals(meal)) {
+                    mealType[i] = meal;
+                } else {
+                    mealType[i] = "";
+                }
+            }
+            foodRecommendVo.setMealTime(mealType);
+            String lastMealType = mealTime;
+
+            userVo.setLastMealType(lastMealType);
+
+            foodRecommendVo.setFoodType("all");
+
+            foodRecommendVo.setPurpose(purpose);
+            user.setUserGoal(purpose);
+
+            foodRecommendVo.setDietType(dietType);
+            user.setDietType(dietType);
+
+            List<String> allergyList = Arrays.asList(allergys);
+            String[] tmp_allergys = new String[foodRecommendVo.getAllergyArray().length];
+            for (int i = 0; i < foodRecommendVo.getAllergyArray().length; i++) {
+                String allergy = foodRecommendVo.getAllergyArray()[i][0];
+                if (allergyList.contains(allergy)) {
+                    tmp_allergys[i] = "y";
+                } else {
+                    tmp_allergys[i] = "a";
+                }
+            }
+            foodRecommendVo.setAllergys(tmp_allergys);
+            user.setNo_egg(tmp_allergys[0]);
+            user.setNo_milk(tmp_allergys[1]);
+            user.setNo_bean(tmp_allergys[2]);
+            user.setNo_shellfish(tmp_allergys[3]);
+
+            foodRecommendVo.setAllergyEtc(allergyEtc);
+            user.setNo_ingredient(allergyEtc);
+
+            foodRecommendVo.setVegetarian(vegetarian);
+            user.setVegetarian(vegetarian);
+
+            foodRecommendVo.setRecommend(recommend);
+            foodRecommendVo.setSortBy(sortBy);
+            foodRecommendVo.setSortDirection(sortDirection);
+            foodRecommendVo.setPageMaxDisplay(pageMaxDisplay);
+        }
+        usersService.insertUser(user);
+        session.setAttribute("foodRecommendVoArray", foodRecommendVoArray);
+        
         return "food/loading";
     }
 

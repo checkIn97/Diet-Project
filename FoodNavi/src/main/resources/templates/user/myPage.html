@@ -69,16 +69,16 @@
                         <th>단백질</th>
                         <th>지방</th>
                     </tr>
-                    <tr th:if="${user.likeList == null or user.likeList.size() == 0}">
+                    <tr th:if="${foodVoList.size() == 0}">
                         <td colspan="5" th:text="'추천한 음식이 없습니다. 음식을 등록해주세요.'"></td>
                     </tr>
-                    <tr th:each="like, iterStat : ${user.likeList}" th:unless="${user.likeList == null or user.likeList.size() == 0}">
-                        <!--<td><a th:href="@{food_detail(fseq=${like.food.fseq})}">[[${like.food.name}]]</a></td>-->
-                        <td th:text="${like.food.name}"></td>
-                        <td th:text="${like.food.foodDetail.kcal}"></td>
-                        <td th:text="${like.food.foodDetail.carb}"></td>
-                        <td th:text="${like.food.foodDetail.prt}"></td>
-                        <td th:text="${like.food.foodDetail.fat}"></td>
+                    <tr th:each="foodVo : ${foodVoList}" th:unless="${foodVoList.size() == 0}">
+                        <!--<td><a th:href="@{food_detail(fseq=${foodVo.food.fseq}, type='m')}">[[${foodVo.food.name}]]</a></td>-->
+                        <td>[[${foodVo.food.name}]]</td>
+                        <td>[[${foodVo.kcal}]]kcal</td>
+                        <td>[[${foodVo.carb}]]g</td>
+                        <td>[[${foodVo.prt}]]g</td>
+                        <td>[[${foodVo.fat}]]g</td>
                     </tr>
                 </table>
             </div>

@@ -4,22 +4,23 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import com.demo.domain.Exercise;
-import com.demo.domain.ExerciseOption;
-import com.demo.persistence.ExerciseOptionRepository;
-import com.demo.service.ExerciseOptionService;
-import com.demo.service.ExerciseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.demo.domain.Board;
+import com.demo.domain.Exercise;
 import com.demo.domain.Users;
 import com.demo.dto.UserVo;
+import com.demo.persistence.ExerciseOptionRepository;
+import com.demo.service.ExerciseService;
 import com.demo.service.HistoryService;
 
 import jakarta.servlet.http.HttpSession;
@@ -81,7 +82,8 @@ public class HomeController {
 
     @GetMapping("load_userVo")
     @ResponseBody
-    public UserVo loadUserVo(HttpSession session) {
+    public Map<String, Object> loadUserVo(HttpSession session) {
+    	Map<String, Object> result = new HashMap<>();
         UserVo userVo = new UserVo((Users) (session.getAttribute("loginUser")));
         userVo.setKcalToday((int) historyService.totalKcalToday(userVo.getUser()));
         userVo.setKcalOnTable((int) historyService.totalKcalOnTable(userVo.getUser()));
@@ -91,6 +93,20 @@ public class HomeController {
         userVo.setPrtOnTable(Math.round(historyService.totalPrtOnTable(userVo.getUser()) * 100) / 100f);
         userVo.setFatToday(Math.round(historyService.totalFatToday(userVo.getUser()) * 100) / 100f);
         userVo.setFatOnTable(Math.round(historyService.totalFatOnTable(userVo.getUser()) * 100) / 100f);
-        return userVo;
+        
+        result.put("kcalToday", userVo.getKcalToday());
+        result.put("kcalOnTable", userVo.getKcalOnTable());
+        result.put("carbToday", userVo.getCarbToday());
+        result.put("carbOnTable", userVo.getCarbOnTable());
+        result.put("prtToday", userVo.getPrtToday());
+        result.put("prtOnTable", userVo.getPrtOnTable());
+        result.put("fatToday", userVo.getFatToday());
+        result.put("fatOnTable", userVo.getFatOnTable());
+        result.put("properCarb", userVo.getProperCarb());
+        result.put("properPrt", userVo.getProperPrt());
+        result.put("properFat", userVo.getProperFat());
+        result.put("EER", userVo.getEER());
+        
+        return result;
     }
 }
