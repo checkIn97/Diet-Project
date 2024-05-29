@@ -201,10 +201,20 @@ public class HistoryController {
         List<History> historyList = new ArrayList<>();
 
         List<History> tmp_historyList = historyService.getHistoryListNotConfirmedYet(user);
-
+        List<Integer> serveNumList = new ArrayList<>();
+        List<String> foodNameList = new ArrayList<>();
+        for(HistoryData hd : historyDataList) {
+            foodNameList.add(hd.getFood_name());
+            serveNumList.add(hd.getServeNumber());
+        }
         // 받은 데이터를 처리하는 로직을 작성
         for (History hs : tmp_historyList) {
             hs.setServedDate(now);
+            for(int i=0; i<serveNumList.size(); i++) {
+                if(hs.getFood().getName().equals(foodNameList.get(i))) {
+                    hs.setServeNumber(serveNumList.get(i));
+                }
+            }
             historyService.historyUpdate(hs);
             historyList.add(hs);
 
