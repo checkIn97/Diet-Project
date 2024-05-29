@@ -69,7 +69,7 @@
                         <th>탄수화물</th>
                         <th>단백질</th>
                         <th>지방</th>
-                        <th>추천점수</th>
+                        <th>추천수</th>
                     </tr>
                     <tr th:if="${foodVoList.size() == 0}">
                         <td colspan="5" th:text="'추천한 음식이 없습니다. 음식을 등록해주세요.'"></td>
@@ -82,26 +82,7 @@
                         <td>[[${foodVo.carb}]]g</td>
                         <td>[[${foodVo.prt}]]g</td>
                         <td>[[${foodVo.fat}]]g</td>
-                        <td>
-			            	<span class="satisfaction" th:alt="${foodVo.scoreView+'%'}"
-                                  th:title="${foodVo.scoreView+'%'}">
-						    	<img class="star" src="/assets/images/star-empty.png" th:if="${foodVo.starScore == 0}">
-						    	<img class="star" src="/assets/images/star-half.png" th:if="${foodVo.starScore == 1}">
-						    	<img class="star" src="/assets/images/star-full.png" th:if="${foodVo.starScore >= 2}">
-						    	<img class="star" src="/assets/images/star-empty.png" th:if="${foodVo.starScore <= 2}">
-						    	<img class="star" src="/assets/images/star-half.png" th:if="${foodVo.starScore == 3}">
-						    	<img class="star" src="/assets/images/star-full.png" th:if="${foodVo.starScore >= 4}">
-						    	<img class="star" src="/assets/images/star-empty.png" th:if="${foodVo.starScore <= 4}">
-						    	<img class="star" src="/assets/images/star-half.png" th:if="${foodVo.starScore == 5}">
-						    	<img class="star" src="/assets/images/star-full.png" th:if="${foodVo.starScore >= 6}">
-						    	<img class="star" src="/assets/images/star-empty.png" th:if="${foodVo.starScore <= 6}">
-						    	<img class="star" src="/assets/images/star-half.png" th:if="${foodVo.starScore == 7}">
-						    	<img class="star" src="/assets/images/star-full.png" th:if="${foodVo.starScore >= 8}">
-						    	<img class="star" src="/assets/images/star-empty.png" th:if="${foodVo.starScore <= 8}">
-						    	<img class="star" src="/assets/images/star-half.png" th:if="${foodVo.starScore == 9}">
-						    	<img class="star" src="/assets/images/star-full.png" th:if="${foodVo.starScore >= 10}">
-		    				</span>
-                        </td>
+                        <td>[[${foodVo.rcdCount}]]개</td>
                     </tr>
                 </table>
                 <button th:unless="${foodVoList.size() == 0}" type="button" id="loadMore">좋아요 더보기</button>

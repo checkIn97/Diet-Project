@@ -149,12 +149,12 @@ public class FoodScanServiceImpl implements FoodScanService {
 			ratioFatMin = userVo.getProperFatRatio()[0];
 			ratioFatMax = userVo.getProperFatRatio()[1];
 		} else if (dietType.equals("lowCarb")) {
-			ratioCarbMin = 0.0f;
-			ratioCarbMax = 0.3f;
-			ratioPrtMin = 0.0f;
-			ratioPrtMax = 1.0f;
-			ratioFatMin = 0.2f;
-			ratioFatMax = 1.0f;
+			ratioCarbMin = 0.00f;
+			ratioCarbMax = 0.20f;
+			ratioPrtMin = 0.10f;
+			ratioPrtMax = 0.30f;
+			ratioFatMin = 0.60f;
+			ratioFatMax = 0.80f;
 		}
 		
 		List<Food> foodList = null;

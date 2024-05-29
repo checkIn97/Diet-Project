@@ -276,7 +276,7 @@ public class UsersController {
         if (page == 0) {
         	page = 1;
         	FoodRecommendVo foodRecommendVo = new FoodRecommendVo();
-    		foodRecommendVo.setRecommend(true);
+    		foodRecommendVo.setRecommend(false);
     		String mealType = foodRecommendVo.getMealTimeByTime();
     		String[] mealTime = new String[4];
     		for (int i = 0 ; i < foodRecommendVo.getMealTimeArray().length ; i++) {
@@ -289,7 +289,12 @@ public class UsersController {
     		userVo.setLastMealType(mealType);
     		List<Food> foodList = rcdService.getRcdFoodListByUser(user);
     		foodRecommendVo.setFoodList(foodList);
-    		List<FoodVo> foodVoList = foodRecommendService.getFoodRecommendList("Recommend.py", userVo, foodList);
+    		List<FoodVo> foodVoList = new ArrayList<>();
+    		for (Food f : foodList) {
+    			FoodVo vo = new FoodVo(f);
+    			vo.setRcdCount(rcdService.getRcdCountByFood(f));
+    			foodVoList.add(vo);
+    		}
     		foodRecommendVo.setFoodRecommendList(foodVoList);
     		session.setAttribute("foodRecommendVo", foodRecommendVo);
         }
@@ -301,9 +306,10 @@ public class UsersController {
 		pageInfo.put("size", size);
 		pageInfo.put("totalPages", (foodRecommendVo.getFoodRecommendList().size()+size-1)/size);
 		List<FoodVo> currentList = new ArrayList<>();
-		for (int i = size*(page-1) ; i < Math.min(size*page, foodRecommendVo.getFoodRecommendList().size()) ; i++) {
-			currentList.add(foodRecommendVo.getFoodRecommendList().get(i));
-		}
+//		for (int i = size*(page-1) ; i < Math.min(size*page, foodRecommendVo.getFoodRecommendList().size()) ; i++) {
+//			currentList.add(foodRecommendVo.getFoodRecommendList().get(i));
+//		}
+		currentList = foodRecommendVo.getFoodRecommendList();
 		foodRecommendVo.setPageInfo(pageInfo);
 		model.addAttribute("pageInfo", foodRecommendVo.getPageInfo());
 		model.addAttribute("foodVoList", currentList);

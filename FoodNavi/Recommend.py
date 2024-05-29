@@ -167,16 +167,25 @@ food_feature_score = pd.DataFrame({'score':user_score_list})
 food_feature_list['user_score'] = user_score_list
 
 
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
 
 food_data_raw = pd.read_csv('Food.csv', encoding='utf-8')
 food_data_raw.dropna(inplace=True)
 food_data_mean = food_data_raw[['kcal', 'carb', 'prt', 'fat']].mean()
 food_data_std = food_data_raw[['kcal', 'carb', 'prt', 'fat']].std()
 
+
+# 필터링 적용
+food_data_filtered_raw = pd.read_csv('tmp_filtered.csv', encoding='utf-8')
+food_data_raw.set_index('fseq', inplace=True)
+food_data_filtered = food_data_raw.loc[food_data_filtered_raw['fseq']]
+
+
+
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
 cols = ['kcal', 'carb', 'prt', 'fat']
-food_data_for_test = food_data_raw[cols]
+food_data_filtered_for_test = food_data_filtered[cols]
 
 food_feature_list.columns = ['kcal', 'carb', 'prt', 'fat', 'score']
 food_feature_list.reset_index(inplace=True)
@@ -187,10 +196,10 @@ food_feature_list_for_test = food_feature_list[cols]
 for n in cols:
     if food_data_std[n] == 0:
         food_feature_list_for_test[n] = 0
-        food_data_for_test[n] = 0
+        food_data_filtered_for_test[n] = 0
     else:
         food_feature_list_for_test[n] = abs(food_feature_list_for_test[n] - food_data_mean[n]) / food_data_std[n]
-        food_data_for_test[n] = abs(food_data_for_test[n] - food_data_mean[n]) / food_data_std[n]
+        food_data_filtered_for_test[n] = abs(food_data_filtered_for_test[n] - food_data_mean[n]) / food_data_std[n]
     
 
 final_food_list = []
@@ -202,14 +211,14 @@ final_food_score_list = []
 
 
 for i in range(len(food_feature_list_for_test)):
-    sim_food_data = cosine_similarity(food_feature_list_for_test.iloc[i:i+1], food_data_for_test)
+    sim_food_data = cosine_similarity(food_feature_list_for_test.iloc[i:i+1], food_data_filtered_for_test)
     sim_food_data_sorted_index = sim_food_data[0].argsort()[::-1]
     check = 0
     count = 0
     for j in range(len(sim_food_data[0])):
         idx = sim_food_data_sorted_index[j]
         tmp_score = sim_food_data[0][idx]
-        fseq = food_data_for_test.index[idx]
+        fseq = food_data_filtered_for_test.index[idx]
         if tmp_score >= 0.70:
             date_diff = food_feature_list_raw.iloc[i]['date_diff']
             decrease_ratio = 1-0.01*date_diff
@@ -254,32 +263,13 @@ final_result = pd.DataFrame({'fseq':final_food_list, 'score':final_food_recommen
 
 
 
-# 필터링 적용
-food_filter_raw = pd.read_csv('tmp_filtered.csv', encoding='utf-8')
-food_filter = food_filter_raw['fseq']
-food_filter = food_filter.values
-final_result_filtered = final_result.copy()
-
-fseq_filtered = []
-score_filtered = []
-
-for i in range(len(final_result_filtered)):
-    tmp_fseq = final_result_filtered.iloc[i]['fseq']
-    if tmp_fseq in food_filter:
-        fseq_filtered.append(int(tmp_fseq))
-        score_filtered.append(final_result_filtered.iloc[i]['score'])
-
-final_result_filtered = pd.DataFrame({'fseq':fseq_filtered, 'score':score_filtered})
-final_result_filtered.set_index('fseq', inplace=True)
-
-
-
-final_result_filtered.sort_values(by='score', ascending=False, inplace=True)
+final_result.sort_values(by='score', ascending=False, inplace=True)
+final_result.set_index('fseq', inplace=True)
 tmp_csv = 'tmp_recommendList.csv'
-final_result_filtered.to_csv(tmp_csv, sep=',', encoding='utf-8')
+final_result.to_csv(tmp_csv, sep=',', encoding='utf-8')
 
 while True:
     if os.path.exists(tmp_csv):
         break
-        
+
 print('success')

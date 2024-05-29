@@ -30,6 +30,7 @@ public class FoodVo {
 	private String prt = "";
 	private String fat = "";
 	private List<FoodIngredient> foodIngredientList = new ArrayList<>();
+	private int rcdCount;
 	
 	public FoodVo(Food food) {
 		this.food = food;
