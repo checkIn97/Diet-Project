@@ -167,25 +167,16 @@ food_feature_score = pd.DataFrame({'score':user_score_list})
 food_feature_list['user_score'] = user_score_list
 
 
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
 food_data_raw = pd.read_csv('Food.csv', encoding='utf-8')
 food_data_raw.dropna(inplace=True)
 food_data_mean = food_data_raw[['kcal', 'carb', 'prt', 'fat']].mean()
 food_data_std = food_data_raw[['kcal', 'carb', 'prt', 'fat']].std()
 
-
-# 필터링 적용
-food_data_filtered_raw = pd.read_csv('tmp_filtered.csv', encoding='utf-8')
-food_data_raw.set_index('fseq', inplace=True)
-food_data_filtered = food_data_raw.loc[food_data_filtered_raw['fseq']]
-
-
-
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
-
 cols = ['kcal', 'carb', 'prt', 'fat']
-food_data_filtered_for_test = food_data_filtered[cols]
+food_data_for_test = food_data_raw[cols]
 
 food_feature_list.columns = ['kcal', 'carb', 'prt', 'fat', 'score']
 food_feature_list.reset_index(inplace=True)
@@ -196,11 +187,20 @@ food_feature_list_for_test = food_feature_list[cols]
 for n in cols:
     if food_data_std[n] == 0:
         food_feature_list_for_test[n] = 0
-        food_data_filtered_for_test[n] = 0
+        food_data_for_test[n] = 0
     else:
         food_feature_list_for_test[n] = abs(food_feature_list_for_test[n] - food_data_mean[n]) / food_data_std[n]
-        food_data_filtered_for_test[n] = abs(food_data_filtered_for_test[n] - food_data_mean[n]) / food_data_std[n]
-    
+        food_data_for_test[n] = abs(food_data_for_test[n] - food_data_mean[n]) / food_data_std[n]
+        
+# 필터링 적용 준비
+food_filter_raw = pd.read_csv('tmp_filtered.csv', encoding='utf-8')
+food_filter = food_filter_raw['fseq']
+food_filter = food_filter.values
+
+fseq_filtered = []
+score_filtered = []
+food_filter = list(food_filter)
+food_filter_index = [i-1 for i in food_filter]
 
 final_food_list = []
 final_food_count = []
@@ -208,46 +208,31 @@ tmp_score_list = []
 tmp_adjusted_score_list = []
 final_food_score_list = []
 
-
-
 for i in range(len(food_feature_list_for_test)):
-    sim_food_data = cosine_similarity(food_feature_list_for_test.iloc[i:i+1], food_data_filtered_for_test)
-    sim_food_data_sorted_index = sim_food_data[0].argsort()[::-1]
-    check = 0
-    count = 0
-    for j in range(len(sim_food_data[0])):
+    sim_food_data = cosine_similarity(food_feature_list_for_test.iloc[i:i+1], food_data_for_test)
+    sim_food_data_filtered = sim_food_data[0][[food_filter_index]]
+    sim_food_data_sorted_index = sim_food_data_filtered[0].argsort()[::-1]
+    for j in range(len(sim_food_data_filtered[0])):
         idx = sim_food_data_sorted_index[j]
-        tmp_score = sim_food_data[0][idx]
-        fseq = food_data_filtered_for_test.index[idx]
-        if tmp_score >= 0.70:
-            date_diff = food_feature_list_raw.iloc[i]['date_diff']
-            decrease_ratio = 1-0.01*date_diff
-            if decrease_ratio <= 0:
-                decrease_ratio = 0
-            if fseq not in final_food_list:
-                final_food_list.append(fseq)
-                final_food_count.append(1)
-                tmp_score_list.append(tmp_score)
-                tmp_adjusted_score_list.append(tmp_score*decrease_ratio)
-                final_food_score_list.append(tmp_score*decrease_ratio*food_feature_list.iloc[i]['score'])
-            else:
-                idx2 = final_food_list.index(fseq)
-                final_food_count[idx2] += 1
-                if final_food_score_list[idx2] < tmp_score*decrease_ratio*food_feature_list.iloc[i]['score']:
-                    tmp_score_list[idx2] = tmp_score
-                    tmp_adjusted_score_list[idx2] = tmp_score*decrease_ratio
-                    final_food_score_list[idx2] = tmp_score*decrease_ratio*food_feature_list.iloc[i]['score']
+        fseq = food_filter[idx]
+        tmp_score = sim_food_data_filtered[0][idx]
+        date_diff = food_feature_list_raw.iloc[i]['date_diff']
+        decrease_ratio = 1-0.01*date_diff
+        if decrease_ratio <= 0:
+            decrease_ratio = 0
+        if fseq not in final_food_list:
+            final_food_list.append(fseq)
+            final_food_count.append(1)
+            tmp_score_list.append(tmp_score)
+            tmp_adjusted_score_list.append(tmp_score*decrease_ratio)
+            final_food_score_list.append(tmp_score*decrease_ratio*food_feature_list.iloc[i]['score'])
         else:
-            check = 1
-            break
-        if len(final_food_list) >= 100:
-            check = 1
-            break
-        count += 1
-        if count == 10:
-            break
-    if check == 1:
-        break
+            idx2 = final_food_list.index(fseq)
+            final_food_count[idx2] += 1
+            if final_food_score_list[idx2] < tmp_score*decrease_ratio*food_feature_list.iloc[i]['score']:
+                tmp_score_list[idx2] = tmp_score
+                tmp_adjusted_score_list[idx2] = tmp_score*decrease_ratio
+                final_food_score_list[idx2] = tmp_score*decrease_ratio*food_feature_list.iloc[i]['score']
 
 all_score_view = pd.DataFrame({'fseq':final_food_list, 'count':final_food_count, 'tmp_score':tmp_score_list, 'tmp_adjusted_score':tmp_adjusted_score_list, 'total_score':final_food_score_list})
 
@@ -259,17 +244,15 @@ for i in range(len(final_food_list)):
     final_food_recommend_score_list.append(final_food_score_list[i]*(0.9+0.01*count))
     
 final_result = pd.DataFrame({'fseq':final_food_list, 'score':final_food_recommend_score_list})
-
-
+final_result.set_index('fseq', inplace=True)
 
 
 final_result.sort_values(by='score', ascending=False, inplace=True)
-final_result.set_index('fseq', inplace=True)
 tmp_csv = 'tmp_recommendList.csv'
 final_result.to_csv(tmp_csv, sep=',', encoding='utf-8')
 
 while True:
     if os.path.exists(tmp_csv):
         break
-
+        
 print('success')
