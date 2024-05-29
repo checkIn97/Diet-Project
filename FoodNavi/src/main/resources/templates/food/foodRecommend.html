@@ -65,7 +65,7 @@
 				<block th:each="foodVo, iterStat : ${foodRecommendVo1.foodRecommendList}" th:if="${foodRecommendVo1.index == iterStat.count}">
 					<input type="hidden" id="fseq1" name="fseq1" th:value="${foodVo.food.fseq}"/>
 					<tr>
-						<img class="foodImg" src="/assets/images/chicken.png" th:if="${foodVo.food.img == null}">
+						<img class="foodImg" src="/assets/images/cooker.png" th:if="${foodVo.food.img == null}">
 						<img class="foodImgR" th:src="@{/assets/foodimages/} + ${foodVo.food.img}" th:if="${foodVo.food.img != null}">
 					</tr>
 		            <tr><span class="food-name" th:text="${foodVo.food.name}"></span>
@@ -140,7 +140,7 @@
 				<block th:each="foodVo, iterStat : ${foodRecommendVo2.foodRecommendList}" th:if="${foodRecommendVo2.index == iterStat.count}">
 					<input type="hidden" id="fseq2" name="fseq2" th:value="${foodVo.food.fseq}"/>
 					<tr>
-						<img class="foodImg" src="/assets/images/rice.png" th:if="${foodVo.food.img == null}">
+						<img class="foodImg" src="/assets/images/food.png" th:if="${foodVo.food.img == null}">
 						<img class="foodImgR" th:src="@{/assets/foodimages/} + ${foodVo.food.img}" th:if="${foodVo.food.img != null}">
 					</tr>
 		            <tr><span class="food-name" th:text="${foodVo.food.name}"></span>

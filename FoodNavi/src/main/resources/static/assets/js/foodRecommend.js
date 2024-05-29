@@ -177,9 +177,9 @@ function reloadSection() {
 					html += "<tr><img class=\"foodImgR\" src=\"/assets/foodimages/"+food_img+"\"></tr>";
 				} else {
 					if(section_num == 1) {
-						html += "<tr><img class=\"foodImg\" src=\"/assets/images/chicken.png\"></tr>";
+						html += "<tr><img class=\"foodImg\" src=\"/assets/images/cooker.png\"></tr>";
 					} else if(section_num == 2) {
-						html += "<tr><img class=\"foodImg\" src=\"/assets/images/rice.png\"></tr>";
+						html += "<tr><img class=\"foodImg\" src=\"/assets/images/food.png\"></tr>";
 					} else {
 						html += "<tr><img class=\"foodImg\" src=\"/assets/images/snack.png\"></tr>";
 					}
