@@ -66,7 +66,7 @@
 					<input type="hidden" id="fseq1" name="fseq1" th:value="${foodVo.food.fseq}"/>
 					<tr>
 						<img class="foodImg" src="/assets/images/chicken.png" th:if="${foodVo.food.img == null}">
-						<img class="foodImg" th:src="@{/assets/foodimages/} + ${foodVo.food.img}" th:if="${foodVo.food.img != null}">
+						<img class="foodImgR" th:src="@{/assets/foodimages/} + ${foodVo.food.img}" th:if="${foodVo.food.img != null}">
 					</tr>
 		            <tr><span class="food-name" th:text="${foodVo.food.name}"></span>
 		            	<!-- r1 : 첫 번째 리스트 상세보기 -->
@@ -141,7 +141,7 @@
 					<input type="hidden" id="fseq2" name="fseq2" th:value="${foodVo.food.fseq}"/>
 					<tr>
 						<img class="foodImg" src="/assets/images/rice.png" th:if="${foodVo.food.img == null}">
-						<img class="foodImg" th:src="@{/assets/foodimages/} + ${foodVo.food.img}" th:if="${foodVo.food.img != null}">
+						<img class="foodImgR" th:src="@{/assets/foodimages/} + ${foodVo.food.img}" th:if="${foodVo.food.img != null}">
 					</tr>
 		            <tr><span class="food-name" th:text="${foodVo.food.name}"></span>
 		            	<!-- r2 : 두 번째 리스트 상세보기 -->
@@ -215,7 +215,7 @@
 				<block th:each="foodVo, iterStat : ${foodRecommendVo3.foodRecommendList}" th:if="${foodRecommendVo3.index == iterStat.count}">
 					<tr>
 						<img class="foodImg" src="/assets/images/snack.png" th:if="${foodVo.food.img == null}">
-						<img class="foodImg" th:src="@{/assets/foodimages/} + ${foodVo.food.img}" th:if="${foodVo.food.img != null}">
+						<img class="foodImgR" th:src="@{/assets/foodimages/} + ${foodVo.food.img}" th:if="${foodVo.food.img != null}">
 					</tr>
 					<input type="hidden" id="fseq3" name="fseq3" th:value="${foodVo.food.fseq}"/>
 		            <tr><span class="food-name" th:text="${foodVo.food.name}"></span>

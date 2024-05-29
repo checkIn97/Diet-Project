@@ -174,7 +174,7 @@ function reloadSection() {
 	        	var html = "";
 	        	html += "<table class=\"food-info\">";
 				if(food_img) {
-					html += "<tr><img class=\"foodImg\" src=\"/assets/foodimages/"+food_img+"\"></tr>";
+					html += "<tr><img class=\"foodImgR\" src=\"/assets/foodimages/"+food_img+"\"></tr>";
 				} else {
 					if(section_num == 1) {
 						html += "<tr><img class=\"foodImg\" src=\"/assets/images/chicken.png\"></tr>";
