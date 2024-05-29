@@ -14,7 +14,7 @@
         <div class="food-detail-Image">
             <div>
                 <img class="foodImg" src="/assets/images/cooker.png" th:if="${foodVo.food.img == null}">
-                <img class="foodImgR" th:src="@{/assets/foodimages/} + ${foodVo.food.img}" th:if="${foodVo.food.img != null}">
+                <img class="foodImgDe" th:src="@{/assets/foodimages/} + ${foodVo.food.img}" th:if="${foodVo.food.img != null}">
             </div>
             <div class="food-detail-item-large">
                 <span class="food-detail-title">[[${foodVo.food.name}]]</span>

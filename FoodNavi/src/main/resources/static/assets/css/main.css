@@ -1939,7 +1939,7 @@ button.searchButton {
 }
 
 .food-detail-Image img {
-    width: 300px;
+    width: 500px;
     height: auto;
 }
 
@@ -2132,6 +2132,13 @@ button.searchButton {
 .section .foodImgR {
     display: block;
     width: 350px; /* 원하는 너비로 설정 */
+    object-fit: cover; /* 이미지의 비율을 유지하면서 적절하게 맞춤 */
+    margin: auto auto 20px;
+}
+
+.foodImgDe {
+    display: block;
+    width: 500px; /* 원하는 너비로 설정 */
     object-fit: cover; /* 이미지의 비율을 유지하면서 적절하게 맞춤 */
     margin: auto auto 20px;
 }
