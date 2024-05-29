@@ -61,7 +61,7 @@
         </div>
 
         <input type="hidden" name="fseq" th:value="${foodVo.food.fseq}">
-        <input type="submit" value="수정하기">
+        <input type="submit" class="adminFoodButton" value="수정하기">
     </form>
     <a th:href="@{admin_food_delete(fseq=${foodVo.food.fseq})}">
         <button>삭제하기</button>
