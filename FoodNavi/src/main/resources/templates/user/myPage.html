@@ -104,7 +104,7 @@
                         </td>
                     </tr>
                 </table>
-                <button type="button" id="loadMore">좋아요 더보기</button>
+                <button th:unless="${foodVoList.size() == 0}" type="button" id="loadMore">좋아요 더보기</button>
             </div>
 
             <div class="field">
