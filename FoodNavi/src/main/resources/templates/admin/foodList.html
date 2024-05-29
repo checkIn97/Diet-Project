@@ -26,8 +26,8 @@
             <th:block th:unless="${foodScanVo.pageInfo.totalPages == 0}">
                 <th:block th:each="foodVo : ${foodList}">
                     <tr class="board_list">
-                        <td><a th:href="@{admin_food_detail(fseq=${foodVo.food.fseq})}" th:if="${foodVo.food.img == null}">없음</a>
-                            <a th:href="@{admin_food_detail(fseq=${foodVo.food.fseq})}" th:if="${foodVo.food.img != null}"><img th:src="${foodVo.food.img}"></a></td>
+                        <td><img class="img" src="/assets/images/nonImg.png" th:if="${foodVo.food.img == null}">
+                            <img class="img" src="/assets/images/img.png" th:if="${foodVo.food.img != null}">
                         <td><a th:href="@{admin_food_detail(fseq=${foodVo.food.fseq})}" th:text="${foodVo.food.name}" th:style="${foodVo.food.useyn == 'n'} ? 'text-decoration: line-through;' : 'text-decoration: none;'"></a></td>
                         <td>[[${foodVo.kcal}]]kcal</td>
                     </tr>

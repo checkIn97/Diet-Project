@@ -1695,6 +1695,22 @@ input[type=range]::-moz-range-thumb {
     margin: 20px; /* 모든 방향으로 10px의 마진을 적용 */
 }
 
+.adminFoodButton {
+    margin-top: 70px;
+}
+
+.adminFoodDetailBox {
+    width: 60%;
+    background: rgba(35, 37, 45, 0.85);
+    padding: 3em;
+    border-radius: 10px;
+}
+
+.img {
+    width: 40px;
+    object-fit: cover;
+}
+
 #dietRecommendationButton {
     font-size: 25px; /* 글씨 크기를 20px로 설정 */
     font-weight: bold;
