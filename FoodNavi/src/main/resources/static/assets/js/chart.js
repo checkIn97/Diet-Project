@@ -1,27 +1,38 @@
-var carbohydrateChart = document.getElementById('carbohydrateChart').querySelector('.chart-bar');
-var proteinChart = document.getElementById('proteinChart').querySelector('.chart-bar');
-var fatChart = document.getElementById('fatChart').querySelector('.chart-bar');
-var kcalChart = document.getElementById('kcalChart').querySelector('.chart-bar');
+$(document).ready(function() {
+	$.ajax({
+	    type: 'GET',
+	    url: '/load_userVo',
+	    dataType: 'json',
+	    success: function (data) {
+	        var carbohydrateChart = document.getElementById('carbohydrateChart').querySelector('.chart-bar');
+			var proteinChart = document.getElementById('proteinChart').querySelector('.chart-bar');
+			var fatChart = document.getElementById('fatChart').querySelector('.chart-bar');
+			var kcalChart = document.getElementById('kcalChart').querySelector('.chart-bar');
+			
+			// 각 차트의 값을 0에서 100 사이의 값으로 설정합니다.
+			var carbohydrateValue = data.carbToday > data.properCarb ? 100 : data.carbToday*100/data.properCarb;
+			var proteinValue = data.prtToday > data.properPrt ? 100 : data.prtToday*100/data.properPrt;
+			var fatValue = data.fatToday > data.properFat ? 100 : data.fatToday*100/data.properFat;
+			var kcalValue = data.kcalToday > data.EER ? 100 : data.kcalToday*100/data.EER;
+			
+			// 각 차트의 현재 값을 나타내는 바의 너비를 변경하여 차트의 값을 표시합니다.
+			carbohydrateChart.style.width = carbohydrateValue + '%';
+			proteinChart.style.width = proteinValue + '%';
+			fatChart.style.width = fatValue + '%';
+			kcalChart.style.width = kcalValue + '%';
+			
+			// 차트의 애니메이션을 시작합니다.
+		    animateChart("carbohydrateChart", data.carbToday > data.properCarb ? data.properCarb : data.carbToday, data.properCarb);
+		    animateChart("proteinChart", data.prtToday > data.properPrt ? data.properPrt : data.prtToday, data.properPrt);
+		    animateChart("fatChart", data.fatToday > data.properFat ? data.properFat : data.fatToday, data.properFat);
+		    animateChart("kcalChart", data.kcalToday > data.EER ? data.EER : data.kcalToday, data.EER);
+	    },
+	    error: function () {
+			alert("차트오류");
+	    }
+	});	
+});
 
-// 각 차트의 값을 0에서 100 사이의 값으로 설정합니다.
-var carbohydrateValue = 50;
-var proteinValue = 100;
-var fatValue = 30;
-var kcalValue = 70;
-
-// 각 차트의 현재 값을 나타내는 바의 너비를 변경하여 차트의 값을 표시합니다.
-carbohydrateChart.style.width = carbohydrateValue + '%';
-proteinChart.style.width = proteinValue + '%';
-fatChart.style.width = fatValue + '%';
-kcalChart.style.width = kcalValue + '%';
-
-// 차트의 애니메이션을 시작합니다.
-window.onload = function() {
-    animateChart("carbohydrateChart", 200, 400);
-    animateChart("proteinChart", 700, 700);
-    animateChart("fatChart", 30, 100);
-    animateChart("kcalChart", 1430, 2100);
-}
 
 function animateChart(chartId, currentValue, maxValue) {
     var chart = document.getElementById(chartId);

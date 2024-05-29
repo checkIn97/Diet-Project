@@ -3,10 +3,33 @@
 <th:block th:insert="~{/admin/include/headerAdmin}"></th:block>
 
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
+<script src="https://code.jquery.com/jquery-3.6.3.min.js"
+		integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU="
+		crossorigin="anonymous"></script>
+<style>
+	.like-button-container {
+		display: flex;
+		justify-content: center;
+		margin-top: 20px;
+		margin-bottom: 10px;
+	}
+	.like-button {
+		font-size: 21px;
+		align-items: center;
+		cursor: pointer;
+		color: #ffffff;
+		mask-size: auto;
+	}
+	.like-button:hover {
+		color: #909097;
+	}
+</style>
 <title>게시글 상세보기</title>
 
 <h1>
-	<a href="admin_main">FoodNavi</a>
+	<a href="/admin_main"><img src="/assets/images/foodNaviFont.png" alt="foodNaviFont" class="foodNaviFont"></a>
 </h1>
 
 <article class="box">
@@ -28,25 +51,20 @@
 							th:text="${#dates.format(board.createdAt, 'yyyy-MM-dd HH:mm:ss')}">날짜시간</span>
 					</div>
 					<div>
-						조회수: <span th:text="${board.cnt}+1">조회수</span>
+						조회수: <span th:text="${board.cnt}">조회수</span>
 					</div>
 
 				</div>
 
-				<img class="thumbnail"
-					th:if="${board.img}"
-					th:src="@{/uploadImages/{fileName}(fileName=${board.img})}"
-					alt="Image">
-
 				<p class="card-text" th:utext="${board.content}">내용</p>
 
 				<div class="btn-group">
-					<form action="admin_board_delete" method="get">
-						<button type="submit" class="primary">삭제하기</button>
+					<form th:action="@{'/admin_board_delete/' + ${board.bseq}}" method="post">
+						<button type="submit" class="button" onclick="return confirmDelete()">삭제하기</button>
 					</form>
 
 					<!-- 목록으로 돌아가기 -->
-					<a th:href="@{admin_board_list(page=${pageInfo.number +1})}" class="button">목록으로 돌아가기</a>
+					<a th:href="@{/admin_board_list(page=${pageInfo.number +1})}" class="button">목록으로 돌아가기</a>
 				</div>
 			</div>
 		</div>
@@ -54,5 +72,13 @@
 
 	<th:block th:insert="~{/admin/boardComments}"></th:block>
 </article>
+<script>
+	function confirmDelete() {
+		var result = confirm("게시글을 삭제하시겠습니까?");
+		return result;
+	}
+
+
+</script>
 
 <th:block th:insert="~{/includes/footer}"></th:block>

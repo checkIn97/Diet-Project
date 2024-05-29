@@ -1,16 +1,18 @@
 package com.demo.service;
 
-import org.springframework.data.domain.Page;
+import java.util.List;
 
 import com.demo.domain.Food;
 import com.demo.domain.Users;
-import com.demo.dto.FoodScanVo;
+import com.demo.dto.FoodRecommendVo;
 
 public interface FoodScanService {
 	
 	public Food getFoodByFseq(int fseq);
 	
-	public Page<Food> getFoodScanList(Users user, FoodScanVo foodScanVo, int page, int size);
+	public Food getFoodByName(String name);
 	
-	public Page<Food> getFoodRecommendList(Users user, FoodScanVo foodScanVo, int page, int size);
+	public List<Food> getFoodScanList(Users user, FoodRecommendVo foodRecommendVo);
+
+	public List<Food> getFoodSearchList();
 }

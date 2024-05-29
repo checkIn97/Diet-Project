@@ -49,6 +49,7 @@ public class Exercise {
 	
 	private int time;
 	
-	
-	
+	@ManyToOne
+	@JoinColumn(name="eoseq", nullable=false)
+	private ExerciseOption exerciseOption;
 }

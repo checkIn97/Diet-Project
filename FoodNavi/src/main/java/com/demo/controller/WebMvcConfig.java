@@ -12,6 +12,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/uploadImages/**")
-                .addResourceLocations("file:///C:/Diet-Project/FoodNavi/src/main/resources/static/uploadImages/");
+                .addResourceLocations("file:/uploadImages/");
+                                        //본인 프로젝트내의 경로
     }
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" lang="ko">
 <head>
     <meta charset="UTF-8">
     <title>FoodNavi</title>
@@ -11,7 +11,7 @@
 <body>
 <th:block th:insert="~{/includes/headerMain}"></th:block>
 
-<h1><a href="/mainpage">FoodNavi</a></h1>
+<h1><a href="/mainpage"><img src="/assets/images/foodNaviFont.png" alt="foodNaviFont" class="foodNaviFont"></a></h1>
 
 <article id="box">
     <h2>커뮤니티 게시글 작성</h2>
@@ -28,6 +28,10 @@
         <button type="button" onclick="window.location.href='/board_list'" class="button">돌아가기</button>
     </form>
 </article>
+
+<div class="fixed-bottom">
+    <th:block th:insert="~{includes/toggleChat}"></th:block>
+</div>
 
 <th:block th:insert="~{includes/footer}"></th:block>
 

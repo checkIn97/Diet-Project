@@ -137,7 +137,7 @@ html {
 
 body, input, select, textarea {
     color: #ffffff;
-    font-family: "Source Sans Pro", sans-serif;
+    /*font-family: "Source Sans Pro", sans-serif;*/
     font-weight: 300;
     font-size: 1rem;
     line-height: 1.65;
@@ -382,6 +382,7 @@ input[type="text"],
 input[type="password"],
 input[type="email"],
 input[type="tel"],
+input[type="date"],
 select,
 textarea {
     -moz-appearance: none;
@@ -407,6 +408,7 @@ input[type="text"]:invalid,
 input[type="password"]:invalid,
 input[type="email"]:invalid,
 input[type="tel"]:invalid,
+input[type="date"]:invalid,
 select:invalid,
 textarea:invalid {
     box-shadow: none;
@@ -416,6 +418,7 @@ input[type="text"]:focus,
 input[type="password"]:focus,
 input[type="email"]:focus,
 input[type="tel"]:focus,
+input[type="date"]:focus,
 select:focus,
 textarea:focus {
     background: rgba(255, 255, 255, 0.075);
@@ -450,8 +453,17 @@ select::-ms-expand {
 input[type="text"],
 input[type="password"],
 input[type="email"],
+input[type="date"],
 select {
     height: 2.75rem;
+}
+
+input[type="text"]:hover {
+    background-color: rgba(255, 255, 255, 0.075)
+}
+
+input[type="number"]:hover {
+    background-color: rgba(255, 255, 255, 0.075)
 }
 
 textarea {
@@ -487,7 +499,7 @@ textarea {
 /* Box */
 
 #box {
-    width: auto;
+    width: 80%;
     background: rgba(35, 37, 45, 0.85);
     padding: 4em;
     border-radius: 10px;
@@ -498,6 +510,7 @@ textarea {
     border-radius: 4px;
     /*border: solid 1px #ffffff;*/
     margin-bottom: 2rem;
+
 }
 
 .box > :last-child,
@@ -511,6 +524,7 @@ textarea {
     border-radius: 0;
     padding: 0;
 }
+
 .box {
     width: auto;
     background: rgba(35, 37, 45, 0.85);
@@ -959,6 +973,7 @@ input[type="button"]:hover,
 button:hover,
 .button:hover {
     background-color: rgba(255, 255, 255, 0.075);
+    transform: scale(1.1);
 }
 
 input[type="submit"]:active,
@@ -1003,6 +1018,11 @@ button.primary,
     background-color: #ffffff;
     color: #1b1f22 !important;
     font-weight: 600;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.primary:hover {
+    transform: scale(1.1);
 }
 
 input[type="submit"].disabled, input[type="submit"]:disabled,
@@ -1144,7 +1164,7 @@ button {
     align-items: center;
 }
 
-.foodLogo{
+.foodLogo {
     transform: translateX(-2px);
 }
 
@@ -1162,8 +1182,8 @@ div.logo {
 }
 
 #header .logo {
-    width: 5.5rem;
-    height: 5.5rem;
+    width: 15rem;
+    height: 15rem;
     line-height: 5.5rem;
     border: solid 1px #ffffff;
     border-radius: 100%;
@@ -1675,6 +1695,22 @@ input[type=range]::-moz-range-thumb {
     margin: 20px; /* 모든 방향으로 10px의 마진을 적용 */
 }
 
+.adminFoodButton {
+    margin-top: 70px;
+}
+
+.adminFoodDetailBox {
+    width: 60%;
+    background: rgba(35, 37, 45, 0.85);
+    padding: 3em;
+    border-radius: 10px;
+}
+
+.img {
+    width: 40px;
+    object-fit: cover;
+}
+
 #dietRecommendationButton {
     font-size: 25px; /* 글씨 크기를 20px로 설정 */
     font-weight: bold;
@@ -1696,12 +1732,12 @@ input[type=range]::-moz-range-thumb {
 
 #toggleButton {
     display: none;
-    /*position: fixed;*/
+    position: relative;
     right: 0;
     bottom: 0;
 }
 
-#toggleButton.box{
+#toggleButton.box {
     margin-top: 20px;
 }
 
@@ -1710,8 +1746,7 @@ input[type=range]::-moz-range-thumb {
 }
 
 
-
-input[type="number"]{
+input[type="number"] {
     background: transparent;
     border: 1px solid #ffffff;
     border-radius: 4px;
@@ -1725,11 +1760,16 @@ input[type="number"]{
 }
 
 .search {
-    width: 20%;
+    width: 22%;
+    margin-right: 10px;
 }
 
 .searchWord {
     width: 70%;
+}
+
+button.searchButton {
+    margin-left: 10px;
 }
 
 /*탄단지 차트*/
@@ -1760,15 +1800,15 @@ input[type="number"]{
 }
 
 #carbohydrateChart .chart-bar {
-    background-color: #97c9e1; /* 탄수화물 차트를 빨간색으로 설정 */
+    background-color: #97c9e1;
 }
 
 #proteinChart .chart-bar {
-    background-color: #87bba2; /* 단백질 차트를 초록색으로 설정 */
+    background-color: #87bba2;
 }
 
 #fatChart .chart-bar {
-    background-color: #c9e4ca; /* 지방 차트를 파란색으로 설정 */
+    background-color: #c9e4ca;
 }
 
 
@@ -1829,4 +1869,443 @@ input[type="number"]{
     display: inline-block;
     padding: 0;
     margin-top: 20px;
+}
+
+#commentsDel {
+    float: right;
+}
+
+.popularPosts {
+    font-weight: bold;
+}
+
+.nextContent {
+    transition: all 0.3s ease; /* 부드러운 전환 */
+    font-weight: normal; /* 기본 글꼴 두께 */
+    font-size: 1em; /* 기본 글꼴 크기 */
+    margin-bottom: 0; /* 기본 마진 */
+}
+
+.nextContent:hover {
+    transform: translateX(10px); /* 오른쪽으로 이동 */
+    font-weight: bold; /* 굵은 글꼴 */
+    font-size: 1.2em; /* 글꼴 크기 증가 */
+    margin-bottom: 10px; /* 하단 마진 추가 */
+}
+
+.popularPosts:hover {
+    transform: scale(1.1);
+}
+
+.board_list:hover {
+    transform: scale(1.1);
+}
+
+.foodDetailContainer {
+    width: auto;
+}
+
+.food-detail-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.food-detail-row {
+    display: flex;
+    width: 100%;
+}
+
+.food-detail-item {
+    flex: 1;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.food-detail-title {
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.food-detail-value {
+    /*margin-left: 10px;*/
+}
+
+.food-detail-Image {
+    display: flex;
+    flex-direction: column;
+    justify-content: right;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.food-detail-Image img {
+    width: 300px;
+    height: auto;
+}
+
+.food-detail-item-large {
+    font-size: 1.5em; /* 원하는 크기로 조정 */
+}
+
+/* chatToggleButton*/
+
+#chatToggleButtonControl {
+    width: 10%;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+#chatToggleButtonControlImg {
+    width: 50px;
+    display: flex;
+
+}
+
+#leftFixed {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+}
+
+.chatBox {
+    width: 30%;
+    height: 100%;
+    background: rgba(35, 37, 45, 0.85);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.list-group ul li {
+    display: none;
+}
+
+
+#chatInput {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: black;
+}
+
+#chatClose {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+
+.chatBotConnection {
+    margin-top: 10px;
+}
+
+#chatClose {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+/*myChange*/
+
+#userKg {
+    width: 300px;
+}
+
+.user-container {
+    display: flex;
+    align-items: center;
+}
+
+/*foodDay*/
+
+.kcalNum {
+    font-size: 2em;
+    font-weight: bold;
+}
+
+.foodContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 20px;
+    width: 100%;
+    height: 100%;
+}
+
+.foodContainer .box {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    background: rgba(238, 238, 238, 0.17);
+    height: 300px;
+}
+
+
+.foodContainer .btn:hover {
+    background: none;
+}
+
+.foodContainer .box:hover {
+    background: rgba(238, 238, 238, 0.3);
+    /*transform: scale(1.05);*/
+}
+
+.foodContainer .foodIcon {
+    width: 100px;
+
+}
+
+.foodContainer .box {
+    position: relative;
+    /* 기존 스타일 유지 */
+}
+
+.foodContainer .box h2 {
+    position: absolute;
+    top: 15px;
+    left: 20px;
+}
+
+.foodContainer .box .foodDescription {
+    position: absolute;
+    bottom: 15px;
+}
+
+.foodContainer .kalIcon {
+    width: 20px;
+}
+
+/*food Recommend*/
+
+.foodRecommend {
+    display: flex;
+}
+
+.foodRecommend .section {
+    padding: 20px;
+    margin: 20px;
+    box-sizing: border-box;
+    width: auto;
+    height: auto;
+    background: rgba(35, 37, 45, 0.85);
+    border-radius: 10px;
+}
+
+.foodRecommend .section:hover {
+    scale: 1.1;
+}
+
+
+.food-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.foodRecommend .section h2 {
+    margin-bottom: 20px; /* 원하는 공간만큼 설정 */
+}
+
+.food-info p {
+    margin: 0 0 10px;
+}
+
+.food-detail {
+    font-size: 1.2em; /* 텍스트 크기 */
+    margin-bottom: 10px; /* 아래 여백 */
+}
+
+.food-detail span {
+    font-weight: bold; /* 볼드체 */
+}
+
+.section .foodImg {
+    display: block;
+    width: 150px; /* 원하는 너비로 설정 */
+    object-fit: cover; /* 이미지의 비율을 유지하면서 적절하게 맞춤 */
+    margin: auto auto 20px;
+}
+
+.section .foodImgR {
+    display: block;
+    width: 350px; /* 원하는 너비로 설정 */
+    object-fit: cover; /* 이미지의 비율을 유지하면서 적절하게 맞춤 */
+    margin: auto auto 20px;
+}
+
+.star {
+    width: 18px;
+    object-fit: cover;
+}
+
+.food-info td {
+    width: 150px; /* 원하는 너비로 설정 */
+}
+
+.food-info td span {
+    width: 200px; /* 원하는 너비로 설정 */
+}
+
+.foodDetailGo {
+    width: 20px;
+    height: auto;
+    margin-left: 10px;
+}
+
+.food-name {
+    font-size: 1.7em; /* 원하는 크기로 조정 */
+    font-weight: bold; /* 굵은 글꼴 */
+    white-space: nowrap; /*줄바꿈 금지*/
+    margin-top: 10px; /* 위쪽 여백 */
+}
+
+.section {
+    position: relative; /* 이미지를 중앙에 배치하기 위해 필요 */
+}
+
+.section .checkmark {
+    display: none; /* 기본적으로 이미지를 숨김 */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100px; /* 이미지 크기를 조정 */
+    height: auto;
+}
+
+.pmIcon {
+    width: 20px;
+    object-fit: cover;
+}
+
+.quantity {
+    display: flex;
+    flex-direction: row;
+}
+
+.quantity button {
+    margin: 8px;
+    width: 19px;
+    height: 25px;
+    padding: 0;
+    box-shadow: none;
+}
+
+.quantity-input {
+    width: 50px;
+    text-align: center;
+}
+
+#foodRecord {
+    margin-top: 50px;
+    width: 60%;
+    font-size: 1.1em;
+}
+
+/*화살표*/
+
+.arrow .arrowL {
+    display: none;
+    position: absolute;
+    left: 0; /* 왼쪽에 배치 */
+    top: 50%; /* 상위 요소의 중앙에 배치 */
+    transform: translateY(-50%); /* 자신의 높이의 절반만큼 위로 이동하여 정확히 중앙에 배치 */
+    width: 70px;
+    height: auto;
+    opacity: 0.5; /* 투명도 적용 */
+    padding-top: 50px;
+    padding-bottom: 50px;
+    padding-right: 40px;
+}
+
+.arrow .arrowR {
+    display: none;
+    position: absolute;
+    right: 0; /* 오른쪽에 배치 */
+    top: 50%; /* 상위 요소의 중앙에 배치 */
+    transform: translateY(-50%); /* 자신의 높이의 절반만큼 위로 이동하여 정확히 중앙에 배치 */
+    width: 70px;
+    height: auto;
+    opacity: 0.5; /* 투명도 적용 */
+    padding-top: 50px;
+    padding-bottom: 50px;
+    padding-left: 40px;
+}
+
+.arrow .arrowL:hover {
+    opacity: 1; /* 마우스 오버 시 투명도 1로 설정 */
+}
+
+.arrow .arrowR:hover {
+    opacity: 1; /* 마우스 오버 시 투명도 1로 설정 */
+}
+
+#section1_1 {
+    display: none;
+}
+
+#section1, #section1_1 {
+    transition: all 0.5s ease;
+}
+
+/*foodDetail*/
+
+.foodLike {
+    width: 20px;
+}
+
+.foodList {
+    scale: 1.1;
+}
+
+
+#rcdCount {
+    opacity: 0.5;
+}
+
+/*mainImg*/
+
+.mainLike {
+    width: 40px;
+}
+
+.mainWarning {
+    width: 40px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+}
+
+.chart-container .mainWarning {
+    width: 60px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+}
+
+@keyframes blinking {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.mainWarning {
+    animation: blinking 2s infinite;
+}
+
+.foodNaviFont {
+    width: 300px;
+}
+
+#logout:hover {
+    transform: none!important;
 }

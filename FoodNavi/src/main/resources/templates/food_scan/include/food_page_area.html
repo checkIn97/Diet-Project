@@ -27,7 +27,7 @@
 	<ul class="pagination" th:with="start=${T(java.lang.Math).floor(pageInfo.number/foodScanVo.pageMaxDisplay)*foodScanVo.pageMaxDisplay + 1},
 														   last=(${start + foodScanVo.pageMaxDisplay-1 < pageInfo.totalPages ? start + foodScanVo.pageMaxDisplay-1 : pageInfo.totalPages})">
   		<th:block th:with="
-  			next_url=${foodScanVo.recommend} ? 'food_recommend' : 'food_scan',
+  			next_url=${foodScanVo.recommend} ? 'food_scan' : 'food_scan',
   			firstPage=@{${next_url}(page=1)},
   			previous=@{${next_url}(page=${pageInfo.number})},
   			next=@{${next_url}(page=${pageInfo.number + 2})},

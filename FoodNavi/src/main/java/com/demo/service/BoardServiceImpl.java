@@ -1,6 +1,5 @@
 package com.demo.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,17 +32,6 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public List<Board> getBoardList(String userid) {
-		return null;
-	}
-
-	@Override
-	public Page<Board> getListAllBoard(Pageable pageable) {
-	    return boardRepo.findAllByOrderByCreatedAtDesc(pageable);
-	}
-
-
-	@Override
 	public void editBoard(Board vo) {
 		boardRepo.save(vo);
 	}
@@ -60,29 +48,63 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public Page<Board> findBoardList(BoardScanVo boardScanVo, int page, int size) {
-		Pageable pageable = null;
-		if (boardScanVo.getSortDirection().equals("ASC")) {
-			pageable = PageRequest.of(page-1, size, Direction.ASC, boardScanVo.getSortBy());
-		} else {
-			pageable = PageRequest.of(page-1, size, Direction.DESC, boardScanVo.getSortBy());
-		}
-		
-		String[][] searchType = boardScanVo.getSearchType();
-		
-		String searchField = boardScanVo.getSearchField();
-		String searchWord = boardScanVo.getSearchWord();
-		List<String> searchParams = new ArrayList<>();
-				
-		for (String[] field : searchType) {
-			if (field[0].equals(searchField)) {
-				searchParams.add(searchWord);
-			} else {
-				searchParams.add("");
-			}
-		}
-		
-		return boardRepo.findBoardList(searchParams.get(0), searchParams.get(1), pageable);
+	public List<Board> getBestBoardList() {
+		return boardRepo.findBestList();
+	}
 
-}
+	@Override
+	public List<Board> getAuthorBoardList(int useq) {
+		return boardRepo.findAuthorList(useq);
+	}
+
+	@Override
+	public void likePost(int bseq) {
+		Board board = boardRepo.findById(bseq).orElseThrow(() -> new RuntimeException("Board not found"));
+		board.setLikes(board.getLikes() + 1);
+		boardRepo.save(board);
+	}
+
+	@Override
+	public void unlikePost(int bseq) {
+		Board board = boardRepo.findById(bseq).orElseThrow(() -> new RuntimeException("Board not found"));
+		board.setLikes(board.getLikes() - 1);
+		boardRepo.save(board);
+	}
+
+
+	@Override
+	public Page<Board> findBoardList(BoardScanVo boardScanVo, int page, int size) {
+	    Pageable pageable = null;
+	    if (boardScanVo.getSortDirection().equals("ASC")) {
+	        pageable = PageRequest.of(page - 1, size, Direction.ASC, boardScanVo.getSortBy());
+	    } else {
+	        pageable = PageRequest.of(page - 1, size, Direction.DESC, boardScanVo.getSortBy());
+	    }
+
+	    String searchField = boardScanVo.getSearchField();
+	    String searchWord = boardScanVo.getSearchWord();
+
+	    Page<Board> resultPage = null;
+	    switch (searchField) {
+	        case "title":
+	            resultPage = boardRepo.findByTitleContaining(searchWord, pageable);
+	            break;
+	        case "content":
+	            resultPage = boardRepo.findByContentContaining(searchWord, pageable);
+	            break;
+	        case "writer":
+	            resultPage = boardRepo.findByUserUserid(searchWord, pageable);
+	            break;
+	        case "titleContent":
+	            resultPage = boardRepo.findBoardList(searchWord, searchWord, pageable);
+	            break;
+	        default:
+	            resultPage = boardRepo.findAllByOrderByCreatedAtDesc(pageable);
+	            break;
+	    }
+
+
+	    return resultPage;
+	}
+
 }

@@ -1,16 +1,15 @@
 package com.demo.controller;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.demo.config.PathConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
@@ -20,7 +19,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
@@ -31,24 +32,32 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.demo.domain.Admin;
 import com.demo.domain.Board;
 import com.demo.domain.Comments;
+import com.demo.domain.ExerciseOption;
 import com.demo.domain.Food;
 import com.demo.domain.FoodDetail;
 import com.demo.domain.FoodIngredient;
+import com.demo.domain.Ingredient;
 import com.demo.domain.Users;
 import com.demo.dto.BoardScanVo;
-import com.demo.dto.FoodScanVo;
+import com.demo.dto.FoodRecommendVo;
+import com.demo.dto.FoodVo;
 import com.demo.dto.UserScanVo;
-import com.demo.service.AdminBoardCommentsService;
-import com.demo.service.AdminBoardService;
+import com.demo.persistence.ExerciseOptionRepository;
 import com.demo.service.AdminFoodDetailService;
 import com.demo.service.AdminFoodService;
 import com.demo.service.AdminService;
 import com.demo.service.AdminUsersService;
+import com.demo.service.BoardCommentsService;
+import com.demo.service.BoardService;
+import com.demo.service.DataInOutService;
+import com.demo.service.ExerciseOptionService;
 import com.demo.service.FoodIngredientService;
 import com.demo.service.IngredientService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import lombok.Getter;
+import lombok.Setter;
 
 @SessionAttributes("adminUser")
 @Controller
@@ -63,17 +72,19 @@ public class AdminController {
 	@Autowired
 	private AdminFoodService foodService;
 	@Autowired
-	private AdminBoardService boardService;
+	private BoardService boardService;
 	@Autowired
-	private AdminBoardCommentsService boardCommentsService;
+	private BoardCommentsService boardCommentsService;
 	@Autowired
 	private IngredientService ingredientService;
 	@Autowired
 	private FoodIngredientService foodIngredientService;
-
-
-	// @Value("${com.demo.upload.path}")
-	// private String uploadPath;
+	@Autowired
+	private ExerciseOptionRepository exerciseOptionRepository;
+	@Autowired
+	private ExerciseOptionService exerciseOptionService;
+	@Autowired
+	private DataInOutService dataInOutService;
 
 	@GetMapping("/admin_login_form")
 	public String admin_login_form() {
@@ -130,7 +141,7 @@ public class AdminController {
 	@GetMapping("admin_user_list")
 	public String userList(Model model, HttpServletRequest request,
 						   @RequestParam(value = "page", defaultValue = "0") int page,
-						   @RequestParam(value = "size", defaultValue = "20") int size,
+						   @RequestParam(value = "size", defaultValue = "8") int size,
 						   @RequestParam(value = "sortBy", defaultValue = "useq") String sortBy,
 						   @RequestParam(value = "sortDirection", defaultValue = "ASC") String sortDirection,
 						   @RequestParam(value = "pageMaxDisplay", defaultValue = "5") int pageMaxDisplay,
@@ -190,18 +201,42 @@ public class AdminController {
 		model.addAttribute("pageInfo", userScanVo.getPageInfo());
 		return "admin/userDetail";
 	}
+	
+	@ResponseBody
+	@PostMapping("admin_user_able")
+	public Map<String, Integer> admin_user_able(HttpSession session, @RequestParam("useq") int useq) {
+		Map<String, Integer> result = new HashMap<>();
+		int status = -1;
+		// 세션에서 사용자 정보 가져오기
+		Admin admin = (Admin) session.getAttribute("adminUser");
+		// 세션에 로그인 정보가 없는 경우
+		if (admin != null) {
+			Users user = usersService.getUserByUseq(useq);
+			if (user.getUseyn().equals("y")) {
+				user.setUseyn("n");
+				status = 0;
+			} else {
+				user.setUseyn("y");
+				status = 1;
+			}
+			usersService.updateUser(user);
+		}
+		result.put("status", status);
+		
+		return result;
+	}
 
 	// 식품 리스트
 	// 1. mapping 과 return값 수정
 	// 2. 검색시 사용될 name 값 key 와 다를시 수정
-	@GetMapping("admin_food_list")
+	@GetMapping("/admin_food_list")
 	public String adminFoodList(Model model, @RequestParam(value = "page", defaultValue = "0") int page,
-								@RequestParam(value = "size", defaultValue = "20") int size,
+								@RequestParam(value = "size", defaultValue = "8") int size,
 								@RequestParam(value = "sortBy", defaultValue = "fseq") String sortBy,
 								@RequestParam(value = "sortDirection", defaultValue = "ASC") String sortDirection,
 								@RequestParam(value = "pageMaxDisplay", defaultValue = "5") int pageMaxDisplay,
 								@RequestParam(value = "searchField", defaultValue = "name") String searchField,
-								@RequestParam(value = "searchWord", defaultValue = "") String searchWord, FoodScanVo foodScanVo,
+								@RequestParam(value = "searchWord", defaultValue = "") String searchWord, FoodRecommendVo foodScanVo,
 								HttpSession session, HttpServletRequest request) {
 
 		// 세션에서 사용자 정보 가져오기
@@ -222,22 +257,33 @@ public class AdminController {
 			foodScanVo.setSortDirection(sortDirection);
 			foodScanVo.setPageMaxDisplay(pageMaxDisplay);
 		} else {
-			foodScanVo = (FoodScanVo) session.getAttribute("foodScanVo");
+			foodScanVo = (FoodRecommendVo) session.getAttribute("foodScanVo");
 		}
 		Page<Food> foodData = foodService.getFoodList(foodScanVo, page, size);
-		foodScanVo.setPageInfo(foodData);
+		List<Food> foodList = foodData.getContent();
+		Map<String, Integer> pageInfo = new HashMap<>();
+		pageInfo.put("number", page);
+		pageInfo.put("size", size);
+		pageInfo.put("totalPages", (foodList.size()+size-1)/size);
+		foodScanVo.setPageInfo(pageInfo);
 		foodScanVo.setFoodList(foodData.getContent());
 		session.setAttribute("foodScanVo", foodScanVo);
 		model.addAttribute("foodScanVo", foodScanVo);
-		model.addAttribute("foodList", foodScanVo.getFoodList());
-		model.addAttribute("pageInfo", foodScanVo.getPageInfo());
-
+		List<FoodVo> foodRecommendList = new ArrayList<>();
+		for (Food food : foodList) {
+			FoodVo foodVo = new FoodVo(food);
+			foodRecommendList.add(foodVo);
+		}
+		foodScanVo.setFoodRecommendList(foodRecommendList);
+		model.addAttribute("foodList", foodScanVo.getFoodRecommendList());
+		model.addAttribute("pageInfo", foodData);
 		return "admin/foodList";
 
 	}
 
+
 	// 식품정보 상세보기
-	@GetMapping("admin_food_Detail")
+	@GetMapping("admin_food_detail")
 	public String adminFoodInfo(Model model, @RequestParam(value = "fseq") int fseq, HttpSession session,
 								HttpServletRequest request) {
 
@@ -252,11 +298,35 @@ public class AdminController {
 		}
 
 		Food food = foodService.getFoodByFseq(fseq);
-		model.addAttribute("food", food);
-		FoodScanVo foodScanVo = (FoodScanVo) session.getAttribute("foodScanVo");
+		List<FoodIngredient> foodIngredients = foodIngredientService.getFoodIngredientListByFood(fseq);
+		model.addAttribute("foodIngredientsList", foodIngredients);
+		int minVeganValue = 5;
+		for (FoodIngredient fi : foodIngredients) {
+			if (fi.getIngredient().getVeganValue() < minVeganValue)
+				minVeganValue = fi.getIngredient().getVeganValue();
+		}
+		String vegan = "";
+		if (minVeganValue == 0) {
+			vegan = "해당 없음";
+		} else if (minVeganValue == 1) {
+			vegan = "폴로-페스코 가능";
+		} else if (minVeganValue == 2) {
+			vegan = "페스코 가능";
+		} else if (minVeganValue == 3) {
+			vegan = "락토-오보 가능";
+		} else if (minVeganValue == 4) {
+			vegan = "락토 가능";
+		} else {
+			vegan = "비건 가능";
+		}
+		FoodVo foodVo = new FoodVo(food);
+		model.addAttribute("vegan", vegan);
+		model.addAttribute("foodVo", foodVo);
+		FoodRecommendVo foodScanVo = (FoodRecommendVo) session.getAttribute("foodScanVo");
 		model.addAttribute("foodScanVo", foodScanVo);
 		model.addAttribute("foodList", foodScanVo.getFoodList());
 		model.addAttribute("pageInfo", foodScanVo.getPageInfo());
+
 		return "admin/foodDetail";
 	}
 
@@ -272,12 +342,10 @@ public class AdminController {
 	@PostMapping("admin_food_insert")
 	public String adminFoodWriteAction(RedirectAttributes re, HttpSession session, HttpServletRequest request,
 									   @RequestParam(value = "name") String name, @RequestParam(value = "img") MultipartFile uploadFile,
-									   @RequestParam(value = "kcal") float kcal, @RequestParam(value = "carb") float carb,
-									   @RequestParam(value = "prt") float prt, @RequestParam(value = "fat") float fat,
-									   @RequestParam(value = "healthyType") String healthyType,
-									   @RequestParam(value = "nationType") String nationType,
 									   @RequestParam(value = "ingredient") String[] ingredient,
-									   @RequestParam(value = "quantity") int [] quantity) {
+									   @RequestParam(value = "quantity") int [] quantity,
+									   @RequestParam(value = "foodType") String foodType,
+									   @RequestParam(value = "n") int n) {
 
 		// 세션에서 사용자 정보 가져오기
 		Admin admin = (Admin) session.getAttribute("adminUser");
@@ -286,9 +354,9 @@ public class AdminController {
 		if (admin == null) {
 			// 로그인 알림을 포함한 경고 메시지를 설정합니다.
 			request.setAttribute("message", "로그인이 필요합니다.");
-			return "index"; // 로그인 페이지로 이동.
+			return "admin/login"; // 로그인 페이지로 이동.
 		}
-
+		
 		Food food = new Food();
 		food.setName(name);
 		if (!uploadFile.isEmpty()) {
@@ -296,38 +364,49 @@ public class AdminController {
 			String uuid = UUID.randomUUID().toString();
 			String saveName = uuid + "_" + fileName;
 			food.setImg(saveName);
-//			try {
-//				uploadFile.transferTo(new File(uploadPath + File.separator + fileName));
-//			} catch (IllegalStateException | IOException e) {
-//				e.printStackTrace();
-//			}
+			try {
+				String uploadPath = PathConfig.intelliJPath + saveName;
+				boolean exists = PathConfig.isExistsPath();
+				if(exists) {
+					uploadFile.transferTo(new File(PathConfig.realPath(uploadPath)));
+				} else {
+					uploadPath = PathConfig.eclipsePath + saveName;
+					uploadFile.transferTo(new File(PathConfig.realPath(uploadPath)));
+				}
+			} catch (IllegalStateException | IOException e) {
+				e.printStackTrace();
+			}
 		}
+		food.setUseyn("y");
 		foodService.insertFood(food);
 		food = foodService.getFoodByMaxFseq();
 		FoodDetail foodDetail = new FoodDetail();
 		foodDetail.setFood(food);
-		foodDetail.setKcal(kcal);
-		foodDetail.setCarb(carb);
-		foodDetail.setPrt(prt);
-		foodDetail.setFat(fat);
-		foodDetail.setHealthyType(healthyType);
-		foodDetail.setNationType(nationType);
-		foodDetailService.insertFoodDetail(foodDetail);
+		foodDetail.setFoodType(foodType);
+		foodDetail.setN(n);
 
-
-
+		
 		for (int i = 0 ; i < ingredient.length ; i++) {
 			FoodIngredient fing = new FoodIngredient();
 			fing.setFood(food);
 			fing.setIngredient(ingredientService.findByName(ingredient[i]).get());
 			fing.setAmount(quantity[i]);
+			foodDetail.setKcal(fing.getAmount()*fing.getIngredient().getKcal()/100f + foodDetail.getKcal());
+			foodDetail.setCarb(fing.getAmount()*fing.getIngredient().getCarb()/100f + foodDetail.getCarb());
+			foodDetail.setPrt(fing.getAmount()*fing.getIngredient().getPrt()/100f + foodDetail.getPrt());
+			foodDetail.setFat(fing.getAmount()*fing.getIngredient().getFat()/100f + foodDetail.getFat());
 			foodIngredientService.insertFoodIngredient(fing);
 		}
 
-
+		foodDetailService.insertFoodDetail(foodDetail);
 
 		re.addAttribute("fseq", food.getFseq());
-		foodInsertPythonRun(foodDetail, food);
+		List<Food> foodList = new ArrayList<>();
+		food = foodService.getFoodByMaxFseq();
+		foodDetail = foodDetailService.getFoodDetailByMaxFdseq();
+		food.setFoodDetail(foodDetail);
+		foodList.add(food);
+		dataInOutService.foodListToCsv(foodList);
 		return "redirect:admin_food_list";
 	}
 
@@ -346,7 +425,14 @@ public class AdminController {
 		}
 
 		Food food = foodService.getFoodByFseq(fvo.getFseq());
-		model.addAttribute("food", food);
+		FoodVo foodVo = new FoodVo(food);
+		model.addAttribute("kcal", (int)foodVo.getFood().getFoodDetail().getKcal());
+		model.addAttribute("carb", String.format("%.2f", foodVo.getFood().getFoodDetail().getCarb()));
+		model.addAttribute("prt", String.format("%.2f", foodVo.getFood().getFoodDetail().getPrt()));
+		model.addAttribute("fat", String.format("%.2f", foodVo.getFood().getFoodDetail().getFat()));
+		model.addAttribute("fileInfo", food.getImg());
+		model.addAttribute("foodIngredientList", foodIngredientService.getFoodIngredientListByFood(foodVo.getFood().getFseq()));
+		model.addAttribute("foodVo", foodVo);
 		return "/admin/foodEdit";
 	}
 
@@ -354,13 +440,11 @@ public class AdminController {
 	@PostMapping("admin_food_edit")
 	public String adminFoodUpdate(RedirectAttributes re, HttpSession session, HttpServletRequest request,
 								  @RequestParam(value = "fseq") int fseq, @RequestParam(value = "name") String name,
-								  @RequestParam(value = "img") MultipartFile uploadFile, @RequestParam(value = "kcal") float kcal,
-								  @RequestParam(value = "carb") float carb, @RequestParam(value = "prt") float prt,
-								  @RequestParam(value = "fat") float fat,
-								  @RequestParam(value = "healthyType") String healthyType,
-								  @RequestParam(value = "NationType") String nationType,
+								  @RequestParam(value = "img") MultipartFile uploadFile, 
 								  @RequestParam(value = "ingredient") String[] ingredient,
-								  @RequestParam(value = "quantity") int[] quantity) {
+								  @RequestParam(value = "quantity") int[] quantity,
+								  @RequestParam(value = "foodType") String foodType, 
+								  @RequestParam(value = "n") int n) {
 
 		// 세션에서 사용자 정보 가져오기
 		Admin admin = (Admin) session.getAttribute("adminUser");
@@ -379,39 +463,61 @@ public class AdminController {
 			String uuid = UUID.randomUUID().toString();
 			String saveName = uuid + "_" + fileName;
 			food.setImg(saveName);
-//				try {
-//					uploadFile.transferTo(new File(uploadPath + File.separator + fileName));
-//				} catch (IllegalStateException | IOException e) {
-//					e.printStackTrace();
-//				}
+				try {
+					String uploadPath = PathConfig.intelliJPath + saveName;
+					boolean exists = PathConfig.isExistsPath();
+					if(exists) {
+						uploadFile.transferTo(new File(PathConfig.realPath(uploadPath)));
+					} else {
+						uploadPath = PathConfig.eclipsePath + saveName;
+						uploadFile.transferTo(new File(PathConfig.realPath(uploadPath)));
+					}
+				} catch (IllegalStateException | IOException e) {
+					e.printStackTrace();
+				}
 		}
 		foodService.updateFood(food);
 		FoodDetail foodDetail = food.getFoodDetail();
 		foodDetail.setFood(food);
-		foodDetail.setKcal(kcal);
-		foodDetail.setCarb(carb);
-		foodDetail.setPrt(prt);
-		foodDetail.setFat(fat);
-		foodDetail.setHealthyType(healthyType);
-		foodDetail.setNationType(nationType);
-		foodDetailService.updateFoodDetail(foodDetail);
-
+		foodDetail.setFoodType(foodType);
+		foodDetail.setN(n);
+		foodDetail.setKcal(0f);
+		foodDetail.setCarb(0f);
+		foodDetail.setPrt(0f);
+		foodDetail.setFat(0f);
+		
+		for (FoodIngredient fi : foodIngredientService.getFoodIngredientListByFood(fseq)) {
+			foodIngredientService.deleteFoodIngredient(fi);
+		}
+		
 		for (int i = 0 ; i < ingredient.length ; i++) {
 			FoodIngredient fing = new FoodIngredient();
 			fing.setFood(food);
 			fing.setIngredient(ingredientService.findByName(ingredient[i]).get());
 			fing.setAmount(quantity[i]);
+			foodDetail.setKcal(fing.getAmount()*fing.getIngredient().getKcal()/100f + foodDetail.getKcal());
+			foodDetail.setCarb(fing.getAmount()*fing.getIngredient().getCarb()/100f + foodDetail.getCarb());
+			foodDetail.setPrt(fing.getAmount()*fing.getIngredient().getPrt()/100f + foodDetail.getPrt());
+			foodDetail.setFat(fing.getAmount()*fing.getIngredient().getFat()/100f + foodDetail.getFat());
 			foodIngredientService.insertFoodIngredient(fing);
 		}
 
+		foodDetailService.insertFoodDetail(foodDetail);
+
 		re.addAttribute("fseq", food.getFseq());
-		foodInsertPythonRun(foodDetail, food);
-		return "redirect:admin_food_Detail";
+		List<Food> foodList = new ArrayList<>();
+		food = foodService.getFoodByMaxFseq();
+		foodDetail = foodDetailService.getFoodDetailByMaxFdseq();
+		food.setFoodDetail(foodDetail);
+		foodList.add(food);
+		dataInOutService.foodListToCsv(foodList);
+		
+		return "redirect:admin_food_detail";
 	}
 
 	// 음식 삭제
 	@GetMapping("admin_food_delete")
-	public String adminFoodDelete(@RequestParam(value = "fseq") int fseq, Food fvo, HttpSession session,
+	public String adminFoodDelete(@RequestParam(value = "fseq") int fseq, HttpSession session,
 								  HttpServletRequest request) {
 
 		// 세션에서 사용자 정보 가져오기
@@ -424,16 +530,17 @@ public class AdminController {
 			return "admin/login"; // 로그인 페이지로 이동.
 		}
 
-		foodDetailService.deleteFoodDetail(fseq);
-		foodService.deleteFood(fseq);
+		Food food = foodService.getFoodByFseq(fseq);
+		food.setUseyn("n");
+		foodService.insertFood(food);
 
 		return "redirect:admin_food_list";
 	}
 
 	// 게시글 리스트 보기
-	@GetMapping("admin_board_list")
+	@GetMapping("/admin_board_list")
 	public String adminBoardList(Model model, @RequestParam(value = "page", defaultValue = "0") int page,
-								 @RequestParam(value = "size", defaultValue = "20") int size,
+								 @RequestParam(value = "size", defaultValue = "8") int size,
 								 @RequestParam(value = "sortBy", defaultValue = "bseq") String sortBy,
 								 @RequestParam(value = "sortDirection", defaultValue = "DESC") String sortDirection,
 								 @RequestParam(value = "pageMaxDisplay", defaultValue = "5") int pageMaxDisplay,
@@ -461,7 +568,7 @@ public class AdminController {
 		} else {
 			boardScanVo = (BoardScanVo) session.getAttribute("boardScanVo");
 		}
-		Page<Board> boardData = boardService.getBoardList(boardScanVo, page, size);
+		Page<Board> boardData = boardService.findBoardList(boardScanVo, page, size);
 		boardScanVo.setPageInfo(boardData);
 		boardScanVo.setBoardList(boardData.getContent());
 		session.setAttribute("boardScanVo", boardScanVo);
@@ -471,10 +578,67 @@ public class AdminController {
 
 		return "admin/boardList";
 	}
+	// 게시글 검색 보기
+	@GetMapping("/admin_board_list_search")
+	public String searchBoardList(Model model,
+								  @RequestParam(value = "page", defaultValue = "0") int page,
+								  @RequestParam(value = "size", defaultValue = "8") int size,
+								  @RequestParam(value = "sortBy", defaultValue = "bseq") String sortBy,
+								  @RequestParam(value = "sortDirection", defaultValue = "DESC") String sortDirection,
+								  @RequestParam(value = "pageMaxDisplay", defaultValue = "5") int pageMaxDisplay,
+								  @RequestParam(value = "searchField", defaultValue = "") String searchField,
+								  @RequestParam(value = "searchWord", defaultValue = "") String searchWord,
+								  BoardScanVo boardScanVo,
+								  HttpSession session, HttpServletRequest request) {
+
+		// 세션에서 사용자 정보 가져오기
+		Admin admin = (Admin) session.getAttribute("adminUser");
+
+		// 세션에 로그인 정보가 없는 경우
+		if (admin == null) {
+			// 로그인 알림을 포함한 경고 메시지를 설정합니다.
+			request.setAttribute("message", "로그인이 필요합니다.");
+			return "admin/login"; // 로그인 페이지로 이동.
+		}
+
+		if (page == 0) {
+			page = 1;
+			boardScanVo = new BoardScanVo(); // 새로운 객체로 초기화
+			boardScanVo.setSearchField(searchField);
+			boardScanVo.setSearchWord(searchWord);
+			boardScanVo.setSortBy(sortBy);
+			boardScanVo.setSortDirection(sortDirection);
+			boardScanVo.setPageMaxDisplay(pageMaxDisplay);
+
+
+		} else {
+			boardScanVo = (BoardScanVo) session.getAttribute("boardScanVo");
+
+		}
+
+		Page<Board> boardData = boardService.findBoardList(boardScanVo, page, size);
+
+		if (boardData.isEmpty()) {
+			model.addAttribute("msg", "검색 결과가 없습니다.");
+			model.addAttribute("redirectTo", "/admin_board_list");
+			return "board/board_alert";
+		} else {
+
+			boardScanVo.setPageInfo(boardData);
+			boardScanVo.setBoardList(boardData.getContent());
+			session.setAttribute("boardScanVo", boardScanVo);
+			model.addAttribute("boardScanVo", boardScanVo);
+			model.addAttribute("boardList", boardScanVo.getBoardList());
+			model.addAttribute("pageInfo", boardScanVo.getPageInfo());
+
+			return "admin/boardList";
+		}
+	}
+
 
 	// 게시글 삭제
-	@GetMapping("admin_board_delete")
-	public String adminBoardDelete(@RequestParam(value = "bseq") int bseq, HttpSession session,
+	@PostMapping("/admin_board_delete/{bseq}")
+	public String adminBoardDelete(@PathVariable(value = "bseq") int bseq, HttpSession session,
 								   HttpServletRequest request) {
 
 		// 세션에서 사용자 정보 가져오기
@@ -486,14 +650,14 @@ public class AdminController {
 			request.setAttribute("message", "로그인이 필요합니다.");
 			return "admin/login"; // 로그인 페이지로 이동.
 		}
-
+		boardCommentsService.deletAllComment(bseq);
 		boardService.deleteBoard(bseq);
-		return "redirect:admin_board_list";
+		return "redirect:/admin_board_list";
 	}
 
 	// 게시글 보기
-	@GetMapping("admin_board_detail")
-	public String adminBoardDetail(@RequestParam(value = "bseq") int bseq, HttpSession session,
+	@GetMapping("/admin_board_detail/{bseq}")
+	public String adminBoardDetail(@PathVariable(value = "bseq") int bseq, HttpSession session,
 								   HttpServletRequest request, Model model) {
 		// 세션에서 사용자 정보 가져오기
 		Admin admin = (Admin) session.getAttribute("adminUser");
@@ -505,7 +669,7 @@ public class AdminController {
 			return "admin/login"; // 로그인 페이지로 이동.
 		}
 
-		Board board = boardService.getBoardByBseq(bseq);
+		Board board = boardService.getBoard(bseq);
 		model.addAttribute("board", board);
 		BoardScanVo boardScanVo = (BoardScanVo) session.getAttribute("boardScanVo");
 		model.addAttribute("boardScanVo", boardScanVo);
@@ -515,17 +679,30 @@ public class AdminController {
 		return "admin/boardDetail";
 	}
 
+
+	@GetMapping("/admin_board_detail/commentsList")
 	@ResponseBody
-	@GetMapping("admin_board_detail/comments/list")
 	public Map<String, Object> commentList(@RequestParam(value = "bseq") int bseq) {
-		Map<String, Object> commentInfo = new HashMap<>();
+		Map<String, Object> result = new HashMap<>();
 
-		List<Comments> commentList = boardCommentsService.getCommentList(bseq);
+		// 댓글 목록 가져오기
+		List<Comments> parentComments = boardCommentsService.getCommentList(bseq);
+		Map<Integer, List<Comments>> commentsMap = new HashMap<>();
 
-		commentInfo.put("commentList", commentList);
-		commentInfo.put("commentCount", commentList.size());
-		System.out.println(111);
-		return commentInfo;
+		// 부모 댓글마다 대댓글 목록 가져오기
+		for (Comments parentComment : parentComments) {
+			List<Comments> replies = boardCommentsService.getReplyCommentList(parentComment.getCseq());
+			commentsMap.put(parentComment.getCseq(), replies);
+		}
+		// 대댓글을 포함한 댓글 수 계산
+		int totalCommentCount = parentComments.size(); // 부모 댓글 수를 초기화
+		for (List<Comments> replies : commentsMap.values()) {
+			totalCommentCount += replies.size(); // 각 부모 댓글에 대한 대댓글 수를 더함
+		}
+		result.put("parentComments", parentComments);
+		result.put("repliesMap", commentsMap);
+
+		return result;
 	}
 
 	@ResponseBody
@@ -563,8 +740,7 @@ public class AdminController {
 		ProcessBuilder processBuilder = new ProcessBuilder("python", "E:/Student/MachineLearning/new_food_insert.py",
 				Integer.toString(food.getFseq()), food.getName(), Double.toString(foodDetail.getKcal()),
 				Double.toString(foodDetail.getCarb()), Double.toString(foodDetail.getPrt()),
-				Double.toString(foodDetail.getFat()), foodDetail.getHealthyType(),
-				foodDetail.getNationType());
+				Double.toString(foodDetail.getFat()), foodDetail.getFoodType());
 
 		try {
 			Process process = processBuilder.start();
@@ -581,6 +757,68 @@ public class AdminController {
 			e.printStackTrace();
 		}
 
+	}
+
+	@GetMapping("/admin_exercise_list")
+	public String adminExerciseWrite(){
+		return "admin/exercise";
+	}
+	@PostMapping("/admin_exercise_list")
+	public String showExerciseList(@RequestParam (value = "exerciseType") String exerciseType,
+								   @RequestParam (value= "exerciseFomula") String exerciseFomula) {
+		ExerciseOption eo = new ExerciseOption();
+		eo.setType(exerciseType);
+		eo.setFomula(exerciseFomula);
+		exerciseOptionService.insertExerciseOption(eo);
+
+		return "/admin/exercise";
+	}
+
+	@GetMapping("/checkExerciseType")
+	@ResponseBody
+	public Map<String, Boolean> checkExerciseType(@RequestParam String exerciseType) {
+		boolean isDuplicated = exerciseOptionRepository.existsByType(exerciseType);
+		Map<String, Boolean> response = new HashMap<>();
+		response.put("isDuplicated", isDuplicated);
+		return response;
+	}
+
+	// 음식 추가 시 영양성분 계산해주는 메소드
+	@PostMapping("/admin_igrd_cal")
+	@ResponseBody
+	public Map<String, Object> calculateIngredient(@RequestBody List<CalData> calDataList) {
+		float kcal = 0f;
+		float carb = 0f;
+		float prt = 0f;
+		float fat = 0f;
+		//calDataList.remove(0);
+		if(!calDataList.isEmpty()) {
+			for (CalData calData : calDataList) {
+				String igredientName = calData.name;
+				int quantity = calData.amount;
+				Ingredient igrd = ingredientService.findByName(igredientName).get();
+				kcal += igrd.getKcal() * (quantity / 100f);
+				carb += igrd.getCarb() * (quantity / 100f);
+				prt += igrd.getPrt() * (quantity / 100f);
+				fat += igrd.getFat() * (quantity / 100f);
+			}
+		}
+		Map<String, Object> response = new HashMap<>();
+		response.put("kcal", (int)kcal);
+		response.put("carb", String.format("%.2f", carb));
+		response.put("prt",  String.format("%.2f", prt));
+		response.put("fat",  String.format("%.2f", fat));
+		return response;
+	}
+
+	/**
+	 *  음식 추가 시 ajax로 보낸 값 받는 클래스--------------------------------------------------------------
+	 */
+	@Getter
+	@Setter
+	class CalData {
+		private String name;
+		private int amount;
 	}
 
 }

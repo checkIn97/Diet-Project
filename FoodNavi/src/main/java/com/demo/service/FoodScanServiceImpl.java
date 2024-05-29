@@ -1,18 +1,16 @@
 package com.demo.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort.Direction;
+
 import org.springframework.stereotype.Service;
 
 import com.demo.domain.Food;
 import com.demo.domain.Users;
-import com.demo.dto.FoodScanVo;
+import com.demo.dto.FoodRecommendVo;
 import com.demo.dto.UserVo;
 import com.demo.persistence.FoodScanRepository;
 
@@ -26,20 +24,20 @@ public class FoodScanServiceImpl implements FoodScanService {
 	public Food getFoodByFseq(int fseq) {
 		return foodScanRepo.findById(fseq).get();
 	}
+
+	@Override
+	public Food getFoodByName(String name) {
+		return foodScanRepo.findByName(name);
+	}
 	
 	@Override
-	public Page<Food> getFoodScanList(Users user, FoodScanVo foodScanVo, int page, int size) {
-		Pageable pageable = null;
-		if (foodScanVo.getSortDirection().equals("ASC")) {
-			pageable = PageRequest.of(page-1, size, Direction.ASC, foodScanVo.getSortBy());
-		} else {
-			pageable = PageRequest.of(page-1, size, Direction.DESC, foodScanVo.getSortBy());
-		}
-		
+	public List<Food> getFoodScanList(Users user, FoodRecommendVo foodScanVo) {
+
 		UserVo userVo = new UserVo(user);
 		
 		String[][] searchType = foodScanVo.getSearchType();
 		
+		// 검색어 반영
 		String searchField = foodScanVo.getSearchField();
 		String searchWord = foodScanVo.getSearchWord();
 		List<String> searchParams = new ArrayList<>();
@@ -52,6 +50,7 @@ public class FoodScanServiceImpl implements FoodScanService {
 			}
 		}
 		
+		// 금지어 반영
 		String banField = foodScanVo.getBanField();
 		String banWord = foodScanVo.getBanWord();
 		List<String> banParams = new ArrayList<>();
@@ -64,26 +63,41 @@ public class FoodScanServiceImpl implements FoodScanService {
 			}
 		}
 		
-		String tasteField = foodScanVo.getTasteField();
-		if (tasteField.equals("all"))
-			tasteField = "";
+		// 한끼유형 반영
+		List<String> mealParams = new ArrayList<>();
+		List<String> mealCheck = Arrays.asList(foodScanVo.getMealTime());
+		for (String[] meal : foodScanVo.getMealTimeArray()) {
+			if (mealCheck.contains(meal[0])) {
+				mealParams.add(meal[0]);
+			} else {
+				mealParams.add("");
+			}
+		}
 		
-		String veganField = foodScanVo.getVeganField();
-		int veganLevel = 0;
-		if (!veganField.equals("0"))
-			veganLevel = Integer.parseInt(veganField);
+		if (mealParams.size() == 0) {
+			mealParams.add(foodScanVo.getMealTimeByTime());
+		}
+
 		
-		String nationField = foodScanVo.getNationField();
-		if (nationField.equals("all"))
-			nationField = "";
+		// 음식유형 반영
+		String foodType = foodScanVo.getFoodType();
+		if (foodType.equals("all")) {
+			foodType = "";
+		}
 		
-		String healthyField = foodScanVo.getHealthyField();
-		if (healthyField.equals("all"))
-			healthyField = "";
+		// 알레르기 반영
+		List<String> allergyParams = Arrays.asList(foodScanVo.getAllergys());
+		String allergyEtc = foodScanVo.getAllergyEtc();
+		if (allergyEtc.equals("")) {
+			allergyEtc = "|";
+		}
 		
-		String mealField = foodScanVo.getMealField();
-		if (mealField.equals("all"))
-			mealField = "";
+		// 채식여부 반영	
+		int vegetarian = 0;
+		String vegetarianField = foodScanVo.getVegetarian();
+		if (!vegetarianField.equals("0")) {
+			vegetarian = Integer.parseInt(vegetarianField);
+		}
 		
 		float kcalMin = 0f;
 		float kcalMax = 1000000f;
@@ -93,58 +107,86 @@ public class FoodScanServiceImpl implements FoodScanService {
 		float prtMax = 1000000f;
 		float fatMin = 0f;
 		float fatMax = 1000000f;
-		String weightField = foodScanVo.getWeightField();
-		
-		if (weightField.equals("diet")) {
-			kcalMax = 100;
-		} else if (weightField.equals("bulkup")) {
-			kcalMin = 100;
+		String purpose = foodScanVo.getPurpose();
+		// 목적에 따라 수치 변경
+		if (purpose.equals("diet")) {
+			kcalMin = 0f;
+			kcalMax = userVo.getEER()/3*0.7f;
+			carbMin = 0f;
+			carbMax = 1000000f;
+			prtMin = 0f;
+			prtMax = 1000000f;
+			fatMin = 0f;
+			fatMax = 1000000f;
+		} else if (purpose.equals("bulkup")) {
+			kcalMin = userVo.getEER()/3*1.0f;
+			kcalMax = userVo.getEER()/3*1.3f;
+			carbMin = 0f;
+			carbMax = 1000000f;
+			prtMin = 0f;
+			prtMax = 1000000f;
+			fatMin = 0f;
+			fatMax = 1000000f;
 		} 
 		
-		System.out.println("성명 : " + user.getName());
-		System.out.println("성별 : " + user.getSex());
-		System.out.println("나이 : " + user.getAge());
-		System.out.println("신장 : " + user.getHeight());
-		System.out.println("체중 : " + user.getWeight());
-		System.out.println("BMI : " + userVo.getBMI());
-		System.out.println("EER : " + userVo.getEER());		
-		System.out.println("포함단어(이름) : " + searchParams.get(0));
-		System.out.println("포함단어(재료) : " + searchParams.get(1));
-		System.out.println("제외단어(이름) : " + banParams.get(0));
-		System.out.println("제외단어(재료) : " + banParams.get(1));
-		System.out.println("맛 유형 : " + foodScanVo.getTasteField());
-		System.out.println("채식 여부 : " + foodScanVo.getVeganField());
-		System.out.println("음식풍 유형 : " + foodScanVo.getNationField());
-		System.out.println("건강식 여부 : " + foodScanVo.getHealthyField());
-		System.out.println("식사 유형 : " + foodScanVo.getMealField());
-		System.out.println("최소 칼로리 : " + kcalMin);
-		System.out.println("최대 칼로리 : " + kcalMax);
-		System.out.println("최소 탄수화물 : " + kcalMin);
-		System.out.println("최대 탄수화물 : " + kcalMax);
-		System.out.println("최소 단백질 : " + kcalMin);
-		System.out.println("최대 단백질 : " + kcalMax);
-		System.out.println("최소 지방 : " + kcalMin);
-		System.out.println("최대 지방 : " + kcalMax);
+		float ratioCarbMin = 0f;
+		float ratioCarbMax = 1000000f;
+		float ratioPrtMin = 0f;
+		float ratioPrtMax = 1000000f;
+		float ratioFatMin = 0f;
+		float ratioFatMax = 1000000f;
+		String dietType = foodScanVo.getDietType();
+		// 균형식 : 탄단지 균형 비율 기준
+		// 저탄고지 : 탄단지 비율 1:2:7
+		if (dietType.equals("balance")) {
+			ratioCarbMin = userVo.getProperCarbRatio()[0];
+			ratioCarbMax = userVo.getProperCarbRatio()[1];
+			ratioPrtMin = userVo.getProperPrtRatio()[0];
+			ratioPrtMax = userVo.getProperPrtRatio()[1];
+			ratioFatMin = userVo.getProperFatRatio()[0];
+			ratioFatMax = userVo.getProperFatRatio()[1];
+		} else if (dietType.equals("lowCarb")) {
+			ratioCarbMin = 0.00f;
+			ratioCarbMax = 0.20f;
+			ratioPrtMin = 0.10f;
+			ratioPrtMax = 0.30f;
+			ratioFatMin = 0.60f;
+			ratioFatMax = 0.80f;
+		}
 		
-				
-		Page<Food> foodData = foodScanRepo.getFoodScanList(
-				searchParams.get(0), 
-				banParams.get(0), 
-				tasteField, veganLevel, nationField, healthyField,
-				kcalMin, kcalMax, carbMin, carbMax, prtMin, prtMax, fatMin, fatMax,				
-				pageable);
+		List<Food> foodList = null;
+		if (foodScanVo.isRecommend()) {
+			int check = foodScanRepo.getFoodCountByMealTypeInHistory(
+					mealParams.get(0), mealParams.get(1), mealParams.get(2), mealParams.get(3));
+			if (check < 10) {
+				foodScanVo.setRecommend(false);				
+			} 
+		} 
 		
-		return foodData;
+		if (foodScanVo.isRecommend()) {
+			foodList = foodScanRepo.getFoodRecommendList(
+					searchParams.get(0), searchParams.get(1), banParams.get(0), banParams.get(1),
+					mealParams.get(0), mealParams.get(1), mealParams.get(2), mealParams.get(3),
+					kcalMin, kcalMax, carbMin, carbMax, prtMin, prtMax, fatMin, fatMax,	
+					ratioCarbMin, ratioCarbMax, ratioPrtMin, ratioPrtMax, ratioFatMin, ratioFatMax, 
+					allergyParams.get(0), allergyParams.get(1), allergyParams.get(2), allergyParams.get(3), allergyEtc, 
+					vegetarian, foodType);
+		} else {
+			foodList = foodScanRepo.getFoodScanList(
+					searchParams.get(0), searchParams.get(1), banParams.get(0), banParams.get(1),
+					kcalMin, kcalMax, carbMin, carbMax, prtMin, prtMax, fatMin, fatMax,	
+					ratioCarbMin, ratioCarbMax, ratioPrtMin, ratioPrtMax, ratioFatMin, ratioFatMax, 
+					allergyParams.get(0), allergyParams.get(1), allergyParams.get(2), allergyParams.get(3), allergyEtc, 
+					vegetarian, foodType);
+		}
+		
+		
+		return foodList;
 	}
 
 	@Override
-	public Page<Food> getFoodRecommendList(Users user, FoodScanVo foodScanVo, int page, int size) {
-		
-		Page<Food> foodData = getFoodScanList(user, foodScanVo, page, size);
-		
-		// 추천 프로세스에 따른 순서 재정렬
-		
-		return foodData; 
+	public List<Food> getFoodSearchList() {
+		return foodScanRepo.getAllByFood();
 	}
 
 }

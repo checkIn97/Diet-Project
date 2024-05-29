@@ -5,44 +5,54 @@
 <meta charset="UTF-8">
 <title>Food List</title>
 
-<h1><a href="admin_main">FoodNavi</a></h1>
+<h1><a href="admin_main"><img src="/assets/images/foodNaviFont.png" alt="foodNaviFont" class="foodNaviFont"></a></h1>
 
 <article id="box">
-    <h2>음식 목록</h2>
-    <table>
-        <thead>
-        <tr>
-            <th>등록번호</th>
-            <th>이미지</th>
-            <th>이름</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="food : ${foodList}">
-            <td>[[${food.fseq}]]</td>
-            <td th:if="${food.img == null}">없음</td>
-            <td th:if="${food.img != null}"><img th:src="${food.img}"></td>
-            <td><a th:href="@{admin_food_Detail(fseq=${food.fseq})}" th:text="${food.name}"></a></td>
-        </tr>
-        </tbody>
-    </table>
+    <h2>음식 관리</a></h2>
 
-    <!-- 페이지 영역 -->
+    <!-- 리스트가 입력되는 영역 -->
+    <div id="list_area">
+        <table>
+            <tr>
+                <th>이미지</th>
+                <th>이름</th>
+                <th>칼로리</th>
+            </tr>
+            <th:block th:if="${foodScanVo.pageInfo.totalPages == 0}">
+                <tr>
+                    <td colspan=3>항목 없음</td>
+                </tr>
+            </th:block>
+            <th:block th:unless="${foodScanVo.pageInfo.totalPages == 0}">
+                <th:block th:each="foodVo : ${foodList}">
+                    <tr class="board_list">
+                        <td><img class="img" src="/assets/images/nonImg.png" th:if="${foodVo.food.img == null}">
+                            <img class="img" src="/assets/images/img.png" th:if="${foodVo.food.img != null}">
+                        <td><a th:href="@{admin_food_detail(fseq=${foodVo.food.fseq})}" th:text="${foodVo.food.name}" th:style="${foodVo.food.useyn == 'n'} ? 'text-decoration: line-through;' : 'text-decoration: none;'"></a></td>
+                        <td>[[${foodVo.kcal}]]kcal</td>
+                    </tr>
+                </th:block>
+            </th:block>
+        </table>
+    </div>
+
+    <a href="admin_food_insert_form">
+        <button type="button">추가</button>
+    </a>
+
+    <form th:action="@{/admin_food_list}" method="get">
+        <div class="search-container">
+            <label> <input type="text" name="searchWord" class="searchWord">
+            </label>
+
+            <button type="submit" class="searchButton">검색</button>
+        </div>
+    </form>
+
     <!-- 리스트에 맞게 페이지가 입력되는 영역 -->
     <!-- 리스트의 사이즈가 0인 경우에는 표시되지 않음 -->
     <th:block id="page_insert" th:if="${pageInfo.totalPages != 0}"
               th:insert="~{/admin/include/food_page_area}"></th:block>
-
-    <form th:action="@{/admin_food_list}" method="get">
-        <div class="search-container">
-            <label>
-                <input type="text" name="searchWord">
-            </label>
-            <button type="submit">검색</button>
-        </div>
-        <a href="admin_food_insert_form">
-            <button type="button">추가</button>
-        </a>
-    </form>
 </article>
 <th:block th:insert="~{/includes/footer}"></th:block>
+</html>

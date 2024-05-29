@@ -26,5 +26,4 @@ public class BoardScanVo {
 	private String sortBy = "";
 	private String sortDirection = "";
 	private int pageMaxDisplay = 0;
-	
 }

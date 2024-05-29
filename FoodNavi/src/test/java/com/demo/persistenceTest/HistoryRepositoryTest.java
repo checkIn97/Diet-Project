@@ -1,7 +1,7 @@
 package com.demo.persistenceTest;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 
@@ -22,6 +22,17 @@ public class HistoryRepositoryTest {
 	
 	@Autowired
 	private UsersInOutRepository usersInOutRepo;
+	
+	@Disabled
+	@Test
+	public void test() {
+		List<History> historyList = historyRepo.findAll();
+		String a = historyList.get(0).getServedDate().toString();
+		String date1 = a.substring(0, 10);
+		String date2 = new SimpleDateFormat("yyyy-MM-dd").format(new Date()).toString();
+		System.out.println(date1.equals(date2));
+
+	}
 	
 	@Disabled
 	@Test

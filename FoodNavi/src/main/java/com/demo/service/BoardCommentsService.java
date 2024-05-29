@@ -11,13 +11,13 @@ public interface BoardCommentsService {
 	
 	public List<Comments> getCommentList(int bseq);
 	
-	public int getCountCommentsList(int bseq);
-	
-	public int getCommentTotal(int bseq);
-	
+	public List<Comments> getReplyCommentList(int parentCseq);
+
 	public void deletComment(int cseq);
 	
 	public void deletAllComment(int bseq);
-	
 
+	public void updateCommentCount(int bseq);
+
+	public List<Comments> getCommentUserList(int useq);
 }

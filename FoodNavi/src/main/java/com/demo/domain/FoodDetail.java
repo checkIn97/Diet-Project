@@ -1,18 +1,13 @@
 package com.demo.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -40,11 +35,9 @@ public class FoodDetail {
 	private float carb;
 	private float prt;
 	
-	private String tasteType;	
-	private String nationType;	
-	private String healthyType;	
-	private int veganType;
-	
+	private String foodType;
+	private int n;
+
 	@OneToOne
 	@JoinColumn(name="fseq", nullable=false)
 	private Food food;

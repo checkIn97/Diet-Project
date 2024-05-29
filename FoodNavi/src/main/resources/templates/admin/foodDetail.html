@@ -1,91 +1,79 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<th:block th:insert="~{/admin/include/headerAdmin}"></th:block>
+
 <meta charset="UTF-8">
 <title>Food Navigator</title>
-<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
-</head>
-<style>
-	table {
-		border: 1px solid black;
-		width: 1600px;
-		border-collapse:collapse;
-	}
-	
-	th, td {
-		border: 1px solid black;
-	}
-</style>
+
+
 <body>
-	<h2>Food Info</h2>
-	<form method="post" action="admin_food_edit_form">
-	<table>		
-		<tr>
-			<th>이미지</th>
-			<td >없음</td>			
-		</tr>
-		<tr>
-			<th>이름</th>
-			<td>[[${food.name}]]</td>
-		</tr>
-		<tr>
-			<th>칼로리(kcal)</th>
-			<td>[[${food.foodDetail.kcal}]]</td>
-		</tr>
-		<tr>
-			<th>탄수화물(g)</th>
-			<td>[[${food.foodDetail.carb}]]</td>
-		</tr>
-		<tr>
-			<th>단백질(g)</th>
-			<td>[[${food.foodDetail.prt}]]</td>
-		</tr>
-		<tr>
-			<th>지방(g)</th>
-			<td>[[${food.foodDetail.fat}]]</td>
-		</tr>
-		<tr>
-			<th>맛</th>
-			<td th:if="${food.foodDetail.tasteType == 'all'}">구분없음</td>
-			<td th:if="${food.foodDetail.tasteType == 'sweet'}">달달한맛</td>
-			<td th:if="${food.foodDetail.tasteType == 'spicy'}">매운맛</td>
-			<td th:if="${food.foodDetail.tasteType == 'sour'}">새콤한맛</td>			
-		</tr>
-		<tr>
-			<th>채식 여부</th>
-			<td th:if="${food.foodDetail.veganType == '0'}">해당 없음</td>
-			<td th:if="${food.foodDetail.veganType == '1'}">채식 1단계</td>
-			<td th:if="${food.foodDetail.veganType == '2'}">채식 2단계</td>
-			<td th:if="${food.foodDetail.veganType == '3'}">채식 3단계</td>
-			<td th:if="${food.foodDetail.veganType == '4'}">채식 4단계</td>
-			<td th:if="${food.foodDetail.veganType == '5'}">채식 5단계</td>				
-		</tr>
-		<tr>
-			<th>음식풍</th>
-			<td th:if="${food.foodDetail.nationType == 'all'}">구분없음</td>
-			<td th:if="${food.foodDetail.nationType == 'ko'}">한식</td>
-			<td th:if="${food.foodDetail.nationType == 'cn'}">중식</td>
-			<td th:if="${food.foodDetail.nationType == 'jp'}">일식</td>
-			<td th:if="${food.foodDetail.nationType == 'we'}">양식</td>
-			<td th:if="${food.foodDetail.nationType == 'sa'}">동남아식</td>
-		</tr>
-		<tr>
-			<th>건강식 여부</th>
-			<td th:if="${food.foodDetail.healthyType == 'all'}">해당 없음</td>
-			<td th:if="${food.foodDetail.healthyType == 'lowna'}">저염식</td>
-			<td th:if="${food.foodDetail.healthyType == 'diab'}">당뇨식</td>
-		</tr>
-		<tr>
-			<th>재료</th>
-			<td>
-				재료 나열하기
-			</td>
-		</tr>		
-	</table>	
-		<input type="hidden" name="fseq" th:value="${food.fseq}">
-		<input type="submit" value="수정하기">
-	</form>	
-	<a th:href="@{admin_food_delete(fseq=${food.fseq})}"><button>삭제하기</button></a>
-	<a th:href="@{admin_food_list(page=${pageInfo.number +1})}"><button>목록 보기</button></a>
+<h2>Food Info</h2>
+<article class="box">
+    <form method="post" action="admin_food_edit_form">
+
+        <div class="food-detail-Image">
+            <div>
+                <img class="foodImg" src="/assets/images/cooker.png" th:if="${foodVo.food.img == null}">
+                <img class="foodImgR" th:src="@{/assets/foodimages/} + ${foodVo.food.img}" th:if="${foodVo.food.img != null}">
+            </div>
+            <div class="food-detail-item-large">
+                <span class="food-detail-title">[[${foodVo.food.name}]]</span>
+            </div>
+        </div>
+        <div class="food-detail-container">
+            <table>
+                <tr>
+                    <th>칼로리(kcal)</th>
+                    <th>탄수화물(g)</th>
+                    <th>단백질(g)</th>
+                    <th>지방(g)</th>
+                    <th>채식 여부</th>
+                    <th>식사 종류</th>
+                    <th>데이터 사용 여부(관리자용)</th>
+                </tr>
+                <tr>
+                    <!--칼로리 값-->
+                    <td>[[${foodVo.kcal}]]</td>
+                    <!--탄수화물 값-->
+                    <td>[[${foodVo.carb}]]</td>
+                    <!--단백질 값-->
+                    <td>[[${foodVo.prt}]]</td>
+                    <!--지방 값-->
+                    <td>[[${foodVo.fat}]]</td>
+                    <!--채식 여부-->
+                    <td>[[${vegan}]]</td>
+                    <!--식탄 종류-->
+                    <td th:if="${foodVo.food.foodDetail.foodType == 'main'}">메인 요리</td>
+                    <td th:if="${foodVo.food.foodDetail.foodType == 'side'}">사이드 요리</td>
+                    <td th:if="${foodVo.food.foodDetail.foodType == 'dessert'}">디저트</td>
+                    <td>[[${foodVo.food.useyn}]]</td>
+                </tr>
+            </table>
+            <div class="food-detail-row">
+                <div class="food-detail-item">
+                    <span class="food-detail-title">재료 ([[${foodVo.food.foodDetail.n}]]인분 기준량)</span><br>
+                    <th:block th:each="foodIngredient, iterStat : ${foodIngredientsList}">
+                        <span th:unless="${iterStat.last}">[[${foodIngredient.ingredient.name}]] [[${foodIngredient.amount}]]g, </span>
+                        <span th:if="${iterStat.last}">[[${foodIngredient.ingredient.name}]] [[${foodIngredient.amount}]]g</span>
+                    </th:block>
+                </div>
+
+            </div>
+        </div>
+
+        <input type="hidden" name="fseq" th:value="${foodVo.food.fseq}">
+        <input type="submit" class="adminFoodButton" value="수정하기">
+    </form>
+    <a th:href="@{admin_food_delete(fseq=${foodVo.food.fseq})}">
+        <button>삭제하기</button>
+    </a>
+    <a th:href="@{admin_food_list(page=${pageInfo.number})}">
+        <button>목록 보기</button>
+    </a>
+</article>
 </body>
 </html>
+
+<th:block th:insert="~{/includes/footer}"></th:block>
+<script src="https://code.jquery.com/jquery-3.6.3.min.js"
+        integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>

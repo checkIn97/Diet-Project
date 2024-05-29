@@ -5,10 +5,10 @@
 <meta charset="UTF-8">
 <title>User List</title>
 
-<h1><a href="admin_main">FoodNavi</a></h1>
+<h1><a href="admin_main"><img src="/assets/images/foodNaviFont.png" alt="foodNaviFont" class="foodNaviFont"></a></h1>
 
 <article id="box">
-    <h2>회원 목록</h2>
+    <h2>회원 관리</h2>
     <table>
         <thead>
         <tr>
@@ -19,7 +19,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="user : ${userList}">
+        <tr class="board_list" th:each="user : ${userList}">
             <td>
                 <a th:href="@{admin_user_detail(useq=${user.useq})}" th:text="${user.userid}"></a>
             </td>

@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.demo.domain.Food;
 import com.demo.domain.History;
 import com.demo.domain.Users;
 import com.demo.persistence.HistoryRepository;
@@ -56,18 +57,13 @@ public class HistoryServiceImpl implements HistoryService {
 	}
 	
 	@Override
-	public List<History> getHistoryListConfirmed() {
-		return historyRepo.getHistoryListConfirmed();
-	}
-	
-	@Override
 	public float totalKcalToday(Users user) {
 		List<History> historyList = historyRepo.getHistoryListConfirmed(user);
 		String today = String.valueOf(LocalDate.now());		
 		float totalKcalToday = 0f;
 		for (History history : historyList) {
 			if (String.valueOf(history.getServedDate()).substring(0, 10).equals(today))
-				totalKcalToday += history.getFood().getFoodDetail().getKcal()*history.getServeNumber();
+				totalKcalToday += history.getFood().getFoodDetail().getKcal()*history.getServeNumber()/history.getFood().getFoodDetail().getN();
 		}
 		return totalKcalToday;
 	}
@@ -77,7 +73,7 @@ public class HistoryServiceImpl implements HistoryService {
 		List<History> historyList = historyRepo.getHistoryListNotConfirmedYet(user);
 		float totalKcalToday = 0f;
 		for (History history : historyList) {
-			totalKcalToday += history.getFood().getFoodDetail().getKcal()*history.getServeNumber();
+			totalKcalToday += history.getFood().getFoodDetail().getKcal()*history.getServeNumber()/history.getFood().getFoodDetail().getN();
 		}
 		return totalKcalToday;
 	}
@@ -89,7 +85,7 @@ public class HistoryServiceImpl implements HistoryService {
 		float totalCarbToday = 0f;
 		for (History history : historyList) {
 			if (String.valueOf(history.getServedDate()).substring(0, 10).equals(today))
-				totalCarbToday += history.getFood().getFoodDetail().getCarb()*history.getServeNumber();
+				totalCarbToday += history.getFood().getFoodDetail().getCarb()*history.getServeNumber()/history.getFood().getFoodDetail().getN();
 		}
 		return totalCarbToday;
 	}
@@ -99,7 +95,7 @@ public class HistoryServiceImpl implements HistoryService {
 		List<History> historyList = historyRepo.getHistoryListNotConfirmedYet(user);
 		float totalCarbToday = 0f;
 		for (History history : historyList) {
-			totalCarbToday += history.getFood().getFoodDetail().getCarb()*history.getServeNumber();
+			totalCarbToday += history.getFood().getFoodDetail().getCarb()*history.getServeNumber()/history.getFood().getFoodDetail().getN();
 		}
 		return totalCarbToday;
 	}
@@ -111,7 +107,7 @@ public class HistoryServiceImpl implements HistoryService {
 		float totalPrtToday = 0f;
 		for (History history : historyList) {
 			if (String.valueOf(history.getServedDate()).substring(0, 10).equals(today))
-				totalPrtToday += history.getFood().getFoodDetail().getPrt()*history.getServeNumber();
+				totalPrtToday += history.getFood().getFoodDetail().getPrt()*history.getServeNumber()/history.getFood().getFoodDetail().getN();
 		}
 		return totalPrtToday;
 	}
@@ -121,7 +117,7 @@ public class HistoryServiceImpl implements HistoryService {
 		List<History> historyList = historyRepo.getHistoryListConfirmed(user);
 		float totalPrtToday = 0f;
 		for (History history : historyList) {
-			totalPrtToday += history.getFood().getFoodDetail().getPrt()*history.getServeNumber();
+			totalPrtToday += history.getFood().getFoodDetail().getPrt()*history.getServeNumber()/history.getFood().getFoodDetail().getN();
 		}
 		return totalPrtToday;
 	}
@@ -133,7 +129,7 @@ public class HistoryServiceImpl implements HistoryService {
 		float totalFatToday = 0f;
 		for (History history : historyList) {
 			if (String.valueOf(history.getServedDate()).substring(0, 10).equals(today))
-				totalFatToday += history.getFood().getFoodDetail().getFat()*history.getServeNumber();
+				totalFatToday += history.getFood().getFoodDetail().getFat()*history.getServeNumber()/history.getFood().getFoodDetail().getN();
 		}
 		return totalFatToday;
 	}
@@ -143,9 +139,14 @@ public class HistoryServiceImpl implements HistoryService {
 		List<History> historyList = historyRepo.getHistoryListConfirmed(user);
 		float totalFatToday = 0f;
 		for (History history : historyList) {
-			totalFatToday += history.getFood().getFoodDetail().getFat()*history.getServeNumber();
+			totalFatToday += history.getFood().getFoodDetail().getFat()*history.getServeNumber()/history.getFood().getFoodDetail().getN();
 		}
 		return totalFatToday;
 	}
-	
+
+	@Override
+	public History getConfirmedHistoryByUserAndFood(Users user, Food food) {
+		
+		return historyRepo.getHistoryConfirmedByUserAndFood(user, food);
+	}
 }

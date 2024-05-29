@@ -2,6 +2,7 @@ package com.demo.service;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -13,6 +14,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.demo.config.PathConfig;
 import com.demo.domain.Admin;
 import com.demo.domain.Board;
 import com.demo.domain.Comments;
@@ -25,6 +27,7 @@ import com.demo.domain.Ingredient;
 import com.demo.domain.Rcd;
 import com.demo.domain.UserChange;
 import com.demo.domain.Users;
+import com.demo.dto.FoodRecommendVo;
 import com.demo.dto.UserVo;
 import com.demo.persistence.AdminRepository;
 import com.demo.persistence.FoodDetailScanRepository;
@@ -44,6 +47,9 @@ public class DataInOutServiceImpl implements DataInOutService {
 	private FoodScanRepository foodScanRepo;
 	
 	@Autowired
+	private FoodScanService foodScanService;
+	
+	@Autowired
 	private FoodDetailScanRepository foodDetailScanRepo;
 	
 	@Autowired
@@ -51,6 +57,9 @@ public class DataInOutServiceImpl implements DataInOutService {
 	
 	@Autowired
 	private HistoryRepository historyRepo;
+	
+	@Autowired
+	private HistoryService historyService;
 	
 	@Autowired
 	private IngredientRepository ingredientRepo;
@@ -83,7 +92,7 @@ public class DataInOutServiceImpl implements DataInOutService {
 			 "태현", "하람", "민혁", "이현", "하민", "성준", "규민", "윤성", "태양", "정민", 
 			 "예찬", "은성", "도훈", "준수", "도하", "준희", "다은", "주안", "이든", "건"},
 			{"mj", "sj", "dy", "yj", "sw", "hj", "jh", "jw", "jh", "jw",
-			 "dh", "js", "gw", "hw", "wj", "jh", "sw", "yj", "uw", "sj",
+			 "dh", "js", "gw", "hw", "wj", "jh", "sw", "yj", "yw", "sj",
 			 "ew", "mj", "hj", "yj", "sy", "jw", "yw", "sw", "jw", "jh", 
 			 "sh", "yc", "jh", "sh", "sm", "sh", "jw", "ms", "ya", "sh",
 			 "jy", "jw", "jy", "sh", "ty", "hg", "ja", "yh", "so", "sw",
@@ -123,78 +132,6 @@ public class DataInOutServiceImpl implements DataInOutService {
 	private int heightChangeFemale = 4;
 	private int weightChangeMale = 5;
 	private int weightChangeFemale = 3;
-	
-	
-	@Override
-	public List<Admin> adminInFromCsv(String csvFile, String n) {
-		List<Admin> adminList = new ArrayList<>();
-		int num = -1;
-		int check = -1;
-		int count = 0;
-		String text = "";
-		
-		if (!n.equals("all")) {
-			try {
-				num = Integer.parseInt(n);
-			} catch (Exception e) {
-				e.fillInStackTrace();
-			}
-		}
-		
-		if (num >= 0 || n.equals("all")) {
-			try {
-				FileReader fr = new FileReader(csvFile);
-				BufferedReader br = new BufferedReader(fr);
-
-				while(true) {
-					if (!n.equals("all")) {
-						if (count == num) {
-							break;
-						}
-					}
-					
-					text = br.readLine();
-					
-					if (text == null)
-						break;			
-
-					if (check != -1) {
-						String[] input = text.substring(0, text.length()-1).split(",");
-						Admin admin = new Admin();
-						admin.setAdminid(input[1]);
-						admin.setAdminpw(input[2]);
-						admin.setName(input[3]);
-						adminRepo.save(admin);
-						adminList.add(admin);
-						count++;
-						text = "";
-					} else {
-						check = 0;
-						text = "";
-					}	
-				}
-				br.close();
-				fr.close();			
-			} catch (IOException e) {
-				System.out.println((count+1)+"번 데이터 입력 중 오류 발생!");
-				e.printStackTrace();
-			}
-		} else {
-			System.out.println("데이터 입력 실패!");
-		}
-		
-		adminListToCsv(adminList);
-		return adminList;
-		
-	}
-
-	@Override
-	public List<Admin> adminInDummy(String n) {
-		List<Admin> adminList = new ArrayList<>();
-
-		
-		return adminList;
-	}
 
 	@Override
 	public void adminListToCsv(List<Admin> adminList) {
@@ -222,91 +159,26 @@ public class DataInOutServiceImpl implements DataInOutService {
 				bufferedWriter.close();
 			}
 			fileWriter.close();
-			System.out.println("admin 데이터 내보내기 성공");			
+			System.out.println("admin 데이터 내보내기 성공");
 		}catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("admin 데이터 내보내기 실패");
+		}
+		
+		File file = new File(csvFile);
+		if (file.exists()) {
+			if (file.delete()) {
+				System.out.println("임시파일 삭제 완료");
+			} else {
+				System.out.println("임시파일 삭제 실패");
+			}
 		}
 
 		
 	}
 	
-	@Override
-	public List<Board> boardInFromCsv(String csvFile, String n) {
-		List<Board> boardList = new ArrayList<>();
-
-		
-		return boardList;
-		
-	}
-
-	@Override
-	public List<Board> boardInDummy(String n) {
-		List<Board> boardList = new ArrayList<>();
-
-		
-		return boardList;
-		
-	}
-
-	@Override
-	public void boardListToCsv(List<Board> boardList) {
-		String csvFile = "tmp_board.csv";
-		String pyFile = "boardListToCsv.py";
-		
-	}
-
-	@Override
-	public List<Comments> commentsInFromCsv(String csvFile, String n) {
-		List<Comments> commentsList = new ArrayList<>();
-
-		
-		return commentsList;
-		
-	}
-
-	@Override
-	public List<Comments> commentsInDummy(String n) {
-		List<Comments> commentsList = new ArrayList<>();
-
-		
-		return commentsList;
-		
-	}
-
-	@Override
-	public void commentsListToCsv(List<Comments> commentsList) {
-		String csvFile = "tmp_comments.csv";
-		String pyFile = "commentsListToCsv.py";
-		
-	}
-	
-	@Override
-	public List<Exercise> exerciseFromCsv(String csvFile, String n) {
-		List<Exercise> exerciseList = new ArrayList<>();
-		
-		
-		return exerciseList;		
-	}
-
-	@Override
-	public List<Exercise> exerciseInDummy(String n) {
-		List<Exercise> exerciseList = new ArrayList<>();
-		
-		
-		return exerciseList;	
-		
-	}
-
-	@Override
-	public void exerciseListToCsv(List<FoodIngredient> foodIngredientList) {
-		String csvFile = "tmp_exercise.csv";
-		String pyFile = "exerciseListToCsv.py";
-		
-	}
-	
 	public void foodTotalSave(Food food, FoodDetail foodDetail, List<FoodIngredient> foodIngredientList) {
-  		foodScanRepo.save(food);
+		foodScanRepo.save(food);
 		food = foodScanRepo.findFirstByOrderByFseqDesc();
 		foodDetail.setFood(food);
 		foodDetailScanRepo.save(foodDetail);
@@ -397,6 +269,7 @@ public class DataInOutServiceImpl implements DataInOutService {
 							foodIngredientList = new ArrayList<>();
 							tmp1 = tmp2;
 							food = new Food();
+							food.setUseyn("y");
 							food.setName(input[1]);
 							
 							foodDetail = new FoodDetail();
@@ -419,19 +292,15 @@ public class DataInOutServiceImpl implements DataInOutService {
 							}
 
 							if (input[7] == null) {
-								foodDetail.setTasteType(null);
+								foodDetail.setFoodType(null);
 							} else {
-								foodDetail.setTasteType(input[7]);
-							}							
-							if (input[8] == null) {
-								foodDetail.setNationType(null);
-							} else {
-								foodDetail.setNationType(input[8]);
+								foodDetail.setFoodType(input[7]);
 							}
-							if (input[9] == null) {
-								foodDetail.setHealthyType(null);
+							
+							if (input[8] == null) {
+								foodDetail.setN(1);
 							} else {
-								foodDetail.setHealthyType(input[9]);
+								foodDetail.setN(Integer.parseInt(input[8]));
 							}
 							
 						}
@@ -530,10 +399,7 @@ public class DataInOutServiceImpl implements DataInOutService {
 					foodDetailVo.setCarb((int)(Math.random()*30 + 40));
 					foodDetailVo.setPrt((int)(Math.random()*40 + 30));
 					foodDetailVo.setKcal(foodDetailVo.getCarb()*4 + foodDetailVo.getPrt()*4 + foodDetailVo.getFat()*9);
-					foodDetailVo.setTasteType("all");
-					foodDetailVo.setNationType("all");
-					foodDetailVo.setHealthyType("all");
-					foodDetailVo.setVeganType(0);
+					foodDetailVo.setFoodType("all");
 					foodDetailScanRepo.save(foodDetailVo);
 					foodList.add(foodVo);
 					count++;
@@ -555,6 +421,8 @@ public class DataInOutServiceImpl implements DataInOutService {
 	public void foodListToCsv(List<Food> foodList) {
 		String csvFile = "tmp_food.csv";
 		String pyFile = "FoodListToCsv.py";
+		csvFile = PathConfig.realPath(csvFile);
+		pyFile = PathConfig.realPath(pyFile);
 		
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder
@@ -584,16 +452,27 @@ public class DataInOutServiceImpl implements DataInOutService {
 			fileWriter.close();
 			ProcessBuilder processBuilder = new ProcessBuilder("python", pyFile, csvFile);
 			Process process = processBuilder.start();
+			process.waitFor();
 			System.out.println("food 데이터 내보내기 성공");			
 		}catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("food 푸드 데이터 내보내기 실패");
+		}
+		
+		File file = new File(csvFile);
+		if (file.exists()) {
+			if (file.delete()) {
+				System.out.println("임시파일 삭제 완료");
+			} else {
+				System.out.println("임시파일 삭제 실패");
+			}
 		}
 	}
 	
 	@Override
 	public void filteredListToCsv(List<Food> filteredList) {
 		String csvFile = "tmp_filtered.csv";
+		csvFile = PathConfig.realPath(csvFile);
 		
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder
@@ -617,91 +496,174 @@ public class DataInOutServiceImpl implements DataInOutService {
 		}		
 	}
 
-
 	@Override
-	public List<FoodDetail> foodDetailInFromCsv(String csvFile, String n) {
-		List<FoodDetail> foodDetailList = new ArrayList<>();
-		
-		
-		return foodDetailList;
-	}
-
-	@Override
-	public List<FoodDetail> foodDetailInDummy(String n) {
-		List<FoodDetail> foodDetailList = new ArrayList<>();
-		
-		
-		return foodDetailList;
-		
-	}
-
-	@Override
-	public void foodDetailListToCsv(List<FoodDetail> foodDetailList) {
-		String csvFile = "tmp_foodDetail.csv";
-		String pyFile = "foodDetailListToCsv.py";
-		
-	}
-	
-	@Override
-	public List<FoodIngredient> foodIngredientFromCsv(String csvFile, String n) {
-		List<FoodIngredient> foodIngredientList = new ArrayList<>();
-		// foodInFromCsv에서 처리
-		
-		return foodIngredientList;
-		
-	}
-
-	@Override
-	public List<FoodIngredient> foodIngredientInDummy(String n) {
-		List<FoodIngredient> foodIngredientList = new ArrayList<>();
-
-		
-		return foodIngredientList;
-		
-	}
-
-	@Override
-	public void foodIngredientToCsv(List<FoodIngredient> foodIngredientList) {
-		String csvFile = "tmp_foodIngredient.csv";
-		String pyFile = "foodIngredientListToCsv.py";
-		
-	}
-	
-	@Override
-	public List<History> historyInFromCsv(String csvFile, String n) {
+	public List<History> historyInDummy(String mealType, String n) {
 		List<History> historyList = new ArrayList<>();
-		
-		
-		return historyList;		
-	}
-
-	@Override
-	public List<History> historyInDummy(String n) {
-		List<History> historyList = new ArrayList<>();
-		int num = Integer.parseInt(n);
-		int totalUserCount = usersInOutRepo.getTotalUsersCount();
-		int totalFoodCount = foodScanRepo.getTotalFoodCount();
-		for (int i = 0 ; i < num ; i++) {
-			int tmp_useq = (int)(Math.random()*totalUserCount+1);
-			History tmp_history = new History();
-			Users tmp_user = usersInOutRepo.findById(tmp_useq).get();
-			UserVo tmp_userVo = new UserVo(tmp_user);
-			float bmi = tmp_userVo.getBMI();
-			float eer = tmp_userVo.getEER();
-			int tmp_fseq = (int)(Math.random()*totalFoodCount+1);
-			Food tmp_food = foodScanRepo.findById(tmp_fseq).get();
-			int serveNumber = (int)(Math.random()*3+1);
-			tmp_history.setUser(tmp_user);
-			tmp_history.setFood(tmp_food);
-			tmp_history.setServeNumber(serveNumber);			
-			historyRepo.save(tmp_history);
-			tmp_history = historyRepo.getHistoryListNotConfirmedYet(tmp_user).get(0);
-			tmp_history.setServedDate(new Date());
-			historyRepo.save(tmp_history);
-			historyList.add(tmp_history);
+		List<Users> userList = usersInOutRepo.findAll();
+		int num = 0;
+		if (n.equals("all")) {
+			num = userList.size();
+		} else {
+			num = Integer.parseInt(n);
 		}
-		
-		historyListToCsv(historyList);
+		if (num > userList.size())
+			num = userList.size();
+		for (int i = 0 ; i < num ; i++) {
+			FoodRecommendVo foodRecommendVo = new FoodRecommendVo();
+			foodRecommendVo.setRecommend(false);
+			int useq = (int)(Math.random()*userList.size());
+			Users user = userList.get(useq);
+			UserVo userVo = new UserVo(user);
+
+			int[] kcalLimit = {0, 0};
+			if (user.getUserGoal().equals("diet")) {
+				kcalLimit[0] = 0;
+				kcalLimit[1] = (int)(0.7f*userVo.getEER()/3);
+			} else if (user.getUserGoal().equals("bulkup")) {
+				kcalLimit[0] = (int)(1.0f*userVo.getEER()/3);
+				kcalLimit[1] = (int)(1.3f*userVo.getEER()/3);
+			} else {
+				kcalLimit[0] = (int)(0.9f*userVo.getEER()/3);
+				kcalLimit[1] = (int)(1.1f*userVo.getEER()/3);
+			}
+			
+			int[] randomArray = new int[3];
+			int r = (int)(Math.random()*6);
+			if (r == 0) {
+				randomArray[0] = 0;
+				randomArray[1] = 1;
+				randomArray[2] = 2;
+			} else if (r == 1) {
+				randomArray[0] = 0;
+				randomArray[1] = 2;
+				randomArray[2] = 1;
+			} else if (r == 2) {
+				randomArray[0] = 1;
+				randomArray[1] = 0;
+				randomArray[2] = 2;
+			} else if (r == 3) {
+				randomArray[0] = 1;
+				randomArray[1] = 2;
+				randomArray[2] = 0;
+			} else if (r == 4) {
+				randomArray[0] = 2;
+				randomArray[1] = 0;
+				randomArray[2] = 1;
+			} else if (r == 5) {
+				randomArray[0] = 2;
+				randomArray[1] = 1;
+				randomArray[2] = 0;
+			}
+			
+			
+			String morning = "|";
+			String lunch = "|";
+			String dinner = "|";
+			String snack = "|";
+			String mealTime = "";
+			Date now = new Date();
+			if (mealType.equals("random")) {
+				mealTime = foodRecommendVo.getMealTimeByTime();
+				if (mealTime.equals("morning")) {
+					morning = mealTime;
+				} else if (mealTime.equals("lunch")) {
+					lunch = mealTime;
+				} else if (mealTime.equals("dinner")) {
+					dinner = mealTime;
+				} else {
+					snack = mealTime;
+				}				
+			} else if(mealType.equals("morning")) {
+				mealTime = "morning";
+				morning = mealTime;
+			} else if(mealType.equals("lunch")) {
+				mealTime = "lunch";
+				lunch = mealTime;
+			} else if(mealType.equals("dinner")) {
+				mealTime = "dinner";
+				dinner = mealTime;
+			} else if(mealType.equals("snack")) {
+				mealTime = "snack";
+				snack = mealTime;
+			}
+			
+			
+			foodRecommendVo.setMealTime(new String[]{morning, lunch, dinner, snack});
+			foodRecommendVo.setPurpose(user.getUserGoal());
+			foodRecommendVo.setDietType(user.getDietType());
+			String[] allergys = new String[foodRecommendVo.getAllergyArray().length];
+			if (user.getNo_egg().equals("y"))
+				allergys[0] = "y";
+			else {
+				allergys[0] = "a";
+			}
+			if (user.getNo_milk().equals("y")) {
+				allergys[1] = "y";
+			} else {
+				allergys[1] = "a";
+			}
+			if (user.getNo_bean().equals("y")) {
+				allergys[2] = "y";
+			} else {
+				allergys[2] = "a";
+			}
+			if (user.getNo_shellfish().equals("y")) {
+				allergys[3] = "y";
+			} else {
+				allergys[3]= "a";
+			}
+			foodRecommendVo.setAllergys(allergys);
+			foodRecommendVo.setVegetarian(user.getVegetarian());
+			
+			for (int j : randomArray) {
+				History history = new History();
+				history.setUser(user);
+				history.setServeNumber(1);
+				history.setMealType(mealTime);
+				history.setNo_egg(user.getNo_egg());
+				history.setNo_milk(user.getNo_milk());
+				history.setNo_bean(user.getNo_bean());
+				history.setNo_shellfish(user.getNo_shellfish());
+				history.setNo_ingredient("");
+				history.setPurpose(foodRecommendVo.getPurpose());
+				history.setDietType(foodRecommendVo.getDietType());
+				history.setVegetarian(foodRecommendVo.getVegetarian());
+
+				float kcalOnTable = historyService.totalKcalOnTable(user);
+
+				if (kcalOnTable > kcalLimit[0] && kcalOnTable < kcalLimit[1]) {
+					if (Math.random()*5 > 3) {
+						foodRecommendVo.setFoodType(foodRecommendVo.getFoodTypeCategory()[j+1][0]);
+						List<Food> foodList = foodScanService.getFoodScanList(user, foodRecommendVo);
+						if (foodList.size() != 0) {
+							Food food = foodList.get((int)(Math.random()*foodList.size()));
+							history.setFood(food);
+							historyRepo.save(history);
+						}
+					} else {
+						break;						
+					}
+				} else if (kcalOnTable <= kcalLimit[0]) {
+					foodRecommendVo.setFoodType(foodRecommendVo.getFoodTypeCategory()[j+1][0]);
+					List<Food> foodList = foodScanService.getFoodScanList(user, foodRecommendVo);
+					if (foodList.size() != 0) {
+						Food food = foodList.get((int)(Math.random()*foodList.size()));
+						history.setFood(food);
+						historyRepo.save(history);
+					}
+				} else if (kcalOnTable > kcalLimit[1]) {
+					break;
+				}
+			}
+			
+			List<History> historyListNotConfirmedYet = historyRepo.getHistoryListNotConfirmedYet(user);
+			for (History history : historyListNotConfirmedYet) {
+				history.setServedDate(now);
+				historyRepo.save(history);
+				historyList.add(history);
+			}
+			userList.remove(useq);
+		}
 		
 		return historyList;
 		
@@ -712,15 +674,25 @@ public class DataInOutServiceImpl implements DataInOutService {
 	public void historyListToCsv(List<History> historyList) {
 		String csvFile = "tmp_history.csv";
 		String pyFile = "historyListToCsv.py";
+		csvFile = PathConfig.realPath(csvFile);
+		pyFile = PathConfig.realPath(pyFile);
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder
 			.append("hseq,")
 			.append("useq,")
-			.append("user_sex,")
-			.append("user_age,")
-			.append("user_height,")
-			.append("user_weight,")
+			.append("sex,")
+			.append("age,")
+			.append("height,")
+			.append("weight,")
 			.append("meal_type,")
+			.append("no_egg,")
+			.append("no_milk,")
+			.append("no_bean,")
+			.append("no_shellfish,")
+			.append("no_ingredient,")
+			.append("purpose,")
+			.append("diet_type,")
+			.append("vegetarian,")
 			.append("served_date,")
 			.append("served_number,")
 			.append("fseq,")
@@ -738,7 +710,15 @@ public class DataInOutServiceImpl implements DataInOutService {
 				.append(history.getUser().getAge()).append(",")
 				.append(history.getUser().getHeight()).append(",")
 				.append(history.getUser().getWeight()).append(",")
-				.append((history.getMealType() == null ? "구분없음" : history.getMealType())).append(",")
+				.append(((history.getMealType() == null) || (history.getMealType().equals("|")) ? "구분없음" : history.getMealType())).append(",")
+				.append(((history.getNo_egg().equals("y")) ? "y" : "n")).append(",")
+				.append(((history.getNo_milk().equals("y")) ? "y" : "n")).append(",")
+				.append(((history.getNo_bean().equals("y")) ? "y" : "n")).append(",")
+				.append(((history.getNo_shellfish().equals("y")) ? "y" : "n")).append(",")
+				.append(((history.getNo_ingredient() == null) || (history.getNo_ingredient().equals("|")) ? "없음" : history.getNo_ingredient())).append(",")
+				.append(history.getPurpose()).append(",")
+				.append(history.getDietType()).append(",")
+				.append(history.getVegetarian()).append(",")
 				.append(String.valueOf(history.getServedDate())).append(",")
 				.append(history.getServeNumber()).append(",")
 				.append(history.getFood().getFseq()).append(",")
@@ -748,7 +728,6 @@ public class DataInOutServiceImpl implements DataInOutService {
 				.append(history.getFood().getFoodDetail().getPrt()).append(",")
 				.append(history.getFood().getFoodDetail().getFat()).append("\n");
 		}
-
 		try {
 			FileWriter fileWriter = new FileWriter(csvFile);
 			try (BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
@@ -758,11 +737,21 @@ public class DataInOutServiceImpl implements DataInOutService {
 			fileWriter.close();
 			ProcessBuilder processBuilder = new ProcessBuilder("python", pyFile, csvFile);
 			Process process = processBuilder.start();
+			process.waitFor();
 			System.out.println("History 데이터 내보내기 성공");			
 		}catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("History 데이터 내보내기 실패");
-		}		
+		}
+		
+		File file = new File(csvFile);
+		if (file.exists()) {
+			if (file.delete()) {
+				System.out.println("임시파일 삭제 완료");
+			} else {
+				System.out.println("임시파일 삭제 실패");
+			}
+		}
 	}
 	
 	@Override
@@ -807,6 +796,11 @@ public class DataInOutServiceImpl implements DataInOutService {
 							ingredient.setPrt(Float.parseFloat(input[3]));
 							ingredient.setFat(Float.parseFloat(input[4]));
 							ingredient.setCarb(Float.parseFloat(input[5]));
+							ingredient.setVeganValue(Integer.parseInt(input[6]));
+							ingredient.setEgg(input[7]);
+							ingredient.setMilk(input[8]);
+							ingredient.setBean(input[9]);
+							ingredient.setShellfish(input[10]);
 							ingredientRepo.save(ingredient);
 							ingredient = ingredientRepo.findFirstByOrderByIseqDesc();
 							ingredientList.add(ingredient);
@@ -836,79 +830,6 @@ public class DataInOutServiceImpl implements DataInOutService {
 		
 		return ingredientList;
 	}
-		
-
-	@Override
-	public List<Ingredient> ingredientInDummy(String n) {
-		List<Ingredient> ingredientList = new ArrayList<>();
-		
-		
-		return ingredientList;
-	}
-
-	@Override
-	public void ingredientListToCsv(List<Ingredient> ingredientList) {
-		String csvFile = "tmp_ingredient.csv";
-		String pyFile = "ingredientListToCsv.py";		
-	}
-
-	@Override
-	public List<Rcd> rcdInFromCsv(String csvFile, String n) {
-		List<Rcd> rcdList = new ArrayList<>();
-		//불필요
-		
-		
-		return rcdList;
-	}
-
-	@Override
-	public List<Rcd> rcdInDummy(String n) {
-		List<Rcd> rcdList = new ArrayList<>();
-		
-		
-		return rcdList;
-		
-	}
-
-	@Override
-	public void rcdListToCsv(List<Rcd> rcdList) {
-		String csvFile = "tmp_rcd.csv";
-		String pyFile = "rcdListToCsv.py";
-		
-	}
-	
-	@Override
-	public List<UserChange> userChangeInFromCsv(String csvFile, String n) {
-		List<UserChange> userChangeList = new ArrayList<>();
-		
-		
-		return userChangeList;
-		
-	}
-
-	@Override
-	public List<UserChange> userChangeInDummy(String n) {
-		List<UserChange> userChangeList = new ArrayList<>();
-		
-		
-		return userChangeList;
-		
-	}
-
-	@Override
-	public void userChangeListToCsv(List<UserChange> userChange) {
-		String csvFile = "tmp_userChange.csv";
-		String pyFile = "userChangeListToCsv.py";
-		
-	}
-
-	@Override
-	public List<Users> usersInFromCsv(String csvFile, String n) {
-		List<Users> usersList = new ArrayList<>();
-		
-		
-		return usersList;
-	}
 
 	@Override
 	public List<Users> usersInDummy(String n) {
@@ -925,7 +846,7 @@ public class DataInOutServiceImpl implements DataInOutService {
 		if (num >= 0) {
 			try {
 				while (count < num) {
-					Users userVo = new Users();
+					Users user = new Users();
 					int sex = (int)(Math.random()*2);
 					int age = (int)(Math.random()*40 + 15);
 					int heightIncrease = 0;
@@ -973,20 +894,80 @@ public class DataInOutServiceImpl implements DataInOutService {
 					if (tmp_user != null)
 						continue;					
 					
-					userVo.setUserid(id);
-					userVo.setUserpw("1234");
-					userVo.setName(name);
+					user.setUserid(id);
+					user.setUserpw("1234");
+					user.setName(name);
 					if (sex == 0) {
-						userVo.setSex("m");
+						user.setSex("m");
 					} else {
-						userVo.setSex("f");
+						user.setSex("f");
 					}
-					userVo.setAge(age);
-					userVo.setHeight(height);
-					userVo.setWeight(weight);
-					usersInOutRepo.save(userVo);
-					userVo = usersInOutRepo.findFirstByOrderByUseqDesc();
-					usersList.add(userVo);
+					user.setAge(age);
+					user.setHeight(height);
+					user.setWeight(weight);
+					user.setUseyn("y");
+					if (Math.random()*100 < 3) {
+						user.setNo_egg("y");
+					} else {
+						user.setNo_egg("a");
+					}
+					if (Math.random()*100 < 3) {
+						user.setNo_milk("y");
+					} else {
+						user.setNo_milk("a");
+					}
+					if (Math.random()*100 < 3) {
+						user.setNo_bean("y");
+					} else {
+						user.setNo_bean("a");
+					}
+					if (Math.random()*100 < 3) {
+						user.setNo_shellfish("y");
+					} else {
+						user.setNo_shellfish("a");
+					}
+					user.setNo_ingredient("");
+					
+					int tmp_random = (int)(Math.random()*100);
+					if (tmp_random < 5) {
+						user.setDietType("balance");
+					} else if (tmp_random > 94) {
+						user.setDietType("lowCarb");
+					} else {
+						user.setDietType("all");
+					}
+					
+					tmp_random = (int)(Math.random()*100);
+					if (tmp_random < 50) {
+						user.setVegetarian("0");
+					} else {
+						int tmp = (int)(tmp_random-50)/10 + 1;
+						user.setVegetarian(String.valueOf(tmp));
+					}
+					
+					usersInOutRepo.save(user);
+					user = usersInOutRepo.findFirstByOrderByUseqDesc();
+					UserVo userVo = new UserVo(user);
+					if (user.getSex().equals("m")) {
+						if (userVo.getBMI() > 28) {
+							user.setUserGoal("diet");
+						} else if (userVo.getBMI() < 22) {
+							user.setUserGoal("bulkup");
+						} else {
+							user.setUserGoal("all");
+						}
+					} else {
+						if (userVo.getBMI() > 25) {
+							user.setUserGoal("diet");
+						} else if (userVo.getBMI() < 18) {
+							user.setUserGoal("bulkup");
+						} else {
+							user.setUserGoal("all");
+						}
+					}
+					
+					usersInOutRepo.save(user);
+					usersList.add(user);
 					count++;
 				}
 			} catch (Exception e) {

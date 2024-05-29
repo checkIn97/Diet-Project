@@ -13,17 +13,16 @@ public class IngredientServiceImpl implements IngredientService {
 
 	@Autowired
 	private IngredientRepository ingredientRepo;
-	
+
+	@Override
+	public Ingredient findById(int iseq) {
+		return ingredientRepo.findById(iseq);
+	}
+
 	@Override
 	public Optional<Ingredient> findByName(String name) {
 		
 		return ingredientRepo.findByName(name);
-	}
-
-	@Override
-	public Ingredient getIngredientByMaxIseq() {
-		
-		return ingredientRepo.findFirstByOrderByIseqDesc();
 	}
 
 }
