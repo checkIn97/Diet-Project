@@ -12,17 +12,6 @@ public class ExerciseOptionServiceImpl implements ExerciseOptionService {
 
 	@Autowired
 	private ExerciseOptionRepository exerciseOptionRepository;
-	
-	@Override
-	public Optional<ExerciseOption> findByType(String type) {
-		
-		return exerciseOptionRepository.findByType(type);
-	}
-
-	@Override
-	public ExerciseOption getIngredientByMaxEoseq() {
-		return exerciseOptionRepository.findFirstByOrderByEoseqDesc();
-	}
 
 	@Override
 	public void insertExerciseOption(ExerciseOption eo) {

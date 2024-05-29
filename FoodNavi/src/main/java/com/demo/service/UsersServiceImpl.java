@@ -34,14 +34,12 @@ public class UsersServiceImpl implements UsersService {
 		if (usersRepo.findByUserid(vo.getUserid()).isPresent()) {
 			useq = usersRepo.findByUserid(vo.getUserid()).get().getUseq();
 		}
-			System.out.println(useq);
-			
 			// Users 테이블에서 사용자 조회
 			Optional<Users> user = usersRepo.findById(useq);
 		
 		// 결과값 설정 :
 		// 1: ID,PWD 일치, 0: 비밀번호 불일치, -1: ID가 존재하지 않음.
-		if(!user.isPresent()) {
+		if(!user.isPresent() || user.get().getUseyn().equals("n")) {
 			result = -1;
 		} else {
 			if (user.get().getUserpw().equals(vo.getUserpw())) {
@@ -57,12 +55,6 @@ public class UsersServiceImpl implements UsersService {
 	public Users getUser(int useq) {
 		
 		return usersRepo.findById(useq).get();
-	}
-
-	@Override
-	public Users getUserByMaxUseq() {
-		return usersRepo.findFirstByOrderByUseqDesc();
-		
 	}
 
 	@Override

@@ -62,21 +62,9 @@ public class AdminFoodServiceImpl implements AdminFoodService {
 	}
 
 	@Override
-	public List<Food> getFoodDetail(int fseq) {
-		
-		return foodRepo.getFoodDetail(fseq);
-	}
-
-	@Override
 	public void updateFood(Food fvo) {
 		
 		foodRepo.save(fvo);
 		
 	}
-	
-	@Override
-	public void deleteFood(int fseq) {
-		foodRepo.deleteById(fseq);
-	}
-
 }

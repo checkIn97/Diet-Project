@@ -22,20 +22,6 @@ public class AdminFoodDetailServiceImpl implements AdminFoodDetailService {
 
 
 	@Override
-	public void updateFoodDetail(FoodDetail fdvo) {
-		foodDetailRepo.save(fdvo);
-		
-	}
-
-
-	@Override
-	public void deleteFoodDetail(int fdseq) {
-		foodDetailRepo.deleteById(fdseq);
-		
-	}
-
-
-	@Override
 	public FoodDetail getFoodDetailByMaxFdseq() {
 		return foodDetailRepo.findFirstByOrderByFdseqDesc();
 	}

@@ -50,11 +50,6 @@ public class RcdServiceImpl implements RcdService {
 		return rcdList.size();
 	}
 
-	@Override
-	public List<Rcd> getRcdListByUser(Users user) {
-		return rcdRepo.findByUser(user);
-	}
-
 
 	@Override
 	public List<Food> getRcdFoodListByUser(Users user) {

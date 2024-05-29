@@ -398,31 +398,6 @@ public class FoodScanController {
 		return "food_scan/foodDetail";
 	}
 
-	// 상세보기에서 상차림으로 데이터를 보낸다.
-	// 이미 존재하면 새로 추가하지 않고 개수만 늘린다.
-	/*
-	@PostMapping("/history_in_from_detail")
-	public String historyInFromDetail(HttpSession session, Food food) {
-		// 세션에서 사용자 정보 가져오기
-    	Users user = (Users) session.getAttribute("loginUser");
-    	// 세션에 로그인 정보가 없는 경우
-        if (user == null) {
-            return "redirect:user_login_form"; // 로그인 페이지로 이동.
-        }
-		
-		food = foodScanService.getFoodByFseq(food.getFseq());
-		
-		History history = new History();
-		history.setUser(user);
-		history.setFood(food);
-		history.setServeNumber(1);
-		historyService.historyIn(history);	
-		
-		FoodRecommendVo foodScanVo = (FoodRecommendVo)session.getAttribute("foodScanVo");
-		
-		return "redirect:food_scan?page="+(foodScanVo.getPageInfo().get("number")+1);
-	}
-	*/
 	// 상차림에서 데이터를 갱신한다.
 	@PostMapping("/history_update")
 	public String historyUpdate(HttpSession session, History history) {

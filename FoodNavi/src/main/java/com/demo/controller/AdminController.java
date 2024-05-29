@@ -86,9 +86,6 @@ public class AdminController {
 	@Autowired
 	private DataInOutService dataInOutService;
 
-	// @Value("${com.demo.upload.path}")
-	// private String uploadPath;
-
 	@GetMapping("/admin_login_form")
 	public String admin_login_form() {
 		return "/admin/login";
@@ -179,7 +176,6 @@ public class AdminController {
 		model.addAttribute("userScanVo", userScanVo);
 		model.addAttribute("userList", userScanVo.getUserList());
 		model.addAttribute("pageInfo", userScanVo.getPageInfo());
-		System.out.println("TEST!!!!!! 유저 pageInfo: " + userScanVo.getPageInfo());
 
 		return "admin/userList";
 	}
@@ -795,11 +791,6 @@ public class AdminController {
 		float carb = 0f;
 		float prt = 0f;
 		float fat = 0f;
-		System.out.println("<-----------------------테스트--------------------------->");
-		System.out.println("calData.size(): " + calDataList.size());
-		System.out.println("calData1.name: " + calDataList.get(0).getName());
-		System.out.println("calData1.amount: " + calDataList.get(0).getAmount());
-		System.out.println("<-----------------------테스트--------------------------->");
 		//calDataList.remove(0);
 		if(!calDataList.isEmpty()) {
 			for (CalData calData : calDataList) {

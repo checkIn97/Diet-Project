@@ -11,9 +11,7 @@ public interface UsersService {
 	public int loginID(Users vo); // 로그인
 	
 	public Users getUser(int useq); // 아이디로 회원 조회
-	
-	public Users getUserByMaxUseq();
-	
+
 	public int compareID(String id);
 
 	public List<UserChange> getWeightList(Users user);

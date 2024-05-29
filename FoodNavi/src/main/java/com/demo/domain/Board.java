@@ -1,7 +1,6 @@
 package com.demo.domain;
 
 import java.util.Date;
-import java.util.List;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;

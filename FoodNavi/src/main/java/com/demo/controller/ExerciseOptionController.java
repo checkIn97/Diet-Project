@@ -49,11 +49,7 @@ public class ExerciseOptionController {
         Optional<ExerciseOption> exo = exerciseOptionRepository.findByType(activityType);
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Date strToDate = null;
-        System.out.println("------------운동기록하기 테스트---------------");
-        System.out.println(activityType);
-        System.out.println(activityTime);
-        System.out.println(activityDate);
-        System.out.println("------------운동기록하기 테스트---------------");
+
         try {
             strToDate = formatter.parse(activityDate);
         } catch (ParseException e) {
@@ -69,9 +65,8 @@ public class ExerciseOptionController {
                     .user(user)
                     .build();
             exerciseRepo.save(vo);
-        } else {
-            System.out.println("없는 운동");
         }
+
         String redirect_uri = "http://localhost:8080/user_myactivity_view";
         response.sendRedirect(redirect_uri);
     }

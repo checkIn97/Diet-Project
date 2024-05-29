@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
 import com.demo.domain.Food;
-import com.demo.domain.Rcd;
 import com.demo.domain.UserChange;
 import com.demo.domain.Users;
 import com.demo.dto.FoodRecommendVo;
@@ -35,9 +34,6 @@ import com.demo.dto.FoodVo;
 import com.demo.dto.UserVo;
 import com.demo.persistence.UserChangeRepository;
 import com.demo.persistence.UsersRepository;
-import com.demo.service.FoodRecommendService;
-import com.demo.service.FoodScanService;
-import com.demo.service.HistoryService;
 import com.demo.service.RcdService;
 import com.demo.service.UsersService;
 
@@ -53,13 +49,7 @@ public class UsersController {
 	@Autowired
 	private UserChangeRepository userChangeRepo;
 	@Autowired
-	private HistoryService historyService;
-	@Autowired
 	private RcdService rcdService;
-	@Autowired
-	private FoodScanService foodScanService;
-	@Autowired
-	private FoodRecommendService foodRecommendService;
 
 	@GetMapping("/user_membership")
 	public String joinView() {
@@ -243,9 +233,6 @@ public class UsersController {
 			Collections.reverse(weightList);
 			Collections.reverse(labels);
 
-			System.out.println(weightList);
-			System.out.println(labels);
-
 			model.addAttribute("changes", weightList);
 			model.addAttribute("labels", labels);
 			model.addAttribute("userVo", userVo);
@@ -331,7 +318,6 @@ public class UsersController {
 	@GetMapping("/pw_check")
 	public String pwCheckView(HttpSession session, Model model) {
 		String userpw = ((Users)session.getAttribute("loginUser")).getUserpw();
-		System.out.println(userpw);
 		model.addAttribute("sessionpw", userpw);
 		return "user/pwCheck";
 	}

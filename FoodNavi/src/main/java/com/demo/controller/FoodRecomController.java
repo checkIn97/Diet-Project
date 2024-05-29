@@ -215,22 +215,9 @@ public class FoodRecomController {
         }
 
         FoodVo foodVo = foodRecommendVo.getFoodRecommendList().get(foodRecommendVo.getIndex());
-		/*
-		List<FoodIngredient> foodIngredientList = foodIngredientService.getFoodIngredientListByFood(foodVo.getFood().getFseq());
-		List<IngredientVo> ingredientNameAndAmountList = new ArrayList<>();
-		int index = 0;
-		for (FoodIngredient foodIngredient : foodIngredientList) {
-			String ingredientName = ingredientService.findById(foodIngredient.getIngredient().getIseq()).getName();
-			int ingredientAmount = foodIngredient.getAmount();
-			IngredientVo vo = new IngredientVo(index, ingredientName, ingredientAmount);
-			ingredientNameAndAmountList.add(vo);
-		}
-		*/
         model.addAttribute("foodVo", foodVo);
         foodRecommendVo = (FoodRecommendVo) session.getAttribute("foodRecommend");
         model.addAttribute("foodRecommendVo", foodRecommendVo);
-
-        //model.addAttribute("ingredientNameAndAmountList", ingredientNameAndAmountList);
 
         return "food/foodRecommend";
     }

@@ -3,7 +3,6 @@ package com.demo.service;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 import com.demo.domain.Board;
 import com.demo.dto.BoardScanVo;

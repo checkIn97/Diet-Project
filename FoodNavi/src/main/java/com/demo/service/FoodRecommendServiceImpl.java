@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import com.demo.config.PathConfig;
 import com.demo.domain.Food;
-import com.demo.domain.FoodDetail;
 import com.demo.dto.FoodVo;
 import com.demo.dto.UserVo;
 import com.demo.persistence.FoodDetailScanRepository;
@@ -135,11 +134,6 @@ public class FoodRecommendServiceImpl implements FoodRecommendService {
 		System.out.println(stringBuilder.toString());
 		return foodRecommendList;
 		
-	}
-
-	@Override
-	public FoodDetail getFoodDetailByFseq(int fseq) {
-		return foodDetailScanRepo.findByFseq(fseq);
 	}
 
 }

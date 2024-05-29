@@ -24,7 +24,6 @@ public class ChatRoomController {
     @GetMapping("/room")
     public List<ChatRoom> rooms(Model model, HttpSession session){
         Users user = (Users) session.getAttribute("loginUser");
-        System.out.println(user.getName());
         session.setAttribute("user_name", user.getName());
         log.info("로그");
         return chatRoomRepository.findAllRoom();
@@ -49,7 +48,6 @@ public class ChatRoomController {
     @PostMapping("/bot_room")
     @ResponseBody
     public ChatRoom createBotRoom(@RequestParam String name){
-        System.out.println("챗봇생성");
         return chatRoomRepository.createChatBotRoom(name);
     }
 

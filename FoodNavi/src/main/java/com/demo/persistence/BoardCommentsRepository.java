@@ -20,10 +20,6 @@ public interface BoardCommentsRepository extends JpaRepository<Comments, Integer
 			"ORDER BY c.cseq ASC")
 	List<Comments> findRepliesByParentCommentCseq(int parentCseq);
 
-	@Query("SELECT COUNT(c) FROM Comments c " +
-			"WHERE c.board.bseq =?1")
-	int getTotalCommentCount(int bseq);
-
 	// 게시글 번호(bseq)에 해당하는 댓글들을 모두 삭제
 	@Transactional
 	void deleteByBoardBseq(int bseq);

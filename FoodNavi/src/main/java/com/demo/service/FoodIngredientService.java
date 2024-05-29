@@ -1,7 +1,6 @@
 package com.demo.service;
 
 import com.demo.domain.FoodIngredient;
-import com.demo.domain.Food;
 
 import java.util.List;
 

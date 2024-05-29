@@ -132,78 +132,6 @@ public class DataInOutServiceImpl implements DataInOutService {
 	private int heightChangeFemale = 4;
 	private int weightChangeMale = 5;
 	private int weightChangeFemale = 3;
-	
-	
-	@Override
-	public List<Admin> adminInFromCsv(String csvFile, String n) {
-		List<Admin> adminList = new ArrayList<>();
-		int num = -1;
-		int check = -1;
-		int count = 0;
-		String text = "";
-		
-		if (!n.equals("all")) {
-			try {
-				num = Integer.parseInt(n);
-			} catch (Exception e) {
-				e.fillInStackTrace();
-			}
-		}
-		
-		if (num >= 0 || n.equals("all")) {
-			try {
-				FileReader fr = new FileReader(csvFile);
-				BufferedReader br = new BufferedReader(fr);
-
-				while(true) {
-					if (!n.equals("all")) {
-						if (count == num) {
-							break;
-						}
-					}
-					
-					text = br.readLine();
-					
-					if (text == null)
-						break;			
-
-					if (check != -1) {
-						String[] input = text.substring(0, text.length()-1).split(",");
-						Admin admin = new Admin();
-						admin.setAdminid(input[1]);
-						admin.setAdminpw(input[2]);
-						admin.setName(input[3]);
-						adminRepo.save(admin);
-						adminList.add(admin);
-						count++;
-						text = "";
-					} else {
-						check = 0;
-						text = "";
-					}	
-				}
-				br.close();
-				fr.close();			
-			} catch (IOException e) {
-				System.out.println((count+1)+"번 데이터 입력 중 오류 발생!");
-				e.printStackTrace();
-			}
-		} else {
-			System.out.println("데이터 입력 실패!");
-		}
-		
-		adminListToCsv(adminList);
-		return adminList;
-		
-	}
-
-	@Override
-	public List<Admin> adminInDummy(String n) {
-		List<Admin> adminList = new ArrayList<>();
-
-		
-		return adminList;
-	}
 
 	@Override
 	public void adminListToCsv(List<Admin> adminList) {
@@ -231,7 +159,7 @@ public class DataInOutServiceImpl implements DataInOutService {
 				bufferedWriter.close();
 			}
 			fileWriter.close();
-			System.out.println("admin 데이터 내보내기 성공");			
+			System.out.println("admin 데이터 내보내기 성공");
 		}catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("admin 데이터 내보내기 실패");
@@ -246,80 +174,6 @@ public class DataInOutServiceImpl implements DataInOutService {
 			}
 		}
 
-		
-	}
-	
-	@Override
-	public List<Board> boardInFromCsv(String csvFile, String n) {
-		List<Board> boardList = new ArrayList<>();
-
-		
-		return boardList;
-		
-	}
-
-	@Override
-	public List<Board> boardInDummy(String n) {
-		List<Board> boardList = new ArrayList<>();
-
-		
-		return boardList;
-		
-	}
-
-	@Override
-	public void boardListToCsv(List<Board> boardList) {
-		String csvFile = "tmp_board.csv";
-		String pyFile = "boardListToCsv.py";
-		
-	}
-
-	@Override
-	public List<Comments> commentsInFromCsv(String csvFile, String n) {
-		List<Comments> commentsList = new ArrayList<>();
-
-		
-		return commentsList;
-		
-	}
-
-	@Override
-	public List<Comments> commentsInDummy(String n) {
-		List<Comments> commentsList = new ArrayList<>();
-
-		
-		return commentsList;
-		
-	}
-
-	@Override
-	public void commentsListToCsv(List<Comments> commentsList) {
-		String csvFile = "tmp_comments.csv";
-		String pyFile = "commentsListToCsv.py";
-		
-	}
-	
-	@Override
-	public List<Exercise> exerciseFromCsv(String csvFile, String n) {
-		List<Exercise> exerciseList = new ArrayList<>();
-		
-		
-		return exerciseList;		
-	}
-
-	@Override
-	public List<Exercise> exerciseInDummy(String n) {
-		List<Exercise> exerciseList = new ArrayList<>();
-		
-		
-		return exerciseList;	
-		
-	}
-
-	@Override
-	public void exerciseListToCsv(List<FoodIngredient> foodIngredientList) {
-		String csvFile = "tmp_exercise.csv";
-		String pyFile = "exerciseListToCsv.py";
 		
 	}
 	
@@ -642,64 +496,6 @@ public class DataInOutServiceImpl implements DataInOutService {
 		}		
 	}
 
-
-	@Override
-	public List<FoodDetail> foodDetailInFromCsv(String csvFile, String n) {
-		List<FoodDetail> foodDetailList = new ArrayList<>();
-		
-		
-		return foodDetailList;
-	}
-
-	@Override
-	public List<FoodDetail> foodDetailInDummy(String n) {
-		List<FoodDetail> foodDetailList = new ArrayList<>();
-		
-		
-		return foodDetailList;
-		
-	}
-
-	@Override
-	public void foodDetailListToCsv(List<FoodDetail> foodDetailList) {
-		String csvFile = "tmp_foodDetail.csv";
-		String pyFile = "foodDetailListToCsv.py";
-		
-	}
-	
-	@Override
-	public List<FoodIngredient> foodIngredientFromCsv(String csvFile, String n) {
-		List<FoodIngredient> foodIngredientList = new ArrayList<>();
-		// foodInFromCsv에서 처리
-		
-		return foodIngredientList;
-		
-	}
-
-	@Override
-	public List<FoodIngredient> foodIngredientInDummy(String n) {
-		List<FoodIngredient> foodIngredientList = new ArrayList<>();
-
-		
-		return foodIngredientList;
-		
-	}
-
-	@Override
-	public void foodIngredientToCsv(List<FoodIngredient> foodIngredientList) {
-		String csvFile = "tmp_foodIngredient.csv";
-		String pyFile = "foodIngredientListToCsv.py";
-		
-	}
-	
-	@Override
-	public List<History> historyInFromCsv(String csvFile, String n) {
-		List<History> historyList = new ArrayList<>();
-		
-		
-		return historyList;		
-	}
-
 	@Override
 	public List<History> historyInDummy(String mealType, String n) {
 		List<History> historyList = new ArrayList<>();
@@ -869,7 +665,6 @@ public class DataInOutServiceImpl implements DataInOutService {
 			userList.remove(useq);
 		}
 		
-		System.out.println("사이즈 : "+historyList.size());
 		return historyList;
 		
 	}
@@ -1034,79 +829,6 @@ public class DataInOutServiceImpl implements DataInOutService {
 		}
 		
 		return ingredientList;
-	}
-		
-
-	@Override
-	public List<Ingredient> ingredientInDummy(String n) {
-		List<Ingredient> ingredientList = new ArrayList<>();
-		
-		
-		return ingredientList;
-	}
-
-	@Override
-	public void ingredientListToCsv(List<Ingredient> ingredientList) {
-		String csvFile = "tmp_ingredient.csv";
-		String pyFile = "ingredientListToCsv.py";		
-	}
-
-	@Override
-	public List<Rcd> rcdInFromCsv(String csvFile, String n) {
-		List<Rcd> rcdList = new ArrayList<>();
-		//불필요
-		
-		
-		return rcdList;
-	}
-
-	@Override
-	public List<Rcd> rcdInDummy(String n) {
-		List<Rcd> rcdList = new ArrayList<>();
-		
-		
-		return rcdList;
-		
-	}
-
-	@Override
-	public void rcdListToCsv(List<Rcd> rcdList) {
-		String csvFile = "tmp_rcd.csv";
-		String pyFile = "rcdListToCsv.py";
-		
-	}
-	
-	@Override
-	public List<UserChange> userChangeInFromCsv(String csvFile, String n) {
-		List<UserChange> userChangeList = new ArrayList<>();
-		
-		
-		return userChangeList;
-		
-	}
-
-	@Override
-	public List<UserChange> userChangeInDummy(String n) {
-		List<UserChange> userChangeList = new ArrayList<>();
-		
-		
-		return userChangeList;
-		
-	}
-
-	@Override
-	public void userChangeListToCsv(List<UserChange> userChange) {
-		String csvFile = "tmp_userChange.csv";
-		String pyFile = "userChangeListToCsv.py";
-		
-	}
-
-	@Override
-	public List<Users> usersInFromCsv(String csvFile, String n) {
-		List<Users> usersList = new ArrayList<>();
-		
-		
-		return usersList;
 	}
 
 	@Override

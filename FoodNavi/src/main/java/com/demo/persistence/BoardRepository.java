@@ -25,9 +25,6 @@ public interface BoardRepository extends JpaRepository<Board, Integer> {
 			+ "or b.content LIKE %:content% OR b.content IS NULL ")
 	Page<Board> findBoardList(String title, String content, Pageable pageable);
 
-	@Query("SELECT b FROM Board b ORDER BY b.bseq DESC")
-	List<Board> findAllList();
-
 	Page<Board> findByTitleContaining(String title, Pageable pageable);
 	
 	Page<Board> findByUserUserid(String userid, Pageable pageable);

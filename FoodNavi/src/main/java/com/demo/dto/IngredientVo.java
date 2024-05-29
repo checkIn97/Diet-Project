@@ -1,8 +1,5 @@
 package com.demo.dto;
 
-import com.demo.domain.Food;
-import com.demo.domain.FoodIngredient;
-import com.demo.domain.Ingredient;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

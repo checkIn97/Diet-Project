@@ -1,6 +1,5 @@
 package com.demo.controller;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,23 +7,15 @@ import java.util.List;
 import com.demo.domain.Food;
 import com.demo.dto.ChatMessage;
 import com.demo.service.FoodScanService;
-import jakarta.servlet.http.HttpSession;
-import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
 
-import java.awt.Desktop;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Map;
 
-import com.demo.dto.ChatRoom;
-
 import lombok.RequiredArgsConstructor;
+
 @RequiredArgsConstructor
 @Controller
 public class ChatController {
@@ -68,7 +59,6 @@ public class ChatController {
 				} else {
 					String link = "https://m.coupang.com/nm/search?q=" + result.get("name");
 					String foodLink = String.valueOf(result.get("fseq"));
-					System.out.println(result.get("fseq"));
 					message.setMessage(result.get("name") + "의 주문페이지를 보여드릴게요.\n");
 					message.setLink(link);
 					message.setFoodLink(foodLink);

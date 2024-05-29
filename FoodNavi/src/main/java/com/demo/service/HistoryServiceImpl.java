@@ -1,7 +1,6 @@
 package com.demo.service;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,11 +54,6 @@ public class HistoryServiceImpl implements HistoryService {
 	@Override
 	public List<History> getHistoryListConfirmed(Users user) {
 		return historyRepo.getHistoryListConfirmed(user);
-	}
-	
-	@Override
-	public List<History> getHistoryListConfirmed() {
-		return historyRepo.getHistoryListConfirmed();
 	}
 	
 	@Override
@@ -148,18 +142,6 @@ public class HistoryServiceImpl implements HistoryService {
 			totalFatToday += history.getFood().getFoodDetail().getFat()*history.getServeNumber()/history.getFood().getFoodDetail().getN();
 		}
 		return totalFatToday;
-	}
-
-	@Override
-	public History getHistoryByUserAndFood(Users user, Food food) {
-		
-		return historyRepo.getHistoryNotConfirmedYetByFood(user, food);
-	}
-
-	@Override
-	public List<History> getHistoryListByUser(Users user) {
-		
-		return historyRepo.getHistoryListByUser(user);
 	}
 
 	@Override
