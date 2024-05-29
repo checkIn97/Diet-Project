@@ -368,11 +368,18 @@ public class AdminController {
 			String uuid = UUID.randomUUID().toString();
 			String saveName = uuid + "_" + fileName;
 			food.setImg(saveName);
-//			try {
-//				uploadFile.transferTo(new File(uploadPath + File.separator + fileName));
-//			} catch (IllegalStateException | IOException e) {
-//				e.printStackTrace();
-//			}
+			try {
+				String uploadPath = PathConfig.intelliJPath + saveName;
+				boolean exists = PathConfig.isExistsPath();
+				if(exists) {
+					uploadFile.transferTo(new File(PathConfig.realPath(uploadPath)));
+				} else {
+					uploadPath = PathConfig.eclipsePath + saveName;
+					uploadFile.transferTo(new File(PathConfig.realPath(uploadPath)));
+				}
+			} catch (IllegalStateException | IOException e) {
+				e.printStackTrace();
+			}
 		}
 		food.setUseyn("y");
 		foodService.insertFood(food);
