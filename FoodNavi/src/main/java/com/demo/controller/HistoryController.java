@@ -97,7 +97,7 @@ public class HistoryController {
         	if (!fseqListNotConfirmedYet.contains(fseq)) {        		
         		history = new History();
         		history.setFood(foodScanService.getFoodByFseq(fseq));
-        		history.setServeNumber(foodRecord.getAmount1());
+        		history.setServeNumber(foodRecord.getAmount2());
         		history.setUser(user);
         		history.setMealType(mealType);
         		history.setDietType(user.getDietType());
@@ -119,7 +119,7 @@ public class HistoryController {
         	if (!fseqListNotConfirmedYet.contains(fseq)) {        		
         		history = new History();
         		history.setFood(foodScanService.getFoodByFseq(fseq));
-        		history.setServeNumber(foodRecord.getAmount1());
+        		history.setServeNumber(foodRecord.getAmount3());
         		history.setUser(user);
         		history.setMealType(mealType);
         		history.setDietType(user.getDietType());
