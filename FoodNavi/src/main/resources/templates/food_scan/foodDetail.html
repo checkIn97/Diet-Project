@@ -102,6 +102,9 @@
     <a href="javascript:history.back()" th:if="${foodSRVo.resultType == 'c'}">
         <input type="button" value="돌아가기">
     </a>
+    <a th:href="@{user_mypage_view(page=${pageInfo.number +1})}" th:if="${foodSRVo.resultType == 'm'}">
+        <input type="button" value="돌아가기">
+    </a>
 </form>
 <div class="fixed-bottom">
     <th:block th:insert="~{includes/toggleChat}"></th:block>

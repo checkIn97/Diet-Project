@@ -56,4 +56,10 @@ public class RcdServiceImpl implements RcdService {
 	}
 
 
+	@Override
+	public List<Food> getRcdFoodListByUser(Users user) {
+		return rcdRepo.getRcdFoodListByUser(user);
+	}
+
+
 }

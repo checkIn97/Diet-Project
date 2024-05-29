@@ -287,7 +287,7 @@ public class FoodScanController {
         } else if (showType.equals("r1")){
         	FoodRecommendVo[] foodRecommendVoArray = (FoodRecommendVo[])session.getAttribute("foodRecommendVoArray");
         	FoodRecommendVo foodRecommendVo = foodRecommendVoArray[0];
-        	foodScanVo.setResultType("r");
+        	foodRecommendVo.setResultType("r");
             FoodVo foodVo = null;
             List<FoodVo> foodVoList = foodRecommendVo.getFoodRecommendList();
         	for (FoodVo vo : foodVoList) {
@@ -310,7 +310,7 @@ public class FoodScanController {
         } else if (showType.equals("r2")){
         	FoodRecommendVo[] foodRecommendVoArray = (FoodRecommendVo[])session.getAttribute("foodRecommendVoArray");
         	FoodRecommendVo foodRecommendVo = foodRecommendVoArray[1];
-        	foodScanVo.setResultType("r");
+        	foodRecommendVo.setResultType("r");
             FoodVo foodVo = null;
             List<FoodVo> foodVoList = foodRecommendVo.getFoodRecommendList();
         	for (FoodVo vo : foodVoList) {
@@ -333,7 +333,7 @@ public class FoodScanController {
         } else if (showType.equals("r3")){
         	FoodRecommendVo[] foodRecommendVoArray = (FoodRecommendVo[])session.getAttribute("foodRecommendVoArray");
         	FoodRecommendVo foodRecommendVo = foodRecommendVoArray[2];
-        	foodScanVo.setResultType("r");
+        	foodRecommendVo.setResultType("r");
             FoodVo foodVo = null;
             List<FoodVo> foodVoList = foodRecommendVo.getFoodRecommendList();
         	for (FoodVo vo : foodVoList) {
@@ -370,6 +370,27 @@ public class FoodScanController {
 			model.addAttribute("pageInfo", foodScanVo.getPageInfo());
 			model.addAttribute("foodList", foodScanVo.getFoodList());
 			model.addAttribute("foodSRVo", foodScanVo);
+			session.setAttribute("foodVo", foodVo);
+		} else if(showType.equals("m")){
+			FoodRecommendVo foodRecommendVo = (FoodRecommendVo)session.getAttribute("foodRecommendVo");
+			foodRecommendVo.setResultType("m");
+			FoodVo foodVo = null;
+			for (FoodVo vo : foodRecommendVo.getFoodRecommendList()) {
+				if (vo.getFood().getFseq() == food.getFseq()) {
+					foodVo = vo;
+					break;
+				}
+			}
+			model.addAttribute("foodVo", foodVo);
+			UserVo userVo = new UserVo(user);
+            model.addAttribute("userVo", userVo);
+			Map<String, Integer> rcdStatus = new HashMap<>();
+			rcdStatus.put("rcdStatus", rcdService.rcdStatus(user, foodVo.getFood()));
+			rcdStatus.put("rcdCount", rcdService.getRcdCountByFood(foodVo.getFood()));
+			model.addAttribute(foodRecommendVo.getPageInfo());
+			model.addAttribute("rcdStatus", rcdStatus);
+			model.addAttribute("pageInfo", foodRecommendVo.getPageInfo());
+			model.addAttribute("foodSRVo", foodRecommendVo);
 			session.setAttribute("foodVo", foodVo);
 		}
         

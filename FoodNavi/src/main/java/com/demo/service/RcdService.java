@@ -11,4 +11,5 @@ public interface RcdService {
 	public int rcdUpdate(Users user, Food food);
 	public int getRcdCountByFood(Food food);
 	public List<Rcd> getRcdListByUser(Users user);
+	public List<Food> getRcdFoodListByUser(Users user);
 }

@@ -9,8 +9,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -28,6 +30,7 @@ import com.demo.domain.Food;
 import com.demo.domain.Rcd;
 import com.demo.domain.UserChange;
 import com.demo.domain.Users;
+import com.demo.dto.FoodRecommendVo;
 import com.demo.dto.FoodVo;
 import com.demo.dto.UserVo;
 import com.demo.persistence.UserChangeRepository;
@@ -57,7 +60,6 @@ public class UsersController {
 	private FoodScanService foodScanService;
 	@Autowired
 	private FoodRecommendService foodRecommendService;
-
 
 	@GetMapping("/user_membership")
 	public String joinView() {
@@ -258,16 +260,53 @@ public class UsersController {
 
 
 	@GetMapping("/user_mypage_view")
-	public String myPageView(HttpSession session, Model model) {
-		Users user = (Users)session.getAttribute("loginUser");
+	public String myPageView(HttpSession session, Model model, 
+			@RequestParam(value="page", defaultValue="0") int page, 
+			@RequestParam(value="size", defaultValue="8") int size,
+			@RequestParam(value="sortBy", defaultValue="name") String sortBy,
+			@RequestParam(value="sortDirection", defaultValue="ASC") String sortDirection,
+			@RequestParam(value="pageMaxDisplay", defaultValue="5") int pageMaxDisplay) {
+		// 세션에서 사용자 정보 가져오기
+    	Users user = (Users) session.getAttribute("loginUser");
+    	// 세션에 로그인 정보가 없는 경우
+        if (user == null) {
+            return "redirect:user_login_form"; // 로그인 페이지로 이동.
+        }
 		UserVo userVo = new UserVo(user);
-		List<Rcd> rcdList = user.getLikeList();
-		List<FoodVo> foodVoList = new ArrayList<>();
-		for (Rcd rcd : rcdList) {
-			Food food = foodScanService.getFoodByFseq(rcd.getFood().getFseq());
-			foodVoList.add(new FoodVo(food));
+        if (page == 0) {
+        	page = 1;
+        	FoodRecommendVo foodRecommendVo = new FoodRecommendVo();
+    		foodRecommendVo.setRecommend(true);
+    		String mealType = foodRecommendVo.getMealTimeByTime();
+    		String[] mealTime = new String[4];
+    		for (int i = 0 ; i < foodRecommendVo.getMealTimeArray().length ; i++) {
+    			if (foodRecommendVo.getMealTimeArray()[i][0].equals(mealType)) {
+    				mealTime[i] = mealType;
+    			} else {
+    				mealTime[i] = "";
+    			}
+    		}
+    		userVo.setLastMealType(mealType);
+    		List<Food> foodList = rcdService.getRcdFoodListByUser(user);
+    		foodRecommendVo.setFoodList(foodList);
+    		List<FoodVo> foodVoList = foodRecommendService.getFoodRecommendList("Recommend.py", userVo, foodList);
+    		foodRecommendVo.setFoodRecommendList(foodVoList);
+    		session.setAttribute("foodRecommendVo", foodRecommendVo);
+        }
+        
+        FoodRecommendVo foodRecommendVo = (FoodRecommendVo)session.getAttribute("foodRecommendVo");
+        userVo.setLastMealType(foodRecommendVo.getMealTimeByTime());
+        Map<String, Integer> pageInfo = new HashMap<>();
+        pageInfo.put("number", page-1);
+		pageInfo.put("size", size);
+		pageInfo.put("totalPages", (foodRecommendVo.getFoodRecommendList().size()+size-1)/size);
+		List<FoodVo> currentList = new ArrayList<>();
+		for (int i = size*(page-1) ; i < Math.min(size*page, foodRecommendVo.getFoodRecommendList().size()) ; i++) {
+			currentList.add(foodRecommendVo.getFoodRecommendList().get(i));
 		}
-		model.addAttribute("foodVoList", foodVoList);
+		foodRecommendVo.setPageInfo(pageInfo);
+		model.addAttribute("pageInfo", foodRecommendVo.getPageInfo());
+		model.addAttribute("foodVoList", currentList);
 		model.addAttribute("userVo", userVo);
 		model.addAttribute("user", user);
 		return "user/myPage";
