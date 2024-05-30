@@ -66,7 +66,7 @@ public class FoodRecomController {
         float kcalSnack = 0f;
         for (History history : historyList) {
             if (today.equals(history.getServedDate().toString().substring(0, 10))) {
-                float kcal = history.getFood().getFoodDetail().getKcal();
+                float kcal = history.getFood().getFoodDetail().getKcal()/history.getFood().getFoodDetail().getN()*history.getServeNumber();
                 String mealType = history.getMealType();
                 if (mealType.equals("morning")) {
                     kcalMorning += kcal;
