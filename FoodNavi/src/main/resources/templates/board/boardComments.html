@@ -55,11 +55,20 @@ $(document).ready(function () {
             data: {bseq: bseq},
             success: function (data) {
                 var loginUser = data.currentUser;
-                var parentComments = data.parentComments;
                 var commentCount = data.commentCount;
-                var repliesMap = data.repliesMap;
+                var parentCommentCseqArray = data.parentCommentCseqArray;
+                var parentCommentUseqArray = data.parentCommentUseqArray;
+                var parentCommentUserArray = data.parentCommentUserArray;
+                var parentCommentContentArray = data.parentCommentContentArray;
+                var parentCommentDateArray = data.parentCommentDateArray;
+                var childCommentCseqArray = data.childCommentCseqArray;
+                var childCommentUseqArray = data.childCommentUseqArray;
+                var childCommentUserArray = data.childCommentUserArray;
+                var childCommentContentArray = data.childCommentContentArray;
+                var childCommentDateArray = data.childCommentDateArray;
+
                 // 가져온 댓글 목록과 사용자 정보를 이용하여 화면에 표시
-                showHTML(parentComments, repliesMap, commentCount, loginUser);
+                showHTML(loginUser, bseq, commentCount, parentCommentCseqArray, parentCommentUseqArray, parentCommentUserArray, parentCommentContentArray, parentCommentDateArray, childCommentCseqArray, childCommentUseqArray, childCommentUserArray, childCommentContentArray, childCommentDateArray);
 
             },
             error: function () {
@@ -74,47 +83,44 @@ function toggleReplyForm(cseq, bseq) {
     $("#replyForm_" + cseq + "_" + bseq).toggle(); // 대댓글 폼 토글
 }
 
-function showHTML(parentComments, repliesMap, commentCount, loginUser) {
+function showHTML(loginUser, bseq, commentCount, parentCommentCseqArray, parentCommentUseqArray, parentCommentUserArray, parentCommentContentArray, parentCommentDateArray, childCommentCseqArray, childCommentUseqArray, childCommentUserArray, childCommentContentArray, childCommentDateArray) {
     var html = "";
-    if (parentComments.length > 0) {
-        parentComments.forEach(function (parentComment) {
-            // 부모 댓글 섹션
-            html += "<div id=\"parent_comment_" + parentComment.cseq + "\">"; // 각 부모 댓글에 대해 고유한 id 부여
-            html += "<strong>작성자: " + parentComment.user.userid + "</strong>&nbsp;&nbsp;&nbsp; ";
-            html += "<span id=\"write_date\"> 작성일: " + displayTime(parentComment.createdAt) + "</span><br>";
-            html += parentComment.content;
-            // 각 부모 댓글에 대한 답글 작성 버튼
+    if (parentCommentCseqArray.length > 0) {
+        for (let i = 0 ; i < parentCommentCseqArray.length ; i++) {
+        	// 부모 댓글 섹션
+        	html += "<div id=\"parent_comment_" + parentCommentCseqArray[i] + "\">"; // 각 부모 댓글에 대해 고유한 id 부여
+            html += "<strong>작성자: " + parentCommentUserArray[i] + "</strong>&nbsp;&nbsp;&nbsp; ";
+            html += "<span id=\"write_date\"> 작성일: " + displayTime(parentCommentDateArray[i]) + "</span><br>";
+            html += parentCommentContentArray[i];
 
-            html += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#' onclick=\"toggleReplyForm(" + parentComment.cseq + ", " + parentComment.board.bseq + "); return false\">답글 작성</a>";
-
-            // 현재 사용자의 댓글인 경우 삭제 버튼 표시
-            if (parentComment.user.useq === loginUser) {
-                html += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#' onclick=\"deleteComment(" + parentComment.cseq + "," + loginUser + "); return false\" class='button' id='commentsDel'>삭제</a>";
+         	// 각 부모 댓글에 대한 답글 작성 버튼	
+            html += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#' onclick=\"toggleReplyForm(" + parentCommentCseqArray[i] + ", " + bseq + "); return false\">답글 작성</a>";
+    	     // 현재 사용자의 댓글인 경우 삭제 버튼 표시
+            if (parentCommentUseqArray[i] === loginUser) {
+                html += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#' onclick=\"deleteComment(" + parentCommentCseqArray[i] + "," + loginUser + "); return false\" class='button' id='commentsDel'>삭제</a>";
             }
-
-            // 대댓글 폼
-            html += "<div id=\"replyForm_" + parentComment.cseq + "_" + parentComment.board.bseq + "\" style=\"display:none;\">"; // 대댓글 폼의 기본적인 HTML을 추가하고 숨김 처리
-            html += "<textarea rows=\"3\" cols=\"50\" id=\"ReplyContent_" + parentComment.cseq + "_" + parentComment.board.bseq + "\" name=\"ReplyContent\" placeholder=\"답글을 입력하세요\"></textarea>";
-            html += "<a href=\"#\" onClick=\"save_reply(" + parentComment.cseq + "," + parentComment.board.bseq + "); return false;\" class=\"btn\">등록</a>"; // 대댓글 등록 버튼
+         
+	         // 대댓글 폼
+            html += "<div id=\"replyForm_" + parentCommentCseqArray[i] + "_" + bseq + "\" style=\"display:none;\">"; // 대댓글 폼의 기본적인 HTML을 추가하고 숨김 처리
+            html += "<textarea rows=\"3\" cols=\"50\" id=\"ReplyContent_" + parentCommentCseqArray[i] + "_" + bseq + "\" name=\"ReplyContent\" placeholder=\"답글을 입력하세요\"></textarea>";
+            html += "<a href=\"#\" onClick=\"save_reply(" + parentCommentCseqArray[i] + "," + bseq + "); return false;\" class=\"btn\">등록</a>"; // 대댓글 등록 버튼
             html += "</div>";
-
-            // 자식 댓글 섹션
-            if (repliesMap[parentComment.cseq] && repliesMap[parentComment.cseq].length > 0) {
-                repliesMap[parentComment.cseq].forEach(function (reply) {
-                    html += "<div id=\"child_comment_" + reply.cseq + "\">"; // 각 자식 댓글에 대해 고유한 id 부여
-                    html += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>작성자: " + reply.user.userid + "</strong>&nbsp;&nbsp;&nbsp; ";
-                    html += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id=\"write_date\"> 작성일: " + displayTime(reply.createdAt) + "</span><br>";
-                    html += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+ reply.content;
-
-                    // 현재 사용자의 댓글인 경우 삭제 버튼 표시
-                    if (reply.user.useq === loginUser) {
-                        html += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#' onclick=\"deleteComment(" + reply.cseq + "," + loginUser + "); return false\" class='button' id='commentsDel'>삭제</a>";
+            
+         	// 자식 댓글 섹션
+            if (childCommentCseqArray[i].length > 0) {
+            	for (let j = 0 ; j < childCommentCseqArray[i].length ; j++) {
+            		html += "<div id=\"child_comment_" + childCommentCseqArray[i][j] + "\">"; // 각 자식 댓글에 대해 고유한 id 부여
+            		html += "&nbsp;&nbsp;&nbsp;&nbsp;<strong>작성자: " + childCommentUserArray[i][j] + "</strong>&nbsp;&nbsp;&nbsp; ";
+                    html += "&nbsp;&nbsp;&nbsp;&nbsp;<span id=\"write_date\"> 작성일: " + displayTime(childCommentDateArray[i][j]) + "</span><br>";
+                    html += "&nbsp;&nbsp;&nbsp;&nbsp;<span>"+ childCommentContentArray[i][j] +"</span>";
+                 	// 현재 사용자의 댓글인 경우 삭제 버튼 표시
+                    if (childCommentUseqArray[i][j] === loginUser) {
+                        html += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#' onclick=\"deleteComment(" + childCommentCseqArray[i][j] + "," + loginUser + "); return false\" class='button' id='commentsDel'>삭제</a>";
                     }
-
                     html += "<br></div>";
-                });
+            	}
             }
-        });
+        }
     } else {
         html += "<div>";
         html += "<h3>등록된 댓글이 없습니다.</h3>";

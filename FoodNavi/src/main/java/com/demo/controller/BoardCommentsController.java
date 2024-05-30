@@ -16,6 +16,7 @@ import com.demo.domain.Board;
 import com.demo.domain.Comments;
 import com.demo.domain.Users;
 import com.demo.service.BoardCommentsService;
+import com.demo.service.UsersService;
 
 import jakarta.servlet.http.HttpSession;
 @RestController
@@ -24,25 +25,77 @@ public class BoardCommentsController {
 
 	@Autowired
 	BoardCommentsService boardCommentsService;
+	@Autowired
+	UsersService usersService;
 
 	@GetMapping(value = "/list")
 	@ResponseBody
 	public Map<String, Object> getComments(@RequestParam(value = "bseq") int bseq, HttpSession session) {
 		Map<String, Object> result = new HashMap<>();
-
+		System.out.println(1);
 		// 세션에서 사용자 정보 가져오기
 		Users user = (Users) session.getAttribute("loginUser");
 		int currentUser = user.getUseq();
 
 		// 댓글 목록 가져오기
 		List<Comments> parentComments = boardCommentsService.getCommentList(bseq);
-		Map<Integer, List<Comments>> commentsMap = new HashMap<>();
-
-		// 부모 댓글마다 대댓글 목록 가져오기
-		for (Comments parentComment : parentComments) {
-			List<Comments> replies = boardCommentsService.getReplyCommentList(parentComment.getCseq());
-			commentsMap.put(parentComment.getCseq(), replies);
+		int[] parentCommentCseqArray = new int[parentComments.size()];
+		int[] parentCommentUseqArray = new int[parentComments.size()];
+		String[] parentCommentUserArray = new String[parentComments.size()];
+		String[] parentCommentContentArray = new String[parentComments.size()];
+		String[] parentCommentDateArray = new String[parentComments.size()];
+		
+		for (int i = 0 ; i < parentComments.size() ; i++) {
+			parentCommentCseqArray[i] = parentComments.get(i).getCseq();
+			parentCommentUseqArray[i] = parentComments.get(i).getUser().getUseq();
+			Users tmp_user = usersService.getUser(parentComments.get(i).getUser().getUseq());
+			parentCommentUserArray[i] = tmp_user.getName()+"("+tmp_user.getUserid()+")";
+			parentCommentContentArray[i] = parentComments.get(i).getContent();
+			String date = parentComments.get(i).getCreatedAt().toString();
+			// date = date.substring(0, date.length()-4);
+			parentCommentDateArray[i] = date;
 		}
+		
+		
+		int[][] childComentCseqArray = new int[parentComments.size()][];
+		int[][] childCommentUseqArray = new int[parentComments.size()][];
+		String[][] childCommentUserArray = new String[parentComments.size()][];
+		String[][] childCommentContentArray = new String[parentComments.size()][];
+		String[][] childCommentDateArray = new String[parentComments.size()][];
+		
+				
+		Map<Integer, List<Comments>> commentsMap = new HashMap<>();
+		
+		int[] tmp_CseqArray = null;
+		int[] tmp_UseqArray = null;
+		String[] tmp_UserArray = null;
+		String[] tmp_ContentArray = null;
+		String[] tmp_DateArray = null;		
+		// 부모 댓글마다 대댓글 목록 가져오기
+		for (int i = 0 ; i < parentComments.size() ; i++) {
+			List<Comments> replies = boardCommentsService.getReplyCommentList(parentComments.get(i).getCseq());
+			tmp_CseqArray = new int[replies.size()];
+			tmp_UseqArray = new int[replies.size()];
+			tmp_UserArray = new String[replies.size()];
+			tmp_ContentArray = new String[replies.size()];
+			tmp_DateArray = new String[replies.size()];
+			for (int j = 0 ; j < replies.size(); j++) {
+				tmp_CseqArray[j] = replies.get(j).getCseq();
+				tmp_UseqArray[j] = replies.get(j).getUser().getUseq();				
+				Users tmp_user = usersService.getUser(replies.get(j).getUser().getUseq());
+				tmp_UserArray[j] = tmp_user.getName()+"("+tmp_user.getUserid()+")";				
+				tmp_ContentArray[j] = replies.get(j).getContent();
+				String date = replies.get(j).getCreatedAt().toString();
+				// date = date.substring(0, date.length()-4);
+				tmp_DateArray[j] = date;
+			}
+			childComentCseqArray[i] = tmp_CseqArray;
+			childCommentUseqArray[i] = tmp_UseqArray;
+			childCommentUserArray[i] = tmp_UserArray;
+			childCommentContentArray[i] = tmp_ContentArray;
+			childCommentDateArray[i] = tmp_DateArray;			
+		}
+		
 		// 대댓글을 포함한 댓글 수 계산
 		int totalCommentCount = parentComments.size(); // 부모 댓글 수를 초기화
 		for (List<Comments> replies : commentsMap.values()) {
@@ -50,9 +103,17 @@ public class BoardCommentsController {
 		}
 
 		result.put("currentUser", currentUser);
-		result.put("parentComments", parentComments);
-		result.put("repliesMap", commentsMap);
 		result.put("commentCount", totalCommentCount); // 대댓글을 포함한 총 댓글 수를 전달
+		result.put("parentCommentCseqArray", parentCommentCseqArray);
+		result.put("parentCommentUseqArray", parentCommentUseqArray);
+		result.put("parentCommentUserArray", parentCommentUserArray);
+		result.put("parentCommentContentArray", parentCommentContentArray);
+		result.put("parentCommentDateArray", parentCommentDateArray);
+		result.put("childCommentCseqArray", childComentCseqArray);
+		result.put("childCommentUseqArray", childCommentUseqArray);
+		result.put("childCommentUserArray", childCommentUserArray);
+		result.put("childCommentContentArray", childCommentContentArray);
+		result.put("childCommentDateArray", childCommentDateArray);
 
 		return result;
 	}
