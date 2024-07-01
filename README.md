@@ -11,8 +11,20 @@ MBC 아카데미 빅데이터 활용 실무 프로젝트 기반 JAVA 풀스택 �
 </ul>
 <hr>
 
-### 홈 화면
+### 메인 화면
 ![index](https://github.com/checkIn97/Diet-Project/assets/158795073/17177f44-f5c0-40d5-9d29-69884235ff10)
 
-### 메인 화면
-![main](https://github.com/checkIn97/Diet-Project/assets/158795073/ae813069-d456-41f6-afd2-e49eeec5b9f6)
+<hr>
+
+### 추천 화면
+![푸드내비추천](https://github.com/checkIn97/Diet-Project/assets/158795073/2040256a-a028-4a3a-b0b6-fdca7797c692)
+
+<hr>
+
+### 요구사항 정의서
+[FoodNavi 요구사항정의서.pdf](https://github.com/user-attachments/files/16050804/FoodNavi.pdf)
+
+### 포트폴리오
+[FoodNavi.pdf](https://github.com/user-attachments/files/16050810/FoodNavi.pdf)
+
+
